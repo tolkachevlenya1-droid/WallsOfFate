@@ -3,23 +3,21 @@ using Quest;
 using System.Collections.Generic;
 using System.Linq;
 
-internal class DialogeTrigger : MonoBehaviour, ICheckableTrigger
-{
+internal class DialogeTrigger : MonoBehaviour, ITriggerable {
     [Header("Dialogue Settings")]
     [SerializeField] private string _defaultDialogue;
     [SerializeField] private string _npcName;
-    //[SerializeField] private dialogueManager _dialogueManager;
     public GameObject PowerCheckPrefab;
 
     public bool IsDone { get; private set; }
 
     public void Triggered()
     {
-        DialogueManager.GetInstance().PowerCheckPrefab = PowerCheckPrefab;
         var activeGroups = QuestCollection.GetActiveQuestGroups();
         QuestGroup groupToUpdate = null;
         QuestTask taskToComplete = null;
-        //DialogueGraph dialogueGraph;
+        DialogueGraph dialogueGraph;
+        DialogueManager _dialogueManager = DialogueManager.Instance;
 
         foreach (var group in activeGroups) {
             taskToComplete = group.Tasks
@@ -34,16 +32,14 @@ internal class DialogeTrigger : MonoBehaviour, ICheckableTrigger
         }
 
         if (groupToUpdate != null) {
-            //QuestTask taskForDiaog = groupToUpdate.GetCurrentTask();
             groupToUpdate.GetCurrentTask().CompleteTask();
             groupToUpdate = UpdateGroupState(groupToUpdate);
             var originalGroup = QuestCollection.GetAllQuestGroups()
                 .FirstOrDefault(g => g.Id == groupToUpdate.Id);
             originalGroup?.CopyFrom(groupToUpdate);
-            //DialogueManager.GetInstance().EnterDialogueMode(taskToComplete.RequeredDialog, groupToUpdate.Id);
-                        
-            //dialogueGraph = GetDialogueGraph(taskToComplete.RequeredDialog);
-            //_dialogueManager.StartDialogue(dialogueGraph);
+        
+            dialogueGraph = GetDialogueGraph(taskToComplete.RequeredDialog);
+            _dialogueManager.StartDialogue(dialogueGraph);
             return;
         }
 
@@ -57,23 +53,19 @@ internal class DialogeTrigger : MonoBehaviour, ICheckableTrigger
         {
             var group = availableGroups.First();
             group.StartQuest();
-            //DialogueManager.GetInstance().EnterDialogueMode(group.OpenDialog, group.Id);
-            
-            //dialogueGraph = GetDialogueGraph(group.OpenDialog);
-            //_dialogueManager.StartDialogue(dialogueGraph);
+
+            dialogueGraph = GetDialogueGraph(group.OpenDialog);
+            _dialogueManager.StartDialogue(dialogueGraph);
             return;
         }
 
-        // Дефолтный диалог
-        //DialogueManager.GetInstance().EnterDialogueMode(_defaultDialogue);
-
-        //dialogueGraph = GetDialogueGraph(_defaultDialogue);
-        //_dialogueManager.StartDialogue(dialogueGraph);
+        dialogueGraph = GetDialogueGraph(_defaultDialogue);
+        _dialogueManager.StartDialogue(dialogueGraph);
     }
 
-    //private DialogueGraph GetDialogueGraph(string name) {
-    //    return this.GetComponents<DialogueGraph>().Where(t => t.DialogueName == name).FirstOrDefault();
-    //}
+    private DialogueGraph GetDialogueGraph(string name) {
+        return this.GetComponents<DialogueGraph>().Where(t => t.GetName() == name).FirstOrDefault();
+    }
 
     private bool CanTriggerTask(QuestTask task, out string dialogue)
     {

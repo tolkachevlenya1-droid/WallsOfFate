@@ -9,6 +9,7 @@ public class AudienceSessionSpawner : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private Transform _dialogSpot;
     [SerializeField] private Transform _exitSpot;
+    [SerializeField] private DialogueManager _dialogueManager;
 
     /* ───── босс-НПС для каждого дня ───── */
     [Header("Main Quest Givers  (day 0 / day 1 / day 2)")]
@@ -58,7 +59,7 @@ public class AudienceSessionSpawner : MonoBehaviour
             return;
         }
 
-        DialogueManager.GetInstance().DialogueFinished += OnDialogueFinished;
+        _dialogueManager.OnFinished += OnDialogueFinished;
         SpawnNext();
     }
 
@@ -98,8 +99,8 @@ public class AudienceSessionSpawner : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (DialogueManager.HasInstance)
-            DialogueManager.GetInstance().DialogueFinished -= OnDialogueFinished;
+        //if (DialogueManager.HasInstance)
+        //    DialogueManager.GetInstance().DialogueFinished -= OnDialogueFinished;
 
         if (LoadingScreenManager.Instance != null)
             LoadingScreenManager.Instance.LoadingFinished -= OnLoadingClosed;

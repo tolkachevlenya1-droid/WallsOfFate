@@ -1,8 +1,9 @@
-using System.Collections;
+п»їusing System.Collections;
 using UnityEngine;
 
 public class MinigameStarter : MonoBehaviour
 {
+    #region PublicVariables
     [SerializeField] private GameObject _miniGame;
     [SerializeField] private GameObject _castle;
     [SerializeField] private GameObject _uiPannel;
@@ -12,13 +13,16 @@ public class MinigameStarter : MonoBehaviour
     [SerializeField] private GameObject _trainingPrefab;
     [SerializeField] private GameObject _bossPrefab;
     [SerializeField] private GameObject _startNewDayButt;
+    #endregion
 
+    #region PrivateVariables
     private GameObject _winPanel;
     private GameObject _losePanel;
 
     private bool _isMiniGameActive = false;
     private bool _isWaitingForMiniGame = false;
     private bool _canStartMiniGame = true;
+    #endregion
 
     private void Start()
     {
@@ -37,7 +41,7 @@ public class MinigameStarter : MonoBehaviour
 
             if (_winPanel == null || _losePanel == null)
             {
-                //Debug.LogWarning("WinPanel or LosePanel not found in _menu object.");
+                Debug.LogWarning("WinPanel or LosePanel not found in _menu object.");
             }
             else
             {
@@ -47,7 +51,7 @@ public class MinigameStarter : MonoBehaviour
         }
         else
         {
-            //Debug.LogWarning("_menu object is not assigned.");
+            Debug.LogWarning("_menu object is not assigned.");
         }
     }
 
@@ -56,16 +60,16 @@ public class MinigameStarter : MonoBehaviour
         if (!_canStartMiniGame || _isMiniGameActive || _isWaitingForMiniGame)
             return;
 
-        if (_bossPrefab == DialogueManager.GetInstance().PowerCheckPrefab) _startNewDayButt.SetActive(false);
+        //if (_bossPrefab == DialogueManager.GetInstance().PowerCheckPrefab) _startNewDayButt.SetActive(false);
 
-        DialogueManager dialogeManager = DialogueManager.GetInstance();
-        bool powerCheckStart = ((Ink.Runtime.BoolValue)dialogeManager.GetVariablesState("PowerCheckStart")).value;
+        //DialogueManager dialogeManager = DialogueManager.GetInstance();
+        //bool powerCheckStart = ((Ink.Runtime.BoolValue)dialogeManager.GetVariablesState("PowerCheckStart")).value;
 
-        if (!dialogeManager.DialogueIsPlaying && powerCheckStart)
-        {
-            StartMiniGame();
-            dialogeManager.SetVariableState("PowerCheckStart", false);
-        }
+        //if (!dialogeManager.DialogueIsPlaying && powerCheckStart)
+        //{
+        //    StartMiniGame();
+        //    dialogeManager.SetVariableState("PowerCheckStart", false);
+        //}
     }
 
     private void StartMiniGame()
@@ -81,7 +85,7 @@ public class MinigameStarter : MonoBehaviour
 
         AudioManager.GetInstance().StartMiniGameMusic();
 
-        // Деактивируем и сразу активируем мини-игру для "сброса"
+        // Р”РµР°РєС‚РёРІРёСЂСѓРµРј Рё СЃСЂР°Р·Сѓ Р°РєС‚РёРІРёСЂСѓРµРј РјРёРЅРё-РёРіСЂСѓ РґР»СЏ "СЃР±СЂРѕСЃР°"
         _miniGame.SetActive(false);
         _miniGame.SetActive(true);
 
@@ -96,15 +100,15 @@ public class MinigameStarter : MonoBehaviour
     }
 
     private IEnumerator EndMiniGameCoroutine(string winnerName, string loserName)
-    {// Обновляем ресурсы в зависимости от результата
+    {// РћР±РЅРѕРІР»СЏРµРј СЂРµСЃСѓСЂСЃС‹ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂРµР·СѓР»СЊС‚Р°С‚Р°
         _isMiniGameActive = false;
         _miniGame.SetActive(false);
         AudioManager.GetInstance().StopMiniGameMusic();
-        // Показываем результат
+        // РџРѕРєР°Р·С‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚
         GameObject resultPanel = winnerName == "Player" ? _winPanel : _losePanel;
-        if(winnerName != "Player" && DialogueManager.GetInstance().PowerCheckPrefab.name == _bossPrefab.name)
+        if(winnerName != "Player" /*&& DialogueManager.GetInstance().PowerCheckPrefab.name == _bossPrefab.name*/)
         {
-            GameResources.GameResources.ChangePeopleSatisfaction(-1000); // Уменьшаем PeopleSatisfaction
+            GameResources.GameResources.ChangePeopleSatisfaction(-1000); // РЈРјРµРЅСЊС€Р°РµРј PeopleSatisfaction
             GameObject objectToDestroy = GameObject.Find("Atash(clone)");
             if (objectToDestroy != null) {
                 Destroy(objectToDestroy);
@@ -112,21 +116,21 @@ public class MinigameStarter : MonoBehaviour
         }
         
         //else if (winnerName == "Player" && DialogueManager.GetInstance().PowerCheckPrefab.name.Contains("Atash"))
-        else if (winnerName == "Player" && DialogueManager.GetInstance().PowerCheckPrefab.name == _bossPrefab.name)
+        else if (winnerName == "Player" /*&& DialogueManager.GetInstance().PowerCheckPrefab.name == _bossPrefab.name*/)
         {
-            GameResources.GameResources.ChangePeopleSatisfaction(1000); // Уменьшаем PeopleSatisfaction
+            GameResources.GameResources.ChangePeopleSatisfaction(1000); // РЈРјРµРЅСЊС€Р°РµРј PeopleSatisfaction
             GameObject objectToDestroy = GameObject.Find("Atash(clone)");
             if (objectToDestroy != null) {
                 Destroy(objectToDestroy);
             }
         }
-        if (winnerName == "Player" && DialogueManager.GetInstance().PowerCheckPrefab != _trainingPrefab)
+        if (winnerName == "Player" /*&& DialogueManager.GetInstance().PowerCheckPrefab != _trainingPrefab*/)
         {
-            GameResources.GameResources.ChangeCastleStrength(10); // Увеличиваем CastleStrength
+            GameResources.GameResources.ChangeCastleStrength(10); // РЈРІРµР»РёС‡РёРІР°РµРј CastleStrength
         }
-        else if(winnerName != "Player" && DialogueManager.GetInstance().PowerCheckPrefab != _trainingPrefab)
+        else if(winnerName != "Player" /*&& DialogueManager.GetInstance().PowerCheckPrefab != _trainingPrefab*/)
         {
-            GameResources.GameResources.ChangeCastleStrength(-1); // Уменьшаем PeopleSatisfaction
+            GameResources.GameResources.ChangeCastleStrength(-1); // РЈРјРµРЅСЊС€Р°РµРј PeopleSatisfaction
         }
         if (resultPanel != null)
         {
@@ -137,12 +141,12 @@ public class MinigameStarter : MonoBehaviour
 
         
 
-        // Возвращаем основную камеру
+        // Р’РѕР·РІСЂР°С‰Р°РµРј РѕСЃРЅРѕРІРЅСѓСЋ РєР°РјРµСЂСѓ
         _switch.SwitchCamera();
         if (!_uiPannel.activeSelf) _uiPannel.SetActive(true);
         _castle.SetActive(true);
 
-        // Задержка перед возможностью повторного запуска
+        // Р—Р°РґРµСЂР¶РєР° РїРµСЂРµРґ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РїРѕРІС‚РѕСЂРЅРѕРіРѕ Р·Р°РїСѓСЃРєР°
         yield return new WaitForSeconds(1f);
         _canStartMiniGame = true;
     }

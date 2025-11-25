@@ -44,6 +44,8 @@ public class CatAI : MonoBehaviour
     [SerializeField] float arrivalDistance = 0.15f;   // ≥ stoppingDistance
     [SerializeField] float arrivalSpeedSqr = 0.0025f; // (≈0.05 м/с)²
 
+    [SerializeField] Transform _player;
+
     const float MinTargetDist = 0.25f;
     #endregion
 
@@ -56,7 +58,6 @@ public class CatAI : MonoBehaviour
     /* components */
     NavMeshAgent _agent;
     Animator _anim;
-    Transform _player;
 
     /* timers */
     float _stateTimer, _curiosityTimer, _cooldownTimer, _stuckTimer;
@@ -66,8 +67,6 @@ public class CatAI : MonoBehaviour
     float _pendingSpeed;
     State _afterTurnState;
 
-    /* DI */
-    [Inject] void Construct(PlayerMoveController pc) => _player = pc.transform;
 
     /* ──────────────────────────────────────────────────────────────── */
 

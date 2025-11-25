@@ -77,6 +77,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6b1691404282e6e49a5bdb28a7812531, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7360230237808890363}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6b1691404282e6e49a5bdb28a7812531, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3703439048360552820}
   m_SourcePrefab: {fileID: 100100000, guid: 6b1691404282e6e49a5bdb28a7812531, type: 3}
 --- !u!1 &6487916388078063443 stripped
 GameObject:
@@ -95,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0996432d9ec83764eab23e8d27b623a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultDialogue: StartDay/NPC6/NPC6
+  _defaultDialogue: Default
   _npcName: NPC6
   PowerCheckPrefab: {fileID: 0}
 --- !u!54 &3236855816230519408
@@ -202,7 +205,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7119323010903739852, guid: c297e275c45b0db4fa8c6c95a825b156, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 569cc1b8cde87c342a8f88bfb84406f0, type: 3}
+  m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 569cc1b8cde87c342a8f88bfb84406f0, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -305,3 +308,53 @@ MonoBehaviour:
   stepClip1: {fileID: 8300000, guid: 569cc1b8cde87c342a8f88bfb84406f0, type: 3}
   stepClip2: {fileID: 8300000, guid: cb08dd830ab07104d86c593912717494, type: 3}
   baseStepInterval: 0.5
+--- !u!114 &3703439048360552820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6487916388078063443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e5a0ef563608e7409ccc00b81b02432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueGraph
+  DialogueName: Default
+  sentences:
+  - id: 0
+    IsMainCharacter: 1
+    CharName: Magnat
+    Text: GGGG
+    NextNodeID: 1
+    isOption: 0
+    isAnswer: 0
+    StartMinigame: 0
+    Gold: 1
+    Food: 1
+    PeopleSatisfaction: 1
+    CastleStrength: 1
+  - id: 1
+    IsMainCharacter: 0
+    CharName: NPC
+    Text: GGGG
+    NextNodeID: 2
+    isOption: 0
+    isAnswer: 0
+    StartMinigame: 0
+    Gold: 1
+    Food: 1
+    PeopleSatisfaction: 1
+    CastleStrength: 1
+  - id: 1
+    IsMainCharacter: 1
+    CharName: Magnat
+    Text: GGGG
+    NextNodeID: -1
+    isOption: 0
+    isAnswer: 0
+    StartMinigame: 0
+    Gold: 1
+    Food: 1
+    PeopleSatisfaction: 1
+    CastleStrength: 1
