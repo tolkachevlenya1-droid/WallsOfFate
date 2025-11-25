@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -24,6 +24,11 @@ public class PlayerMoveController : MonoBehaviour
     [SerializeField] private float clickRunThreshold = 0.3f; // двойной клик
     [SerializeField] private float holdThreshold = 0.2f;     // follow курсора
 
+    [Header("Pitch Settings")]
+    [SerializeField] private float walkingPitch = 1f;
+    [SerializeField] private float runningPitch = 1.5f;
+    [SerializeField] private DialogueManager _dialogueManager;
+
     private bool isHoldMove;
     private bool isClickRun;
     private float lastClickTime = -1f;
@@ -39,9 +44,6 @@ public class PlayerMoveController : MonoBehaviour
     private readonly Dictionary<string, List<AudioClip>> sceneFootstepSounds = new();
     private AudioClip leftClip, rightClip;
 
-    [Header("Pitch Settings")]
-    [SerializeField] private float walkingPitch = 1f;
-    [SerializeField] private float runningPitch = 1.5f;
 
     private CharacterController characterController;
     private NavMeshAgent agent;
@@ -60,6 +62,7 @@ public class PlayerMoveController : MonoBehaviour
 
     private void Awake()
     {
+        _dialogueManager = DialogueManager.Instance;
         interactManager = GetComponent<InteractManager>();
         //if (!interactManager) Debug.LogError("PlayerMoveController: InteractManager missing!");
     }
@@ -111,7 +114,7 @@ public class PlayerMoveController : MonoBehaviour
     #region Mouse Input
     private void HandleMouseInput()
     {
-        if (DialogueManager.GetInstance()?.DialogueIsPlaying == true) return;
+        if (_dialogueManager.IsInDialogue  == true) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -171,9 +174,8 @@ public class PlayerMoveController : MonoBehaviour
     #region Movement Core
     private void HandleMovement()
     {
-        if (DialogueManager.GetInstance()?.DialogueIsPlaying == true)
-        {
-            moveDirection = new Vector3(0, moveDirection.y, 0);
+        if (_dialogueManager.IsInDialogue == true) { 
+        moveDirection = new Vector3(0, moveDirection.y, 0);
             characterController.Move(moveDirection * Time.deltaTime);
             agent.isStopped = true;
             return;
@@ -281,7 +283,7 @@ public class PlayerMoveController : MonoBehaviour
 
     private void UpdateFootstep()
     {
-        if (DialogueManager.GetInstance()?.DialogueIsPlaying == true) return;
+        if (_dialogueManager.IsInDialogue  == true) return;
         if (Vector3.Distance(transform.position, lastPosition) > 0.001f && !footstepSource.isPlaying)
             PlayFootstep();
     }

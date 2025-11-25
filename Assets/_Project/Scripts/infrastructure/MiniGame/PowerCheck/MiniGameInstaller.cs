@@ -55,13 +55,13 @@ public class MiniGameInstaller : MonoInstaller
         GameObject enemyPrefab = EnemyPrefab;
 
         // dsПроверяем, нужно ли использовать префаб из DialogueManager
-        if (DialogueManager.HasInstance && DialogueManager.GetInstance().PowerCheckPrefab != null)
-        {
-            if (enemyPrefab != DialogueManager.GetInstance().PowerCheckPrefab)
-            {
-                enemyPrefab = DialogueManager.GetInstance().PowerCheckPrefab;
-            }
-        }
+        //if (DialogueManager.HasInstance && DialogueManager.GetInstance().PowerCheckPrefab != null)
+        //{
+        //    if (enemyPrefab != DialogueManager.GetInstance().PowerCheckPrefab)
+        //    {
+        //        enemyPrefab = DialogueManager.GetInstance().PowerCheckPrefab;
+        //    }
+        //}
 
         InstantiateEnemies(enemyPrefab, SpawnPoint);
 
@@ -111,13 +111,13 @@ public class MiniGameInstaller : MonoInstaller
         GameObject enemyPrefab = EnemyPrefab;
 
         // dsПроверяем, нужно ли использовать префаб из DialogueManager
-        if (DialogueManager.HasInstance && DialogueManager.GetInstance().PowerCheckPrefab != null)
-        {
-            if (enemyPrefab != DialogueManager.GetInstance().PowerCheckPrefab)
-            {
-                enemyPrefab = DialogueManager.GetInstance().PowerCheckPrefab;
-            }
-        }
+        //if (DialogueManager.HasInstance && DialogueManager.GetInstance().PowerCheckPrefab != null)
+        //{
+        //    if (enemyPrefab != DialogueManager.GetInstance().PowerCheckPrefab)
+        //    {
+        //        enemyPrefab = DialogueManager.GetInstance().PowerCheckPrefab;
+        //    }
+        //}
 
         InstantiateEnemies(enemyPrefab, spawnPoint);
 

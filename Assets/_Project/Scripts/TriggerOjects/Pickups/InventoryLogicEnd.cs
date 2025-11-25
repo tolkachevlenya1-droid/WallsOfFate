@@ -177,7 +177,7 @@ public class InventoryLogicEnd : MonoBehaviour
             if(!quest.Evidence.DialogePlayed)
             {
                 _inventoryObj.SetActive(false);
-                DialogueManager.GetInstance().EnterDialogueMode(quest.Evidence.Dialoge);
+                //DialogueManager.GetInstance().EnterDialogueMode(quest.Evidence.Dialoge);
                 quest.Evidence.DialogePlayed = true;
             }
             else
