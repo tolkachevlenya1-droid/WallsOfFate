@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static EntryPoint;
 
 public class DialogueManager : MonoBehaviour {
     #region UI
@@ -48,10 +49,14 @@ public class DialogueManager : MonoBehaviour {
             _instance = value;
         }
     }
+
+    bool startMinigame;
+    MiniGameData miniGameData;
     #endregion
 
     #region Events
     public event Action OnFinished;
+    public event Action<MiniGameData> OnMiniGameStartRequested;
     #endregion
 
     private void Awake() {
@@ -69,6 +74,67 @@ public class DialogueManager : MonoBehaviour {
         }
     }
 
+    #region PannelsUI
+    private void ShiftAllPanelsUp() {
+        if (spawnedPanels.Count < 1) return;
+
+        for (int i = 0; i < spawnedPanels.Count; i++) {
+            GameObject panel = spawnedPanels[i];
+            if (panel != null) {
+                RectTransform rectTransform = panel.GetComponent<RectTransform>();
+                if (rectTransform != null) {
+                    Vector2 newPosition = Vector2.zero;
+                    newPosition.y += rectTransform.anchoredPosition.y + panelSpacing;
+                    rectTransform.anchoredPosition = newPosition;
+                }
+            }
+        }
+    }
+
+    private void RecalculatePanelPositions() {
+        float currentY = 0f;
+
+        for (int i = 0; i < spawnedPanels.Count; i++) {
+            GameObject panel = spawnedPanels[i];
+            if (panel != null) {
+                RectTransform rectTransform = panel.GetComponent<RectTransform>();
+                if (rectTransform != null) {
+                    rectTransform.anchoredPosition = new Vector2(0, currentY);
+                    currentY += rectTransform.rect.height + panelSpacing;
+                }
+            }
+        }
+    }
+
+    private void ClearSpawnedPanels() {
+        foreach (GameObject panel in spawnedPanels) {
+            if (panel != null) {
+                Destroy(panel);
+            }
+        }
+        spawnedPanels.Clear();
+    }
+    #endregion
+
+    #region MiniGame
+
+    void ConfigMiniGame() {
+        if (_currentDialogue.sentences[CurrentID].StartMinigame) {
+            startMinigame = true;
+            miniGameData = GetParamsOfMinigame();
+        }
+
+    }
+
+    MiniGameData GetParamsOfMinigame() {
+        DialogueGraph.MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MinigameType;
+        Dictionary<string, object> minigameParams = _currentDialogue.sentences[CurrentID].MinigameParams;
+
+        return new MiniGameData(minigameType, minigameParams);
+    }
+    #endregion
+
+    #region MainLogic
     private void Start() {
         if (DialogueUI != null) {
             DialogueUI.SetActive(false);
@@ -151,54 +217,14 @@ public class DialogueManager : MonoBehaviour {
         return false;
     }
 
-    private void ShiftAllPanelsUp() {
-        if (spawnedPanels.Count < 1) return; 
-
-        for (int i = 0; i < spawnedPanels.Count; i++) {
-            GameObject panel = spawnedPanels[i];
-            if (panel != null) {
-                RectTransform rectTransform = panel.GetComponent<RectTransform>();
-                if (rectTransform != null) {
-                    Vector2 newPosition =Vector2.zero;
-                    newPosition.y += rectTransform.anchoredPosition.y + panelSpacing;
-                    rectTransform.anchoredPosition = newPosition;
-                }
-            }
-        }
-    }
-
-    private void RecalculatePanelPositions() {
-        float currentY = 0f;
-
-        for (int i = 0; i < spawnedPanels.Count; i++) {
-            GameObject panel = spawnedPanels[i];
-            if (panel != null) {
-                RectTransform rectTransform = panel.GetComponent<RectTransform>();
-                if (rectTransform != null) {
-                    rectTransform.anchoredPosition = new Vector2(0, currentY);
-                    currentY += rectTransform.rect.height + panelSpacing;
-                }
-            }
-        }
-    }
-
-    private void ClearSpawnedPanels() {
-        foreach (GameObject panel in spawnedPanels) {
-            if (panel != null) {
-                Destroy(panel);
-            }
-        }
-        spawnedPanels.Clear();
-    }
-
-    public void TakeOption(int OptionId) {
+     public void TakeOption(int OptionId) {
         if (!OptionChosed && OptionId >= 0 && OptionId < OptionIDs.Count) {
             DisplayNextSentence(OptionIDs[OptionId]);
             OptionChosed = true;
 
             foreach (var b in optionButtons) {
                 if (b != null && b.transform.childCount > 0) {
-                    Text buttonText = b.transform.GetChild(0).GetComponent<Text>();
+                    TMP_Text buttonText = b.transform.GetChild(0).GetComponent<TMP_Text>();
                     if (buttonText != null) {
                         buttonText.text = "";
                     }
@@ -211,7 +237,6 @@ public class DialogueManager : MonoBehaviour {
     public void DisplayNextSentence() {
         if (!SentenceWriten || _currentDialogue == null) return;
 
-        UpdateResources();
 
         int nextNodeId = -1;
         if (CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count) {
@@ -225,6 +250,8 @@ public class DialogueManager : MonoBehaviour {
 
         CurrentID = nextNodeId;
 
+        UpdateResources();
+
         if (CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count &&
             _currentDialogue.sentences[CurrentID].isOption) {
             OptionChosed = false;
@@ -232,7 +259,6 @@ public class DialogueManager : MonoBehaviour {
             return;
         }
 
-        // 5. ТЕПЕРЬ создаём панель для АКТУАЛЬНОГО CurrentID
         bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePannel);
 
         if (pannelSpawned) {
@@ -280,6 +306,8 @@ public class DialogueManager : MonoBehaviour {
                 }
 
                 CurrentID = NodeID;
+                ConfigMiniGame();
+
                 SentenceWriten = false;
 
                 if (nameText != null && CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count) {
@@ -302,7 +330,7 @@ public class DialogueManager : MonoBehaviour {
 
         foreach (var b in optionButtons) {
             if (b != null && b.transform.childCount > 0) {
-                Text buttonText = b.transform.GetChild(0).GetComponent<Text>();
+                TMP_Text buttonText = b.transform.GetChild(0).GetComponent<TMP_Text>();
                 if (buttonText != null) {
                     buttonText.text = "";
                 }
@@ -315,7 +343,7 @@ public class DialogueManager : MonoBehaviour {
                 _currentDialogue.sentences[OptionalID].isOption) {
                 if (i < optionButtons.Count && optionButtons[i] != null &&
                     optionButtons[i].transform.childCount > 0) {
-                    Text buttonText = optionButtons[i].transform.GetChild(0).GetComponent<Text>();
+                    TMP_Text buttonText = optionButtons[i].transform.GetChild(0).GetComponent<TMP_Text>();
                     if (buttonText != null) {
                         buttonText.text = _currentDialogue.sentences[OptionalID].Text;
                     }
@@ -339,6 +367,7 @@ public class DialogueManager : MonoBehaviour {
         IsInDialogue = false;
         CurrentID = 0;
         OnFinished?.Invoke();
+        OnMiniGameStartRequested?.Invoke(miniGameData);
     }
 
     IEnumerator TypeSentence(string _Sentence, TMP_Text textComponent) {
@@ -355,6 +384,8 @@ public class DialogueManager : MonoBehaviour {
 
     private void OnDestroy() {
         OnFinished = null;
+        OnMiniGameStartRequested = null;
         ClearSpawnedPanels();
     }
+    #endregion
 }

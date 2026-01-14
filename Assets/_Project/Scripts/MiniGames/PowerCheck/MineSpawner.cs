@@ -1,12 +1,10 @@
-﻿using Assets.Scripts.MiniGames.PowerCheck.GridCoordinates;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
-public class MineSpawner : MonoBehaviour
-{
+public class MineSpawner : MonoBehaviour, Unity.VisualScripting.IInitializable {
     // =====================================================================
     // Spawn area settings
     // =====================================================================
@@ -15,18 +13,21 @@ public class MineSpawner : MonoBehaviour
     public Vector2 spawnAreaSize = new Vector2(10, 10);
 
     [SerializeField] private Transform parentTransform;
-    [SerializeField] private List<Transform> _forbiddenSpawnPoints;
-    [SerializeField, Tooltip("Минимальная дистанция до запрещённых точек (игрок, враг и т.д.) при спавне")] private float allowedDistanseForForrbidenSpawnPoint = 2f;
-    [SerializeField, Tooltip("Y‑координата, на которой появляются мины")] private float yPositionOfSpawnMine = 0f;
+    [SerializeField, Tooltip("Минимальная дистанция до запрещённых точек (игрок, враг и т.д.) при спавне")]
+    private float allowedDistanseForForrbidenSpawnPoint = 2f;
+    [SerializeField, Tooltip("Y‑координата, на которой появляются мины")]
+    private float yPositionOfSpawnMine = 0f;
 
     [Header("Proximity Rules")]
-    [SerializeField, Tooltip("Минимальная дистанция между любыми двумя минами при спавне")] private float minDistanceBetweenMines = 1.25f;
+    [SerializeField, Tooltip("Минимальная дистанция между любыми двумя минами при спавне")]
+    private float minDistanceBetweenMines = 1.25f;
 
     // =====================================================================
     // Spawn visual
     // =====================================================================
     [Header("Spawn Animation")]
-    [SerializeField, Tooltip("Длительность анимации появления (сек.)")] private float spawnAnimationDuration = 0.35f;
+    [SerializeField, Tooltip("Длительность анимации появления (сек.)")]
+    private float spawnAnimationDuration = 0.35f;
 
     // =========================================
     // Prefab scale cache
@@ -46,8 +47,7 @@ public class MineSpawner : MonoBehaviour
     // Per‑type spawn rules
     // =====================================================================
     [System.Serializable]
-    private class MineSpawnConfig
-    {
+    private class MineSpawnConfig {
         public int initialCount;
         public int maxCount;
         public Vector2 spawnIntervalRange;
@@ -89,28 +89,30 @@ public class MineSpawner : MonoBehaviour
     private MineList buffMineList;
     private MineList debuffMineList;
 
-    private GridCordinates _gridCordinates;
+    private List<Transform> _forbiddenSpawnPoints = new List<Transform>();
+
+    private bool _isInitialized = false;
 
     public IReadOnlyList<Mine> HealMines => healMineList.Minelist;
     public IReadOnlyList<Mine> DamageMines => damageMineList.Minelist;
     public IReadOnlyList<Mine> BuffMines => buffMineList.Minelist;
     public IReadOnlyList<Mine> DebuffMines => debuffMineList.Minelist;
 
-    [Inject]
-    private void Construct([Inject(Id = "Player")] PlayerMove player,
-                           [Inject(Id = "Enemy")] AIController enemy)
-    {
-        _forbiddenSpawnPoints.Add(player.transform);
-        _forbiddenSpawnPoints.Add(enemy.transform);
+    // Dependency injection через метод
+    public void SetForbiddenSpawnPoints(List<Transform> forbiddenPoints) {
+        _forbiddenSpawnPoints.Clear();
+        _forbiddenSpawnPoints.AddRange(forbiddenPoints);
     }
 
-    //private void Awake()
-    //{
-    //    InitializeMines();
-    //}
+    public void Initialize() {
+        if (_isInitialized) return;
 
-    private void InitializeMines()
-    {
+        InitializeMines();
+        StartingSpawn();
+        _isInitialized = true;
+    }
+
+    private void InitializeMines() {
         if (healMineList == null) healMineList = new MineList(healConfig.maxCount);
         if (damageMineList == null) damageMineList = new MineList(damageConfig.maxCount);
         if (buffMineList == null) buffMineList = new MineList(buffConfig.maxCount);
@@ -124,56 +126,38 @@ public class MineSpawner : MonoBehaviour
         CacheOriginalScales();
     }
 
-    public void ClearAllMineObjects()
-    {
-        // Удаляем все объекты для каждого типа мин
+    public void ClearAllMineObjects() {
         ClearMineObjects(healMineList);
         ClearMineObjects(damageMineList);
         ClearMineObjects(buffMineList);
         ClearMineObjects(debuffMineList);
 
-        // Очищаем кеш масштабов
         _originalScales.Clear();
     }
 
-    private void ClearMineObjects(MineList mineList)
-    {
-        foreach (var mine in mineList.Minelist)
-        {
-            if (mine.MineGameObject != null)
-            {
+    private void ClearMineObjects(MineList mineList) {
+        if (mineList == null) return;
+
+        foreach (var mine in mineList.Minelist) {
+            if (mine.MineGameObject != null) {
                 Destroy(mine.MineGameObject);
             }
         }
         mineList.Minelist.Clear();
     }
 
-    private void CacheOriginalScales()
-    {
+    private void CacheOriginalScales() {
+        _originalScales.Clear();
         foreach (var mine in EnumerateAllMines())
             _originalScales[mine] = mine.MineGameObject.transform.localScale;
     }
 
-    private void OnEnable()
-    {
-        InitializeMines();
-        StartingSpawn();
-    }
-
-    private void OnDisable()
-    {
+    private void OnDisable() {
+        StopAllCoroutines();
         ClearAllMineObjects();
-        //StopAllCoroutines(); // Останавливаем все корутины спавна
     }
 
-    private void Start()
-    {
-        StartingSpawn();
-       
-    }
-
-    private void StartingSpawn()
-    {
+    private void StartingSpawn() {
         SpawnInitialMines(healMineList, 0, healConfig.initialCount);
         SpawnInitialMines(damageMineList, 1, damageConfig.initialCount);
         SpawnInitialMines(buffMineList, 2, buffConfig.initialCount);
@@ -185,48 +169,37 @@ public class MineSpawner : MonoBehaviour
         StartCoroutine(SpawnRoutine(debuffMineList, 3, debuffConfig));
     }
 
-    private IEnumerator SpawnRoutine(MineList list, uint typeId, MineSpawnConfig cfg)
-    {
+    private IEnumerator SpawnRoutine(MineList list, uint typeId, MineSpawnConfig cfg) {
         yield return null;
-        while (true)
-        {
+        while (true) {
             yield return new WaitForSeconds(cfg.RandomInterval);
 
             int activeCount = CountActiveMines(list);
-            if (typeId == 3 && activeCount >= cfg.maxCount)
-            {
-                // при достижении лимита ловушек — удаляем одну и спавним новую
+            if (typeId == 3 && activeCount >= cfg.maxCount) {
                 Mine toRemove = FindActiveMine(list);
-                if (toRemove != null)
-                {
+                if (toRemove != null) {
                     toRemove.SetActive(false);
                 }
             }
-            else if (activeCount >= cfg.maxCount)
-            {
+            else if (activeCount >= cfg.maxCount) {
                 continue;
             }
 
             Mine candidate = FindInactiveMine(list);
-            if (candidate == null && list.Minelist.Count < cfg.maxCount)
-            {
+            if (candidate == null && list.Minelist.Count < cfg.maxCount) {
                 AddMineByType(typeId);
                 candidate = list.Minelist[^1];
             }
-            if (candidate != null && !candidate.MineGameObject.activeSelf)
-            {
+            if (candidate != null && !candidate.MineGameObject.activeSelf) {
                 SpawnMineAnimated(candidate);
             }
         }
     }
 
-    private void SpawnInitialMines(MineList list, uint typeId, int amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
+    private void SpawnInitialMines(MineList list, uint typeId, int amount) {
+        for (int i = 0; i < amount; i++) {
             Mine m = FindInactiveMine(list);
-            if (m == null)
-            {
+            if (m == null) {
                 AddMineByType(typeId);
                 m = list.Minelist[^1];
             }
@@ -234,8 +207,7 @@ public class MineSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnMineAnimated(Mine mine)
-    {
+    private void SpawnMineAnimated(Mine mine) {
         Vector3 pos = FindValidPosition();
         mine.MineGameObject.transform.position = pos;
         if (parentTransform != null) mine.MineGameObject.transform.SetParent(parentTransform);
@@ -244,8 +216,7 @@ public class MineSpawner : MonoBehaviour
         mine.MineGameObject.transform.localScale = Vector3.zero;
 
         Collider[] colliders = mine.MineGameObject.GetComponentsInChildren<Collider>();
-        foreach (var collider in colliders)
-        {
+        foreach (var collider in colliders) {
             collider.enabled = false;
         }
 
@@ -253,11 +224,9 @@ public class MineSpawner : MonoBehaviour
         StartCoroutine(AnimateScale(mine.MineGameObject.transform, targetScale));
     }
 
-    private IEnumerator AnimateScale(Transform t, Vector3 to)
-    {
+    private IEnumerator AnimateScale(Transform t, Vector3 to) {
         float elapsed = 0f;
-        while (elapsed < spawnAnimationDuration)
-        {
+        while (elapsed < spawnAnimationDuration) {
             elapsed += Time.deltaTime;
             float p = Mathf.Clamp01(elapsed / spawnAnimationDuration);
             t.localScale = Vector3.Lerp(Vector3.zero, to, EasingOutBack(p));
@@ -266,31 +235,27 @@ public class MineSpawner : MonoBehaviour
         t.localScale = to;
 
         Collider[] colliders = t.gameObject.GetComponentsInChildren<Collider>();
-        foreach (var collider in colliders)
-        {
+        foreach (var collider in colliders) {
             collider.enabled = true;
         }
     }
-    private float EasingOutBack(float t)
-    {
+
+    private float EasingOutBack(float t) {
         const float c1 = 1.70158f;
         const float c3 = c1 + 1f;
         return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
     }
 
-    private Mine FindActiveMine(MineList list)
-    {
+    private Mine FindActiveMine(MineList list) {
         foreach (var m in list.Minelist)
             if (m.MineGameObject.activeSelf) return m;
         return null;
     }
 
-    private Vector3 FindValidPosition()
-    {
+    private Vector3 FindValidPosition() {
         Vector3 cand;
         int safe = 0;
-        do
-        {
+        do {
             int x = Mathf.RoundToInt(Random.Range(CenterPoint.position.x - spawnAreaSize.x * 0.5f, CenterPoint.position.x + spawnAreaSize.x * 0.5f));
             int z = Mathf.RoundToInt(Random.Range(CenterPoint.position.z - spawnAreaSize.y * 0.5f, CenterPoint.position.z + spawnAreaSize.y * 0.5f));
             cand = new Vector3(x, yPositionOfSpawnMine, z);
@@ -300,51 +265,58 @@ public class MineSpawner : MonoBehaviour
         return cand;
     }
 
-    private bool IsPositionFree(Vector3 pos)
-    {
-        GameProcess gameProcessor = GameObject.FindGameObjectWithTag("GameProcessor").GetComponent<GameProcess>();
-        if (!_forbiddenSpawnPoints[1] && gameProcessor) _forbiddenSpawnPoints[1] = gameProcessor.EnemyChar.transform;
+    private bool IsPositionFree(Vector3 pos) {
         foreach (var f in _forbiddenSpawnPoints)
-            if (Vector3.Distance(pos, f.position) < allowedDistanseForForrbidenSpawnPoint) return false;
+            if (f != null && Vector3.Distance(pos, f.position) < allowedDistanseForForrbidenSpawnPoint)
+                return false;
+
         foreach (var m in EnumerateAllMines())
             if (m.MineGameObject.activeSelf && Vector3.Distance(pos, m.MineGameObject.transform.position) < minDistanceBetweenMines)
                 return false;
         return true;
     }
 
-    private IEnumerable<Mine> EnumerateAllMines()
-    {
-        foreach (var m in healMineList.Minelist) yield return m;
-        foreach (var m in damageMineList.Minelist) yield return m;
-        foreach (var m in buffMineList.Minelist) yield return m;
-        foreach (var m in debuffMineList.Minelist) yield return m;
+    private IEnumerable<Mine> EnumerateAllMines() {
+        if (healMineList != null)
+            foreach (var m in healMineList.Minelist) yield return m;
+        if (damageMineList != null)
+            foreach (var m in damageMineList.Minelist) yield return m;
+        if (buffMineList != null)
+            foreach (var m in buffMineList.Minelist) yield return m;
+        if (debuffMineList != null)
+            foreach (var m in debuffMineList.Minelist) yield return m;
     }
 
-    private int CountActiveMines(MineList list)
-    {
+    private int CountActiveMines(MineList list) {
         int c = 0;
         foreach (var m in list.Minelist) if (m.MineGameObject.activeSelf) c++;
         return c;
     }
 
-    private Mine FindInactiveMine(MineList list)
-    {
+    private Mine FindInactiveMine(MineList list) {
         foreach (var m in list.Minelist) if (!m.MineGameObject.activeSelf) return m;
         return null;
     }
 
-    private void AddMineByType(uint type)
-    {
-        switch (type)
-        {
-            case 0: healMineList.AddMine(HealMinePrefab, healCooldown, (n, cd, go) => new HealMine(n, cd, go)); break;
-            case 1: damageMineList.AddMine(DamageMinePrefab, damageCooldown, (n, cd, go) => new DamageMine(n, cd, go)); break;
+    private void AddMineByType(uint type) {
+        switch (type) {
+            case 0:
+                healMineList.AddMine(HealMinePrefab, healCooldown, (n, cd, go) => new HealMine(n, cd, go));
+                break;
+            case 1:
+                damageMineList.AddMine(DamageMinePrefab, damageCooldown, (n, cd, go) => new DamageMine(n, cd, go));
+                break;
             case 2:
-                buffMineList.AddMine(BuffMinePrefab, speedBufCooldown, speedBuf, buffTime, buffTimeBeforeExplosion, buffRadiusOfExplosion, buffDamage,
-                        (n, cd, go, s, cd2, tbe, r, d) => new BuffSpeedMine(n, cd, go, s, cd2, tbe, r, d, false)); break;
+                buffMineList.AddMine(BuffMinePrefab, speedBufCooldown, speedBuf, buffTime, buffTimeBeforeExplosion,
+                    buffRadiusOfExplosion, buffDamage,
+                    (n, cd, go, s, cd2, tbe, r, d) => new BuffSpeedMine(n, cd, go, s, cd2, tbe, r, d, false));
+                break;
             case 3:
-                debuffMineList.AddMine(DebuffMinePrefab, speedDebufCooldown, speedDebuf, debuffTime, debuffTimeBeforeExplosion, debuffRadiusOfExplosion, debuffDamage,
-                        (n, cd, go, s, cd2, tbe, r, d) => new BuffSpeedMine(n, cd, go, s, cd2, tbe, r, d, true)); break;
+                debuffMineList.AddMine(DebuffMinePrefab, speedDebufCooldown, speedDebuf, debuffTime, debuffTimeBeforeExplosion,
+                    debuffRadiusOfExplosion, debuffDamage,
+                    (n, cd, go, s, cd2, tbe, r, d) => new BuffSpeedMine(n, cd, go, s, cd2, tbe, r, d, true));
+                break;
         }
+        CacheOriginalScales();
     }
 }

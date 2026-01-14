@@ -47,15 +47,6 @@ public class AIController : MonoBehaviour
     private int _countDam, _countHeal, _countBuff;
     private bool _initialized = false;
 
-    #region DI
-    [Inject]
-    private void Construct([Inject(Id = "Player")] PlayerMove player)
-    {
-        _playerTf = player.transform;
-        _playerStats = player.GetComponent<MiniGamePlayer>();
-    }
-    #endregion
-
     // ───────────────────────── LIFECYCLE ─────────────────────────
     private void Awake()
     {
@@ -64,29 +55,17 @@ public class AIController : MonoBehaviour
 
     private void RefreshFields()
     {
-        if (!_playerStats || !_playerTf || !_mineSpawner || !_thisStats || !_agent)
-        {
-            GameObject gameProcessor = GameObject.FindGameObjectWithTag("GameProcessor");
-            if (gameProcessor != null)
-            {
-                // Получаем компонент GameProcess (предполагая, что он есть на объекте)
-                GameProcess gameProcess = gameProcessor.GetComponent<GameProcess>();
-
-                if (gameProcess != null && gameProcess.Player != null)
-                {
-                    // Получаем компоненты из Player
-                    if (!_playerStats) _playerStats = gameProcess.Player.GetComponent<MiniGamePlayer>();
-                    if (!_playerTf) _playerTf = gameProcess.Player.transform;
-                }
-                else
-                {
-                    //Debug.LogError("Не удалось найти GameProcess или Player в GameProcessor");
-                }
-            }
-        }
         if (!_mineSpawner) _mineSpawner = FindObjectOfType<MineSpawner>();
         if (!_thisStats) _thisStats = GetComponent<MiniGamePlayer>();
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
+
+        if (!_playerStats || !_playerTf) {
+            PlayerMove player = FindObjectOfType<PlayerMove>();
+            if (player != null) {
+                _playerTf = player.transform;
+                _playerStats = player.GetComponent<MiniGamePlayer>();
+            }
+        }
     }
 
     private void Start()

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -11,7 +11,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float _runDefaultSpeed = 6.0f;
     [SerializeField] private float _runSpeed = 6.0f;
     [SerializeField] private float _rotationSpeed = 20f;
-    [SerializeField] private Transform _cameraTrnsform;
+    [SerializeField] private Transform _cameraTransform;
     [SerializeField] private MiniGamePlayer _characteristics;
 
     private Rigidbody _rb;
@@ -19,14 +19,15 @@ public class PlayerMove : MonoBehaviour
     private bool _underDebuff;
     private GameObject _debuffEffect;
 
-    [Inject]
-    private void Construct(Transform cameraTransform)
-    {
-        _cameraTrnsform = cameraTransform;
-    }
-
     private void Awake()
     {
+        if (_cameraTransform == null) {
+            GameObject cameraObj = GameObject.FindGameObjectWithTag("PowerCheckCamera");
+            if (cameraObj != null) {
+                _cameraTransform = cameraObj.transform;
+            }
+        }
+
         _rb = GetComponent<Rigidbody>();
 
         _rb.useGravity = false;
@@ -39,7 +40,7 @@ public class PlayerMove : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_cameraTrnsform) _cameraTrnsform = GameObject.FindGameObjectWithTag("PowerCheckCamera").transform;
+        if (!_cameraTransform) _cameraTransform = GameObject.FindGameObjectWithTag("PowerCheckCamera").transform;
 
         if (_underDebuff && _debuffEffect != null)
         {
@@ -98,7 +99,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveDirection = Vector3.zero;
 
         // ��������� ���� �� ���������� ������
-        float cameraAngle = _cameraTrnsform.eulerAngles.y * Mathf.Deg2Rad;
+        float cameraAngle = _cameraTransform.eulerAngles.y * Mathf.Deg2Rad;
 
         // ���������� ������������������ ��������
         float sinAngle = Mathf.Sin(cameraAngle);
