@@ -6,26 +6,15 @@ using UnityEngine.UI;
 
 namespace Game
 {
-
-    public class ButtonsController : MonoBehaviour
+    public class InputController : MonoBehaviour
     {
-        public static ButtonsController Instance { get; private set; }
-
-        [SerializeField] private GameObject firstButton;
-
+        public GameObject firstButton;
         // Интервал, в течение которого повторные нажатия Enter/Space/E игнорируются
-        [SerializeField] private float submitCooldown = 1f;
+        public float submitCooldown = 1f;
+
         private float lastSubmitTime = -Mathf.Infinity;
-
         private bool canAcceptInput = true;
-
         private float blockInputUntil = 0f;
-
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
-        }
 
         private void OnEnable()
         {

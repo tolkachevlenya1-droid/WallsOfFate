@@ -1,16 +1,11 @@
-using Ink.Parsed;
-using Newtonsoft.Json;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static LocalizationManager;
 
 namespace Game
 {
-
     public class LocalizedAnimation : MonoBehaviour
     {
         [Header("Localization for load text")]
@@ -30,85 +25,6 @@ namespace Game
         private string currentLanguage;
         private string localisedLoading;
         private string localisedContionue;
-
-        private void OnEnable()
-        {
-            currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-            LoadLocalization();
-        }
-
-        private void ChangeLocalisation(List<LocalizationItem> localisationData)
-        {
-            try
-            {
-                foreach (LocalizationItem item in localisationData)
-                {
-                    if (keys[0] == item.key)
-                    {
-                        localisedLoading = item.value;
-                    }
-                    else
-                    {
-                        localisedContionue = item.value;
-                    }
-                }
-
-                ////Debug.Log($"Локализация загружена: {localisationData.Count} записей");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"Ошибка парсинга JSON: {e.Message}");
-            }
-        }
-
-        private void LoadLocalization()
-        {
-            List<LocalizationItem> localisationData = null;
-            bool flowControl = ParseLocalisationFile(out localisationData);
-            if (!flowControl)
-            {
-                return;
-            }
-
-            ChangeLocalisation(localisationData);
-        }
-
-        private bool ParseLocalisationFile(out List<LocalizationItem> localisationData)
-        {
-            localisationData = null;
-            if (currentLanguage == null)
-                currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-
-            string result = currentLanguage.Replace("\\", "").Replace("/", "");
-            string path = $"Localization/{result}/ui/{localizationFileName}";
-
-            TextAsset jsonFile = Resources.Load<TextAsset>(path);
-
-            if (jsonFile == null)
-            {
-                //Debug.LogError($"Файл локализации не найден: {path}");
-
-                if (currentLanguage != "en")
-                {
-                    string fallbackPath = $"Localization/en/ui/{localizationFileName}";
-                    jsonFile = Resources.Load<TextAsset>(fallbackPath);
-
-                    if (jsonFile == null)
-                    {
-                        Debug.LogError($"Fallback файл локализации не найден: {fallbackPath}");
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            List<LocalizationItem> data = JsonConvert.DeserializeObject<List<LocalizationItem>>(jsonFile.text);
-            localisationData = data;
-
-            return true;
-        }
 
         private void Awake()
         {

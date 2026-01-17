@@ -33,9 +33,6 @@ namespace Game
             // Убираем текущее выделение, затем выбираем кнопку «Подтвердить»
             EventSystem.current.SetSelectedGameObject(null);
             confirmButton.Select();
-
-            if (ButtonsController.Instance != null)
-                ButtonsController.Instance.BlockInputFor(1f);
         }
 
         public void HideExitPanel()

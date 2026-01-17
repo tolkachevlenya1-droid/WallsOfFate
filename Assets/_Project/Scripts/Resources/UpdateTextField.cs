@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
-using static LocalizationManager;
-
 namespace Game
 {
     public class UpdateTextField : MonoBehaviour

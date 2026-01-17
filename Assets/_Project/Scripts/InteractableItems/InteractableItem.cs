@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static LocalizationManager;
 
 namespace Game
 {
@@ -22,7 +21,6 @@ namespace Game
         public string message = "+1 resource";
         public string Key = "key";
         public string localizationFileName = "intaractive-items";
-        [SerializeField] private SettingsMenu settingsMenu;
 
         [Header("Floating Text")]
         public GameObject floatingTextPrefab;
@@ -39,20 +37,11 @@ namespace Game
         private bool _hasBeenUsed = false;
         public bool HasBeenUsed => _hasBeenUsed;
 
-        private string currentLanguage;
-
         void Awake()
         {
             var go = GameObject.FindGameObjectWithTag("Player");
             if (go) _player = go.transform;
             else Debug.LogError("Player not found Ч please tag the player object as 'Player'.");
-
-            if (settingsMenu != null)
-            {
-                settingsMenu.OnLanguageChanged += OnLanguageChanged;
-            }
-            currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-            LoadLocalization();
 
             CheckUsability();
         }
@@ -60,83 +49,6 @@ namespace Game
         private void Update()
         {
             CheckUsability();
-        }
-
-        private void OnLanguageChanged(string languageValue)
-        {
-            string newLanguage = languageValue;
-
-            if (newLanguage != currentLanguage)
-            {
-                currentLanguage = newLanguage;
-                LoadLocalization();
-            }
-        }
-
-        private void LoadLocalization()
-        {
-            List<LocalizationItem> localisationData = null;
-            bool flowControl = ParseLocalisationFile(out localisationData);
-            if (!flowControl)
-            {
-                return;
-            }
-
-            ChangeLocalisation(localisationData);
-        }
-
-        private void ChangeLocalisation(List<LocalizationItem> localisationData)
-        {
-            try
-            {
-                foreach (var item in localisationData)
-                {
-                    if (item.key == Key) message = item.value;
-                }
-
-                ////Debug.Log($"Ћокализаци€ загружена: {localisationData.Count} записей");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"ќшибка парсинга JSON: {e.Message}");
-            }
-        }
-
-        private bool ParseLocalisationFile(out List<LocalizationItem> localisationData)
-        {
-            localisationData = null;
-            if (settingsMenu == null)
-                currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-
-            string result = currentLanguage.Replace("\\", "").Replace("/", "");
-            string path = $"Localization/{result}/ui/{localizationFileName}";
-
-            TextAsset jsonFile = UnityEngine.Resources.Load<TextAsset>(path);
-
-            if (jsonFile == null)
-            {
-                //Debug.LogError($"‘айл локализации не найден: {path}");
-
-                if (currentLanguage != "en")
-                {
-                    string fallbackPath = $"Localization/en/ui/{localizationFileName}";
-                    jsonFile = UnityEngine.Resources.Load<TextAsset>(fallbackPath);
-
-                    if (jsonFile == null)
-                    {
-                        Debug.LogError($"Fallback файл локализации не найден: {fallbackPath}");
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            List<LocalizationItem> data = JsonConvert.DeserializeObject<List<LocalizationItem>>(jsonFile.text);
-            localisationData = data;
-
-            return true;
         }
 
         private void CheckUsability()
@@ -161,7 +73,6 @@ namespace Game
                 }
             }
         }
-
         void OnMouseUpAsButton()
         {
             if (_hasBeenUsed) return;
@@ -192,8 +103,6 @@ namespace Game
             string scene = SceneManager.GetActiveScene().name;
             InteractableItemCollection.SetItemState(scene, gameObject.name, false);
         }
-
-
 
         public void Interact()
         {

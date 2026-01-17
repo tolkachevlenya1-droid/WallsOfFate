@@ -402,7 +402,6 @@ GameObject:
   - component: {fileID: 59119507}
   - component: {fileID: 59119509}
   - component: {fileID: 59119508}
-  - component: {fileID: 59119510}
   m_Layer: 5
   m_Name: ExitConfirmationPanel
   m_TagString: Untagged
@@ -471,27 +470,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59119506}
   m_CullTransparentMesh: 1
---- !u!114 &59119510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59119506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: confirmations/game-exit-confirmation
-  localizedTexts:
-  - key: question
-    textField: {fileID: 1185098824}
-  - key: yes
-    textField: {fileID: 1658095815}
-  - key: no
-    textField: {fileID: 189650991}
-  settingsMenu: {fileID: 2001908986}
 --- !u!1 &71139321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,7 +2246,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231543}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -2495,7 +2473,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231543}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: HideNewGamePanel
         m_Mode: 1
@@ -2632,7 +2610,6 @@ GameObject:
   - component: {fileID: 317026025}
   - component: {fileID: 317026027}
   - component: {fileID: 317026026}
-  - component: {fileID: 317026029}
   - component: {fileID: 317026028}
   m_Layer: 5
   m_Name: 'WinScreenPanel '
@@ -2724,35 +2701,6 @@ MonoBehaviour:
     value: {fileID: 1956644774}
   - key: strength
     value: {fileID: 1518517627}
---- !u!114 &317026029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 317026024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: day/resources
-  localizedTexts:
-  - key: resources
-    textField: {fileID: 1756347449}
-  - key: money
-    textField: {fileID: 1158218610}
-  - key: food
-    textField: {fileID: 2041494031}
-  - key: satisfaction
-    textField: {fileID: 998643006}
-  - key: strength
-    textField: {fileID: 819387426}
-  - key: main-menu-butt
-    textField: {fileID: 704066463}
-  - key: new-game-butt
-    textField: {fileID: 1430414658}
-  settingsMenu: {fileID: 0}
 --- !u!1 &327843927
 GameObject:
   m_ObjectHideFlags: 0
@@ -3011,7 +2959,6 @@ GameObject:
   - component: {fileID: 438676238}
   - component: {fileID: 438676240}
   - component: {fileID: 438676239}
-  - component: {fileID: 438676241}
   - component: {fileID: 438676242}
   m_Layer: 5
   m_Name: EndDayScreenPanel
@@ -3081,35 +3028,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438676237}
   m_CullTransparentMesh: 1
---- !u!114 &438676241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 438676237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: day/resources
-  localizedTexts:
-  - key: resources
-    textField: {fileID: 1013494196}
-  - key: money
-    textField: {fileID: 1059342364}
-  - key: food
-    textField: {fileID: 2009119845}
-  - key: satisfaction
-    textField: {fileID: 631057155}
-  - key: strength
-    textField: {fileID: 27869690}
-  - key: back-butt
-    textField: {fileID: 205809696}
-  - key: continue-butt
-    textField: {fileID: 1789781901}
-  settingsMenu: {fileID: 0}
 --- !u!114 &438676242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4009,81 +3927,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 631057153}
   m_CullTransparentMesh: 1
---- !u!1 &635231539
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 635231542}
-  - component: {fileID: 635231541}
-  - component: {fileID: 635231540}
-  - component: {fileID: 635231543}
-  m_Layer: 0
-  m_Name: SaveLoadManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &635231540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635231539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26a7a3701aa6b12429d2e851ced6d3fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _button: {fileID: 2005583415}
---- !u!114 &635231541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635231539}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37447fe3f1772ff4381a8128f2837c99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  StartNewGame: 0
-  spawnPoint: {fileID: 0}
---- !u!4 &635231542
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635231539}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 399.69073, y: 620.21045, z: -143.8048}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &635231543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 635231539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71d2acf30b14b694981462033b216238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newGamePanel: {fileID: 939273030}
-  firstScene: CreateCharacter
 --- !u!1 &669280644
 GameObject:
   m_ObjectHideFlags: 0
@@ -4361,7 +4204,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231543}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: HideNewGamePanel
         m_Mode: 1
@@ -4651,7 +4494,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788727853}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: BackToMenuGame
         m_Mode: 1
@@ -4983,8 +4826,9 @@ GameObject:
   m_Component:
   - component: {fileID: 780228223}
   - component: {fileID: 780228224}
+  - component: {fileID: 780228225}
   m_Layer: 0
-  m_Name: UIManager
+  m_Name: MainMenuController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5017,14 +4861,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef0b75769b3335e41bc9354242ea2889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.MainMenuController
-  startGameButton: {fileID: 0}
-  continueGameButton: {fileID: 0}
-  settingsButton: {fileID: 0}
-  exitGameButton: {fileID: 0}
-  newGameConfirmationPanel: {fileID: 0}
-  exitConfirmationPanel: {fileID: 0}
-  settingsPanel: {fileID: 0}
-  firstScene: 
+  startGameButton: {fileID: 1222735117}
+  continueGameButton: {fileID: 2005583415}
+  settingsButton: {fileID: 1790417391}
+  exitGameButton: {fileID: 797224717}
+  newGameConfirmationPanel: {fileID: 939273030}
+  exitConfirmationPanel: {fileID: 59119506}
+  settingsPanel: {fileID: 2001908982}
+  firstScene: CreateCharacter
+--- !u!114 &780228225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780228220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3f02e5130cb044087695cbd25487de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.KeyboardController
+  firstButton: {fileID: 0}
+  submitCooldown: 1
 --- !u!1 &797224717
 GameObject:
   m_ObjectHideFlags: 0
@@ -5109,9 +4967,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ExitConfirmation, Assembly-CSharp
-        m_MethodName: ShowExitPanel
+      - m_Target: {fileID: 780228224}
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: OnExitButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5500,7 +5358,6 @@ GameObject:
   - component: {fileID: 823327448}
   - component: {fileID: 823327450}
   - component: {fileID: 823327449}
-  - component: {fileID: 823327451}
   m_Layer: 5
   m_Name: StartDayScreenPanel
   m_TagString: Untagged
@@ -5566,23 +5423,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823327447}
   m_CullTransparentMesh: 1
---- !u!114 &823327451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 823327447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: day/start
-  localizedTexts:
-  - key: inscription
-    textField: {fileID: 1485427598}
-  settingsMenu: {fileID: 0}
 --- !u!1 &835380726
 GameObject:
   m_ObjectHideFlags: 0
@@ -5877,6 +5717,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839481233}
   m_CullTransparentMesh: 1
+--- !u!1 &862555459
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 862555461}
+  - component: {fileID: 862555460}
+  m_Layer: 0
+  m_Name: SceneContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &862555460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862555459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Zenject::Zenject.SceneContext
+  _scriptableObjectInstallers: []
+  _monoInstallers: []
+  _installerPrefabs: []
+  _autoRun: 1
+  OnPreInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  _parentNewObjectsUnderSceneContext: 0
+  _contractNames: []
+  _parentContractNames: []
+--- !u!4 &862555461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862555459}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &939273030
 GameObject:
   m_ObjectHideFlags: 0
@@ -5888,9 +5791,8 @@ GameObject:
   - component: {fileID: 939273033}
   - component: {fileID: 939273032}
   - component: {fileID: 939273031}
-  - component: {fileID: 939273034}
   m_Layer: 5
-  m_Name: StartNewGameConfirmationPanel (1)
+  m_Name: StartNewGameConfirmationPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5957,27 +5859,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &939273034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939273030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: confirmations/new-game-confirmation
-  localizedTexts:
-  - key: question
-    textField: {fileID: 713017476}
-  - key: yes
-    textField: {fileID: 1499961576}
-  - key: no
-    textField: {fileID: 1541395023}
-  settingsMenu: {fileID: 2001908986}
 --- !u!1 &975182198
 GameObject:
   m_ObjectHideFlags: 0
@@ -6702,7 +6583,6 @@ GameObject:
   - component: {fileID: 1041258313}
   - component: {fileID: 1041258315}
   - component: {fileID: 1041258314}
-  - component: {fileID: 1041258317}
   - component: {fileID: 1041258316}
   m_Layer: 5
   m_Name: LoseScreenPanel
@@ -6793,35 +6673,6 @@ MonoBehaviour:
     value: {fileID: 1133934628}
   - key: strength
     value: {fileID: 2090776936}
---- !u!114 &1041258317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1041258312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: day/resources
-  localizedTexts:
-  - key: resources
-    textField: {fileID: 1612599879}
-  - key: money
-    textField: {fileID: 2016797881}
-  - key: food
-    textField: {fileID: 1554914465}
-  - key: satisfaction
-    textField: {fileID: 1254796481}
-  - key: strength
-    textField: {fileID: 152454215}
-  - key: main-menu-butt
-    textField: {fileID: 1804133040}
-  - key: new-game-butt
-    textField: {fileID: 1978818224}
-  settingsMenu: {fileID: 0}
 --- !u!1 &1059342362
 GameObject:
   m_ObjectHideFlags: 0
@@ -8017,9 +7868,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231543}
-        m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
-        m_MethodName: StartGameButton
+      - m_Target: {fileID: 780228224}
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: OnStartGameButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8631,7 +8482,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788727853}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -8919,52 +8770,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &1306707532
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1306707534}
-  - component: {fileID: 1306707533}
-  m_Layer: 0
-  m_Name: ButtonsController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1306707533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306707532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3f02e5130cb044087695cbd25487de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firstButton: {fileID: 1222735117}
-  submitCooldown: 1
---- !u!4 &1306707534
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306707532}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 238.42308, y: 251.44385, z: -12.833473}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1307953209
 GameObject:
   m_ObjectHideFlags: 0
@@ -9349,7 +9154,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788727853}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -9408,7 +9213,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1353863461}
-  - component: {fileID: 1353863460}
   m_Layer: 0
   m_Name: AudiencePool
   m_TagString: Untagged
@@ -9416,29 +9220,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1353863460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353863459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545d1e90ae28f23499714f58794fde5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _allNpcs:
-  - {fileID: 11400000, guid: 0e05ed43be3689c45a325f0026e53530, type: 2}
-  - {fileID: 11400000, guid: dd4ccf2de159381448db450eeabcb8a0, type: 2}
-  - {fileID: 11400000, guid: 8d49ac0b3e49b074ebbccadee6a8eadc, type: 2}
-  - {fileID: 11400000, guid: dcb3415764ac4b8478245614c5eda190, type: 2}
-  - {fileID: 11400000, guid: e7f9efc74a40aad41ba4834fd5234aeb, type: 2}
-  - {fileID: 11400000, guid: b2797fbb5aceb1c479eca09fb74edb87, type: 2}
-  - {fileID: 11400000, guid: a98585266c223da488af6e7b272cdefe, type: 2}
-  - {fileID: 11400000, guid: 754dc289c303acd4b9f457339bd726a6, type: 2}
-  - {fileID: 11400000, guid: 1604e6bc2e9a25548a43fce1c9c3b956, type: 2}
-  - {fileID: 11400000, guid: f948f1e70905efb429fb5f02bbb404f7, type: 2}
 --- !u!4 &1353863461
 Transform:
   m_ObjectHideFlags: 0
@@ -12300,7 +12081,6 @@ GameObject:
   - component: {fileID: 1671712613}
   - component: {fileID: 1671712612}
   - component: {fileID: 1671712611}
-  - component: {fileID: 1671712615}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -12399,29 +12179,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1671712615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1671712610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: main-meny
-  localizedTexts:
-  - key: settings
-    textField: {fileID: 2084949330}
-  - key: continue
-    textField: {fileID: 163844022}
-  - key: new-game
-    textField: {fileID: 2070464375}
-  - key: exit
-    textField: {fileID: 1889168454}
-  settingsMenu: {fileID: 2001908986}
 --- !u!1 &1686888473
 GameObject:
   m_ObjectHideFlags: 0
@@ -13033,7 +12790,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1788727852}
   - component: {fileID: 1788727851}
-  - component: {fileID: 1788727853}
   m_Layer: 0
   m_Name: LoadingManager
   m_TagString: Untagged
@@ -13076,20 +12832,6 @@ Transform:
   - {fileID: 1646453216}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1788727853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1788727850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71d2acf30b14b694981462033b216238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newGamePanel: {fileID: 107570652}
-  firstScene: 
 --- !u!1 &1789781899
 GameObject:
   m_ObjectHideFlags: 0
@@ -13327,9 +13069,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SettingsPanel, Assembly-CSharp
-        m_MethodName: ShowSettingsPanel
+      - m_Target: {fileID: 780228224}
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: OnSettingsButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -15126,7 +14868,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231543}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
@@ -15277,7 +15019,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1788727853}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
         m_MethodName: BackToMenuGame
         m_Mode: 1
@@ -15416,9 +15158,8 @@ GameObject:
   - component: {fileID: 2001908985}
   - component: {fileID: 2001908984}
   - component: {fileID: 2001908986}
-  - component: {fileID: 2001908987}
   m_Layer: 5
-  m_Name: SettingsPanel
+  m_Name: SettingsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15501,29 +15242,6 @@ MonoBehaviour:
   sliderSFX: {fileID: 1285647279}
   sliderUI: {fileID: 1712844315}
   languageDropdown: {fileID: 1974991139}
---- !u!114 &2001908987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2001908982}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966a08d86b67a394b951b05345ae9f08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
-  localizationFileName: settings
-  localizedTexts:
-  - key: sounds
-    textField: {fileID: 1694741603}
-  - key: music
-    textField: {fileID: 582504346}
-  - key: system
-    textField: {fileID: 183363507}
-  - key: language
-    textField: {fileID: 217824763}
-  settingsMenu: {fileID: 2001908986}
 --- !u!1 &2005583415
 GameObject:
   m_ObjectHideFlags: 0
@@ -15605,9 +15323,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 635231541}
-        m_TargetAssemblyTypeName: SaveLoadManager, Assembly-CSharp
-        m_MethodName: LoadGame
+      - m_Target: {fileID: 780228224}
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: OnContinueGameButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16015,7 +15733,6 @@ MonoBehaviour:
     \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u0430\u043D \u043A\u0438\u0440\u0438\u043B\u043B\u0438\u0446\u0435\u0439,
     \u043B\u0430\u0442\u0438\u043D\u0438\u0446\u0435\u0439 \u0438 \u0430\u0440\u0430\u0431\u0441\u043A\u043E\u0439
     \u0432\u044F\u0437\u044C\u044E."
-  localizationFileName: day/loading-screen
 --- !u!1 &2016797879
 GameObject:
   m_ObjectHideFlags: 0
@@ -17164,8 +16881,7 @@ SceneRoots:
   - {fileID: 1671712614}
   - {fileID: 780228223}
   - {fileID: 2135656550}
-  - {fileID: 635231542}
   - {fileID: 1788727852}
   - {fileID: 1353863461}
-  - {fileID: 1306707534}
   - {fileID: 229039179}
+  - {fileID: 862555461}
