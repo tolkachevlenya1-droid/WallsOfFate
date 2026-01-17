@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using Zenject;
 
@@ -23,6 +21,16 @@ namespace Game.UI
         public void Start()
         {
             Localize();
+        }
+
+        public void OnEnable()
+        {
+            lm.OnLanguageChanged += Localize;
+        }
+
+        public void OnDisable()
+        {
+            lm.OnLanguageChanged -= Localize;
         }
 
         public void Localize() 

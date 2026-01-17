@@ -1,36 +1,26 @@
-using UnityEngine;
-using UnityEngine.UI;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
 
 namespace Game.UI
 {
     public class SettingsMenuController : MonoBehaviour
     {
-        [SerializeField] private Slider sliderMusic;
-        [SerializeField] private Slider sliderSFX;
-        [SerializeField] private Slider sliderUI;
-        [SerializeField] private TMPro.TMP_Dropdown languageDropdown;
+        public Slider sliderMusic;
+        public Slider sliderSFX;
+        public Slider sliderUI;
+        public TMPro.TMP_Dropdown languageDropdown;
 
-        private string currentLanguage;
-        private Dictionary<string, List<Dictionary<string, string>>> languageConfig;
         private bool isLoading = false;
 
-        public event Action<string> OnLanguageChanged;
-
-        public string CurrentLanguage
+        private LocalizationManager lm;
+        [Inject]
+        public void Init(LocalizationManager lm)
         {
-            get => currentLanguage;
-            set
-            {
-                if (currentLanguage != value)
-                {
-                    currentLanguage = value;
-                    OnLanguageChanged?.Invoke(currentLanguage);
-                    InitializeLanguageDropdown();
-                }
-            }
+            this.lm = lm;
         }
 
         private void Start()
@@ -39,9 +29,7 @@ namespace Game.UI
             sliderSFX.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
             sliderUI.value = PlayerPrefs.GetFloat("UIVolume", 1f);
 
-            LoadLanguageConfig();
             InitializeLanguageDropdown();
-
             ApplySettings();
         }
 
@@ -53,31 +41,14 @@ namespace Game.UI
             }
         }
 
-        private void LoadLanguageConfig()
-        {
-            TextAsset configFile = Resources.Load<TextAsset>("Localization/languages");
-            if (configFile != null)
-            {
-                languageConfig = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(configFile.text);
-            }
-            else
-            {
-                Debug.LogError("Language config file not found!");
-            }
-
-            currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-        }
-
         private void InitializeLanguageDropdown()
         {
-            if (languageDropdown == null || languageConfig == null || !languageConfig.ContainsKey(currentLanguage)) return;
-
             isLoading = true;
             languageDropdown.ClearOptions();
 
             List<TMPro.TMP_Dropdown.OptionData> options = new();
 
-            List<Dictionary<string, string>> currentLanguageList = languageConfig[currentLanguage];
+            List<Dictionary<string, string>> currentLanguageList = lm.LocalizationConfig[lm.CurrentLanguage];
 
             foreach (var dict in currentLanguageList)
             {
@@ -104,7 +75,7 @@ namespace Game.UI
             {
                 foreach (var kvp in languageList[i])
                 {
-                    if (kvp.Value == currentLanguage)
+                    if (kvp.Value == lm.CurrentLanguage)
                     {
                         return i;
                     }
@@ -117,25 +88,17 @@ namespace Game.UI
         {
             if (isLoading) return;
 
-            if (languageConfig != null && languageConfig.ContainsKey(currentLanguage))
+            List<Dictionary<string, string>> currentLanguageList = lm.LocalizationConfig[lm.CurrentLanguage];
+
+            if (index < currentLanguageList.Count)
             {
-                List<Dictionary<string, string>> currentLanguageList = languageConfig[currentLanguage];
+                var selectedDict = currentLanguageList[index];
 
-                if (index < currentLanguageList.Count)
+                foreach (var kvp in selectedDict)
                 {
-                    var selectedDict = currentLanguageList[index];
-
-                    foreach (var kvp in selectedDict)
-                    {
-                        CurrentLanguage = kvp.Value;
-                        break;
-                    }                    
-
-                    PlayerPrefs.SetString("CurrentLanguage", CurrentLanguage);
-                    PlayerPrefs.Save();
-
-                    Debug.Log($"Language changed to: {CurrentLanguage}");
-                }
+                    lm.CurrentLanguage = kvp.Value;
+                    break;
+                }                    
             }
         }
 
@@ -152,11 +115,6 @@ namespace Game.UI
             PlayerPrefs.SetFloat("SFXVolume", sliderSFX.value);
             PlayerPrefs.SetFloat("UIVolume", sliderUI.value);
             PlayerPrefs.Save();
-        }
-
-        private void OnDestroy()
-        {
-            OnLanguageChanged = null;
         }
 
         public void HideSettingsMenu()

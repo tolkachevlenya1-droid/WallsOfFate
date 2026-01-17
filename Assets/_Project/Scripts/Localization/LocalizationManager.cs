@@ -15,10 +15,14 @@ namespace Game
             public string value;
         }
 
-        private readonly string localizationRoot = "Localization/";
+        private readonly string localizationRoot = "Localization/";        
         private readonly Dictionary<string, Dictionary<string, string>> localizationDictionary = new();
 
+        private Dictionary<string, List<Dictionary<string, string>>> localizationConfig;
+
         private string currentLanguage;
+
+        public event Action OnLanguageChanged;
 
         public LocalizationManager()
         {
@@ -27,15 +31,18 @@ namespace Game
             LoadLocalization();
         }
 
-        public void SetCurrentLanguage(string language)
-        { 
-            currentLanguage = language;
-            PlayerPrefs.SetString("CurrentLanguage", language);
-        }
+        public Dictionary<string, List<Dictionary<string, string>>> LocalizationConfig => localizationConfig;
 
-        public string GetCurrentLanguage()
+        public string CurrentLanguage
         {
-            return currentLanguage;
+            get => currentLanguage;
+            set
+            {
+                currentLanguage = value;
+                PlayerPrefs.SetString("CurrentLanguage", value);
+                PlayerPrefs.Save();
+                OnLanguageChanged.Invoke();
+            }
         }
 
         public Dictionary<string, string> CurrentLocalization => localizationDictionary[currentLanguage];
@@ -56,26 +63,19 @@ namespace Game
             {
                 if (!CurrentLocalization.ContainsKey(item.key))
                 {
-                    CurrentLocalization.Add(item.key, item.value);
+                    CurrentLocalization.Add(localizationPath + "/" + item.key, item.value);
                 }
             }
 
             if (CurrentLocalization.ContainsKey(path))
             {
                 return CurrentLocalization[path];
-            } else
+            } 
+            else
             {
                 throw new Exception($"Localization key not found: {path}");
             }
         }
-
-        public class LocalizedText
-        {
-            public string key;
-            public TMPro.TMP_Text textField;
-        }
-
-        public List<LocalizedText> localizedTexts = new();
 
         private void LoadLocalization()
         {
@@ -84,8 +84,8 @@ namespace Game
             {
                 throw new Exception("Languages file not found.");
             }
-            var languageList = JsonConvert.DeserializeObject<Dictionary<string, object>>(languages.text);
-            foreach (var lang in languageList.Keys)
+            localizationConfig = JsonConvert.DeserializeObject< Dictionary<string, List<Dictionary<string, string>>>>(languages.text);
+            foreach (var lang in localizationConfig.Keys)
             {
                 localizationDictionary.TryAdd(lang, new Dictionary<string, string>());                
             }
