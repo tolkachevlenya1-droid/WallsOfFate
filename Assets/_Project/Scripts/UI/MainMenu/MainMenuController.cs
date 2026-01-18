@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace Game.UI
 {
@@ -19,6 +19,14 @@ namespace Game.UI
         public string firstScene;
 
         public static event System.Action NewGameStarted;
+
+        private LoadingManager loadingManager;
+
+        [Inject]
+        public void Construct(LoadingManager loadingManager)
+        {
+            this.loadingManager = loadingManager;
+        }
 
         private void Awake()
         {
@@ -65,7 +73,7 @@ namespace Game.UI
 
             NewGameStarted?.Invoke();
 
-            LoadingScreenManager.Instance.LoadScene(firstScene);
+            loadingManager.LoadScene(firstScene);
         }
     }
 }

@@ -4,21 +4,16 @@ using TMPro;
 using System;
 using System.Collections;
 using UnityEngine.UI;
+using Newtonsoft.Json.Bson;
+using Zenject;
 
 namespace Game
 {
-
-    public class LoadingScreenManager : MonoBehaviour
+    public class LoadingScreenController : MonoBehaviour
     {
-        public static LoadingScreenManager Instance;
-
         public bool IsLoading { get; private set; }
-        public event Action LoadingStarted;
-        public event Action LoadingFinished;
         public event Action<float> LoadingProgressUpdated;
         public event Action WaitingForInputStarted;
-
-        private bool _startupIntroShown = false;
 
         private Coroutine _fadeCoroutine;
 
@@ -36,24 +31,20 @@ namespace Game
         private bool waitingForInput;
 
         [Header("Intro Screen (New Game)")]
-        public GameObject panelNewGameIntro;      // ваш новый экран интро при старте
+        public GameObject panelNewGameIntro;      // ваш новый экран интро при старте        
 
-        private void Awake()
+        private LoadingManager loadingManager;
+        [Inject]
+        private void Init(LoadingManager loadingManager)
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else { Destroy(gameObject); }
-
+            this.loadingManager = loadingManager;
         }
 
         private void Start()
         {
-            if (!_startupIntroShown && panelNewGameIntro != null)
+            if (!loadingManager.StartupIntroShown)
             {
-                _startupIntroShown = true;
+                loadingManager.StartupIntroShown = true;
                 StartCoroutine(ShowStartupIntro());
             }
         }
@@ -85,28 +76,13 @@ namespace Game
             ShowLoadingUI();
 
             IsLoading = true;
-            LoadingStarted?.Invoke();
+            //LoadingStarted?.Invoke();
 
             AudioManager.Instance.ActivateLoadingSnapshot();
             AudioManager.Instance.PlayLoadingMusic();
 
             StartCoroutine(LoadSceneAsync(sceneName, showStartDay: true));
         }
-
-        public void LoadScene(string sceneName)
-        {
-            targetSceneName = sceneName;
-            ShowLoadingUI();
-
-            IsLoading = true;
-            LoadingStarted?.Invoke();
-
-            AudioManager.Instance.ActivateLoadingSnapshot();
-            AudioManager.Instance.PlayLoadingMusic();
-
-            StartCoroutine(LoadSceneAsync(sceneName, showStartDay: false));
-        }
-
 
         private void ShowLoadingUI()
         {
@@ -178,7 +154,7 @@ namespace Game
 
             IsLoading = false;
 
-            LoadingFinished?.Invoke();
+            //LoadingFinished?.Invoke();
         }
 
         private IEnumerator ShowStartupIntro()

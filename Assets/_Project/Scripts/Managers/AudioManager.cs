@@ -190,9 +190,6 @@ public class AudioManager : MonoBehaviour
         if (_previousMusic != null)
             PlayMusic(_previousMusic);
     }
-
-
-
     public void ReloadVolumeSettings()
     {
         float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
@@ -203,5 +200,4 @@ public class AudioManager : MonoBehaviour
         SetVolume("Volume_SFX", sfxVolume);
         SetVolume("Volume_UI", uiVolume);
     }
-
 }

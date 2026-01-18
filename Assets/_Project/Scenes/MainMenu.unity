@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: 59119507}
   - component: {fileID: 59119509}
   - component: {fileID: 59119508}
+  - component: {fileID: 59119510}
   m_Layer: 5
   m_Name: ExitConfirmationPanel
   m_TagString: Untagged
@@ -470,6 +471,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59119506}
   m_CullTransparentMesh: 1
+--- !u!114 &59119510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59119506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaaecb713c350a94f8c30e5388fb9310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.ExitConfirmationPanelController
+  confirmButton: {fileID: 600446117}
+  declineButton: {fileID: 1496013622}
 --- !u!1 &71139321
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,6 +999,7 @@ GameObject:
   - component: {fileID: 163844021}
   - component: {fileID: 163844023}
   - component: {fileID: 163844022}
+  - component: {fileID: 163844024}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1109,6 +1125,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163844020}
   m_CullTransparentMesh: 1
+--- !u!114 &163844024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 163844020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/main-menu/continue
 --- !u!1 &173341063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,6 +1236,7 @@ GameObject:
   - component: {fileID: 183363506}
   - component: {fileID: 183363508}
   - component: {fileID: 183363507}
+  - component: {fileID: 183363509}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1332,6 +1362,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183363505}
   m_CullTransparentMesh: 1
+--- !u!114 &183363509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183363505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/settings/system
 --- !u!1 &189650989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1343,6 +1386,7 @@ GameObject:
   - component: {fileID: 189650990}
   - component: {fileID: 189650992}
   - component: {fileID: 189650991}
+  - component: {fileID: 189650993}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1468,6 +1512,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189650989}
   m_CullTransparentMesh: 1
+--- !u!114 &189650993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189650989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.LocalizedText
+  key: ui/confirmations/game-exit-confirmation/no
 --- !u!1 &195947105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,6 +1712,7 @@ GameObject:
   - component: {fileID: 217824762}
   - component: {fileID: 217824764}
   - component: {fileID: 217824763}
+  - component: {fileID: 217824765}
   m_Layer: 5
   m_Name: Language
   m_TagString: Untagged
@@ -1780,6 +1838,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217824761}
   m_CullTransparentMesh: 1
+--- !u!114 &217824765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217824761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/settings/language
 --- !u!1 &222757158
 GameObject:
   m_ObjectHideFlags: 0
@@ -3515,6 +3586,7 @@ GameObject:
   - component: {fileID: 582504345}
   - component: {fileID: 582504347}
   - component: {fileID: 582504346}
+  - component: {fileID: 582504348}
   m_Layer: 5
   m_Name: Music
   m_TagString: Untagged
@@ -3640,6 +3712,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582504344}
   m_CullTransparentMesh: 1
+--- !u!114 &582504348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 582504344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/settings/music
 --- !u!1 &600446114
 GameObject:
   m_ObjectHideFlags: 0
@@ -5522,19 +5607,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 835380730}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SettingsPanel, Assembly-CSharp
-        m_MethodName: HideSettingsPanel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &835380730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7584,6 +7657,7 @@ GameObject:
   - component: {fileID: 1185098823}
   - component: {fileID: 1185098825}
   - component: {fileID: 1185098824}
+  - component: {fileID: 1185098826}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7709,6 +7783,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1185098822}
   m_CullTransparentMesh: 1
+--- !u!114 &1185098826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185098822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.LocalizedText
+  key: ui/confirmations/game-exit-confirmation/question
 --- !u!1 &1196371928
 GameObject:
   m_ObjectHideFlags: 0
@@ -10611,7 +10698,7 @@ GameObject:
   - component: {fileID: 1525257511}
   - component: {fileID: 1525257515}
   m_Layer: 5
-  m_Name: LoadingScreenPanel
+  m_Name: LoadingPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10689,10 +10776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a63d7a514e58004f80727b82ff16712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizedAnimation
-  keys:
-  - continue-butt0
-  - continue-butt1
-  localizationFileName: day/loading-screen
   loadingText: {fileID: 1275772446}
   loadingImage: {fileID: 1471600082}
   finalSprite: {fileID: 21300000, guid: f43f4ed66919f7341b953a235f8ce2ed, type: 3}
@@ -11944,6 +12027,7 @@ GameObject:
   - component: {fileID: 1658095814}
   - component: {fileID: 1658095816}
   - component: {fileID: 1658095815}
+  - component: {fileID: 1658095817}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -12069,6 +12153,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658095813}
   m_CullTransparentMesh: 1
+--- !u!114 &1658095817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1658095813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.LocalizedText
+  key: ui/confirmations/game-exit-confirmation/yes
 --- !u!1 &1671712610
 GameObject:
   m_ObjectHideFlags: 0
@@ -12230,6 +12327,7 @@ GameObject:
   - component: {fileID: 1694741602}
   - component: {fileID: 1694741604}
   - component: {fileID: 1694741603}
+  - component: {fileID: 1694741605}
   m_Layer: 5
   m_Name: SFX
   m_TagString: Untagged
@@ -12355,6 +12453,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1694741601}
   m_CullTransparentMesh: 1
+--- !u!114 &1694741605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694741601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/settings/sounds
 --- !u!1 &1712844313
 GameObject:
   m_ObjectHideFlags: 0
@@ -12791,7 +12902,7 @@ GameObject:
   - component: {fileID: 1788727852}
   - component: {fileID: 1788727851}
   m_Layer: 0
-  m_Name: LoadingManager
+  m_Name: LoadingScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12806,15 +12917,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1788727850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82ef62140da2b9d458bcf4023961950f, type: 3}
+  m_Script: {fileID: 11500000, guid: 753ee7801ae497d4dac6a82b2222b6cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loadingScreen: {fileID: 1525257510}
   panelEndOfDay: {fileID: 438676237}
   panelStartOfDay: {fileID: 823327447}
   startDayDuration: 2
-  inputDelay: 4
-  finalSprite: {fileID: 21300000, guid: f43f4ed66919f7341b953a235f8ce2ed, type: 3}
+  inputDelay: 0.05
+  finalSprite: {fileID: 0}
   panelNewGameIntro: {fileID: 315544520}
 --- !u!4 &1788727852
 Transform:
@@ -13706,6 +13817,7 @@ GameObject:
   - component: {fileID: 1889168453}
   - component: {fileID: 1889168455}
   - component: {fileID: 1889168454}
+  - component: {fileID: 1889168456}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -13831,6 +13943,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1889168452}
   m_CullTransparentMesh: 1
+--- !u!114 &1889168456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889168452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/main-menu/exit
 --- !u!1 &1889743251
 GameObject:
   m_ObjectHideFlags: 0
@@ -15242,6 +15367,7 @@ MonoBehaviour:
   sliderSFX: {fileID: 1285647279}
   sliderUI: {fileID: 1712844315}
   languageDropdown: {fileID: 1974991139}
+  closeButton: {fileID: 835380726}
 --- !u!1 &2005583415
 GameObject:
   m_ObjectHideFlags: 0
@@ -16091,6 +16217,7 @@ GameObject:
   - component: {fileID: 2070464374}
   - component: {fileID: 2070464376}
   - component: {fileID: 2070464375}
+  - component: {fileID: 2070464377}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -16216,6 +16343,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070464373}
   m_CullTransparentMesh: 1
+--- !u!114 &2070464377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070464373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/main-menu/new-game
 --- !u!1 &2071210338
 GameObject:
   m_ObjectHideFlags: 0
@@ -16263,6 +16403,7 @@ GameObject:
   - component: {fileID: 2084949329}
   - component: {fileID: 2084949331}
   - component: {fileID: 2084949330}
+  - component: {fileID: 2084949332}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -16388,6 +16529,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084949328}
   m_CullTransparentMesh: 1
+--- !u!114 &2084949332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084949328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98afa0d574b53004cb75ce914136a79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.UI.LocalizedText
+  key: ui/main-menu/settings
 --- !u!1 &2090776934
 GameObject:
   m_ObjectHideFlags: 0

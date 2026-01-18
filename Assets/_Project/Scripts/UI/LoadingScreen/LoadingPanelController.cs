@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-namespace Game
+namespace Game.UI
 {
-    public class LocalizedAnimation : MonoBehaviour
+    public class LoadingPanelController : MonoBehaviour
     {
-        [Header("Localization for load text")]
-        [SerializeField] private List<string> keys;
-        [SerializeField] private string localizationFileName = "localization";
-
         [Header("UI Components")]
         public TMP_Text loadingText;
         public Image loadingImage;
@@ -22,31 +19,37 @@ namespace Game
 
         private UISpriteAnimator spriteAnimator;
         private Coroutine fadeCoroutine;
-        private string currentLanguage;
         private string localisedLoading;
-        private string localisedContionue;
+        private string localisedContinue;
+
+        private LocalizationManager localizationManager;
+        private LoadingManager loadingManager;
+
+        [Inject]
+        private void Construct(LoadingManager loadingManager, LocalizationManager localizationManager)
+        {
+            this.loadingManager = loadingManager;
+            this.localizationManager = localizationManager;
+            localisedLoading = localizationManager.GetLocalizedText("ui/day/loading-screen/continue-butt0");
+            localisedContinue = localizationManager.GetLocalizedText("ui/day/loading-screen/continue-butt1");
+        }
 
         private void Awake()
         {
-            currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-
             spriteAnimator = loadingImage.GetComponent<UISpriteAnimator>();
 
-            if (LoadingScreenManager.Instance != null)
-            {
-                LoadingScreenManager.Instance.LoadingStarted += OnLoadingStarted;
-                LoadingScreenManager.Instance.LoadingFinished += OnLoadingFinished;
-                LoadingScreenManager.Instance.WaitingForInputStarted += OnWaitingForInputStarted;
-            }
+            loadingManager.LoadingStarted += OnLoadingStarted;
+            loadingManager.LoadingFinished += OnLoadingFinished;
+            loadingManager.WaitingForInputStarted += OnWaitingForInputStarted;
         }
 
         private void OnDestroy()
         {
-            if (LoadingScreenManager.Instance != null)
+            if (loadingManager != null)
             {
-                LoadingScreenManager.Instance.LoadingStarted -= OnLoadingStarted;
-                LoadingScreenManager.Instance.LoadingFinished -= OnLoadingFinished;
-                LoadingScreenManager.Instance.WaitingForInputStarted -= OnWaitingForInputStarted;
+                loadingManager.LoadingStarted -= OnLoadingStarted;
+                loadingManager.LoadingFinished -= OnLoadingFinished;
+                loadingManager.WaitingForInputStarted -= OnWaitingForInputStarted;
             }
         }
 
@@ -96,7 +99,7 @@ namespace Game
                 loadingImage.sprite = finalSprite;
             }
 
-            loadingText.text = localisedContionue;
+            loadingText.text = localisedContinue;
 
             StartTextFade();
         }

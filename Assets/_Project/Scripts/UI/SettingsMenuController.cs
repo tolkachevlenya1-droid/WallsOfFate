@@ -13,12 +13,13 @@ namespace Game.UI
         public Slider sliderSFX;
         public Slider sliderUI;
         public TMPro.TMP_Dropdown languageDropdown;
+        public GameObject closeButton;
 
         private bool isLoading = false;
 
         private LocalizationManager lm;
         [Inject]
-        public void Init(LocalizationManager lm)
+        public void Construct(LocalizationManager lm)
         {
             this.lm = lm;
         }
@@ -28,6 +29,7 @@ namespace Game.UI
             sliderMusic.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
             sliderSFX.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
             sliderUI.value = PlayerPrefs.GetFloat("UIVolume", 1f);
+            closeButton.GetComponent<Button>().onClick.AddListener(HideSettingsMenu);
 
             InitializeLanguageDropdown();
             ApplySettings();

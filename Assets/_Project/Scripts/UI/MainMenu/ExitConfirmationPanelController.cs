@@ -3,51 +3,43 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.UI
 {
-
-    public class ExitConfirmation : MonoBehaviour
-    {
-        [SerializeField] private GameObject exitPanel;
-        [SerializeField] private Button confirmButton;  // кнопка подтверждения выхода
-
+    public class ExitConfirmationPanelController : MonoBehaviour
+    {        
+        public Button confirmButton;
+        public Button declineButton;
 
         private void Start()
         {
-            exitPanel.SetActive(false);
+            // назначаем обработчики кнопок
+            confirmButton.onClick.AddListener(QuitGame);
+            declineButton.onClick.AddListener(HideExitPanel);
         }
 
         private void Update()
         {
             // закрываем панель по Esc, если она уже открыта
-            if (exitPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            if (gameObject.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             {
                 HideExitPanel();
             }
         }
 
-        public void ShowExitPanel()
+        private void OnEnable()
         {
-            exitPanel.SetActive(true);
-
-            // Убираем текущее выделение, затем выбираем кнопку «Подтвердить»
+            // При открытии панели выделяем кнопку «Отмена» по умолчанию
             EventSystem.current.SetSelectedGameObject(null);
-            confirmButton.Select();
+            declineButton.Select();
         }
 
         public void HideExitPanel()
         {
-            exitPanel.SetActive(false);
+            gameObject.SetActive(false);
 
             // сброс фокуса, чтобы при закрытии панели ничего не осталось выделенным
             EventSystem.current.SetSelectedGameObject(null);
         }
-
-        public void QuitToMenuGame()
-        {
-            LoadingScreenManager.Instance.LoadScene("MainMenu");
-        }
-
         public void QuitGame()
         {
             Application.Quit();

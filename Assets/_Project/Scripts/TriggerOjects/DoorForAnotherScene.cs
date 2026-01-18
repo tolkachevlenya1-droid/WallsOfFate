@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Zenject;
 
 namespace Game
 {
@@ -8,6 +9,13 @@ namespace Game
         [SerializeField] string SceneName;
         [SerializeField] private Vector3 SpawnPosition; // Точка спавна в новой сцене
         [SerializeField] private Vector3 SpawnEulerAngles = Vector3.zero; // Углы Эйлера для поворота
+
+        private LoadingManager loadingManager;
+        [Inject]
+        public void Construct(LoadingManager loadingManager)
+        {
+            this.loadingManager = loadingManager;
+        }
 
         // Скрытое поле для Quaternion, вычисляемое на основе SpawnEulerAngles
         private Quaternion SpawnRotation => Quaternion.Euler(SpawnEulerAngles);
@@ -23,10 +31,9 @@ namespace Game
                 PlayerSpawnData.SpawnRotation = SpawnRotation;
 
                 // Вызываем событие для загрузки сцены
-                LoadingScreenManager.Instance.LoadScene(SceneName);
+                loadingManager.LoadScene(SceneName);
             }
         }
-
 
         public bool ShouldTrigger() {
             

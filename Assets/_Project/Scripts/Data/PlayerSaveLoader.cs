@@ -45,7 +45,6 @@ namespace Game.Data
 
     public static class PlayerSaveLoader
     {
-
         public static bool LoadData()
         {
             if (Repository.TryGetData("Player", out PlayerSaveData savedData))
@@ -55,7 +54,7 @@ namespace Game.Data
 
                 if (!string.IsNullOrEmpty(savedData.sceneName))
                 {
-                    LoadingScreenManager.Instance.LoadScene(savedData.sceneName);
+                    //LoadingScreenManager.Instance.LoadScene(savedData.sceneName);
                     Time.timeScale = 1;
                 }
                 return true;

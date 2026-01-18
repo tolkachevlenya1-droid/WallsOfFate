@@ -10,6 +10,7 @@ namespace Game
         public override void InstallBindings()
         {
             Container.Bind<LocalizationManager>().AsSingle().NonLazy();
+            Container.Bind<LoadingManager>().AsSingle().NonLazy();
         }
     }
 }

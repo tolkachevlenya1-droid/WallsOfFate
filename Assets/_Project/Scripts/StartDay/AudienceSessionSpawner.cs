@@ -1,6 +1,7 @@
 ﻿using Game.Quest;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace Game
 {
@@ -22,13 +23,19 @@ namespace Game
 
         /* ───────────────────────────────────────────────────────────── */
 
+        private LoadingManager loadingManager;
+        [Inject]
+        public void Construct(LoadingManager loadingManager)
+        {
+            this.loadingManager = loadingManager;
+        }
+
         private void Start()
         {
             // Если открыт loading-экран — дождаться его закрытия
-            if (LoadingScreenManager.Instance != null &&
-                LoadingScreenManager.Instance.IsLoading)
+            if (loadingManager.IsLoading)
             {
-                LoadingScreenManager.Instance.LoadingFinished += OnLoadingClosed;
+                loadingManager.LoadingFinished += OnLoadingClosed;
             }
             else
             {
@@ -38,7 +45,7 @@ namespace Game
 
         private void OnLoadingClosed()
         {
-            LoadingScreenManager.Instance.LoadingFinished -= OnLoadingClosed;
+            loadingManager.LoadingFinished -= OnLoadingClosed;
             PrepareQueueAndStart();
         }
 
@@ -96,16 +103,15 @@ namespace Game
         private void EndSession()
         {
             ////Debug.Log("<color=yellow>Приём окончен — переходим в MainRoom</color>");
-            LoadingScreenManager.Instance.LoadScene("MainRoom");
+            loadingManager.LoadScene("MainRoom");
         }
 
         private void OnDestroy()
         {
             if (DialogueManager.HasInstance)
                 DialogueManager.GetInstance().DialogueFinished -= OnDialogueFinished;
-
-            if (LoadingScreenManager.Instance != null)
-                LoadingScreenManager.Instance.LoadingFinished -= OnLoadingClosed;
+            
+            loadingManager.LoadingFinished -= OnLoadingClosed;
         }
     }
 

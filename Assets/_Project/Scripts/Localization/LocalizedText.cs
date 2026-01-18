@@ -13,7 +13,7 @@ namespace Game.UI
         private LocalizationManager lm;
 
         [Inject]
-        public void Init(LocalizationManager lm)
+        public void Construct(LocalizationManager lm)
         {
             this.lm = lm;
         }

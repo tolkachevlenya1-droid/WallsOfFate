@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Game
 {
@@ -16,22 +17,24 @@ namespace Game
         private bool canAcceptInput = true;
         private float blockInputUntil = 0f;
 
+        private LoadingManager loadingManager;
+
+        [Inject]
+        private void Init(LoadingManager loadingManager)
+        {
+            this.loadingManager = loadingManager;
+        }
+
         private void OnEnable()
         {
-            if (LoadingScreenManager.Instance != null)
-            {
-                LoadingScreenManager.Instance.LoadingStarted += OnLoadingStarted;
-                LoadingScreenManager.Instance.LoadingFinished += OnLoadingFinished;
-            }
+            loadingManager.LoadingStarted += OnLoadingStarted;
+            loadingManager.LoadingFinished += OnLoadingFinished;            
         }
 
         private void OnDisable()
         {
-            if (LoadingScreenManager.Instance != null)
-            {
-                LoadingScreenManager.Instance.LoadingStarted -= OnLoadingStarted;
-                LoadingScreenManager.Instance.LoadingFinished -= OnLoadingFinished;
-            }
+            loadingManager.LoadingStarted -= OnLoadingStarted;
+            loadingManager.LoadingFinished -= OnLoadingFinished;
         }
 
         private void OnLoadingStarted()
@@ -59,7 +62,7 @@ namespace Game
         {
             // Блокируем ввод, пока идёт загрузка или не истёк начальный delay
             if (!canAcceptInput ||
-                (LoadingScreenManager.Instance != null && LoadingScreenManager.Instance.IsLoading))
+                (loadingManager.IsLoading))
                 return;
 
             if (Time.unscaledTime < blockInputUntil)

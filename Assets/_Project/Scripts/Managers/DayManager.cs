@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Game
 {
@@ -12,13 +13,20 @@ namespace Game
         [Header("UI")]
         [SerializeField] private Button newDayButton;
 
+        private LoadingManager loadingManager;
+
+        [Inject]
+        public void Construct(LoadingManager loadingManager)
+        {
+            this.loadingManager = loadingManager;
+        }
+
         private void Awake()
         {
             if (newDayButton != null)
                 newDayButton.onClick.AddListener(ShowEndOfDay);
             //else
             //Debug.LogWarning("DayManager: newDayButton не назначена!");
-
         }
 
         private void Update()
@@ -27,7 +35,6 @@ namespace Game
         }
         public void CheckNewDayConditions()
         {
-
             // Ищем главный Prime-квест, у которого ВСЕ задачи отмечены IsDone == true
             var completedPrimeQuest = QuestCollection.GetAllQuestGroups()
                 .FirstOrDefault(q =>
@@ -40,7 +47,7 @@ namespace Game
 
         private void ShowEndOfDay()
         {
-            LoadingScreenManager.Instance.ShowEndOfDayPanel();
+            //loadingManager.ShowEndOfDayPanel();
         }
     }
 }
