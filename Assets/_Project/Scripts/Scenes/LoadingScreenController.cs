@@ -1,10 +1,10 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using TMPro;
+using Newtonsoft.Json.Bson;
 using System;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Newtonsoft.Json.Bson;
 using Zenject;
 
 namespace Game
@@ -14,6 +14,7 @@ namespace Game
         public bool IsLoading { get; private set; }
         public event Action<float> LoadingProgressUpdated;
         public event Action WaitingForInputStarted;
+        public event Action WaitingForInputEnded;
 
         private Coroutine _fadeCoroutine;
 
@@ -49,13 +50,43 @@ namespace Game
             }
         }
 
-        public void ShowEndOfDayPanel()
+        public void ActivateLoading(AsyncOperation operation)
+        {
+            AudioManager.Instance.ActivateLoadingSnapshot();
+            AudioManager.Instance.PlayLoadingMusic();
+
+            StartCoroutine(LoadingWait(operation));
+        }
+
+        private IEnumerator LoadingWait(AsyncOperation operation)
+        {
+            // Отслеживаем прогресс загрузки
+            while (!operation.isDone)
+            {
+                LoadingProgressUpdated?.Invoke(operation.progress);
+
+                if (operation.progress >= 0.9f)
+                {
+                    yield return new WaitForSeconds(inputDelay);
+
+                    // Уведомляем о начале ожидания ввода
+                    WaitingForInputStarted?.Invoke();
+                    waitingForInput = true;
+
+                    yield return StartCoroutine(WaitForUserInput(operation));
+                    yield break;
+                }
+                yield return null;
+            }
+        }
+
+        /*public void ShowEndOfDayPanel()
         {
             Time.timeScale = 0f;               // ставим игру на паузу
             panelEndOfDay.SetActive(true);
-        }
+        }*/
 
-        public void OnConfirmEndOfDay()
+        /*public void OnConfirmEndOfDay()
         {
             PlayerSpawnData.ClearData();
 
@@ -63,14 +94,14 @@ namespace Game
 
             panelEndOfDay.SetActive(false);
             BeginLoadWithStartOfDay("StartDay");
-        }
+        }*/
 
-        public void OnCancelEndOfDay()
+        /*public void OnCancelEndOfDay()
         {
             panelEndOfDay.SetActive(false);
-        }
+        }*/
 
-        public void BeginLoadWithStartOfDay(string sceneName)
+        /*public void BeginLoadWithStartOfDay(string sceneName)
         {
             targetSceneName = sceneName;
             ShowLoadingUI();
@@ -82,48 +113,22 @@ namespace Game
             AudioManager.Instance.PlayLoadingMusic();
 
             StartCoroutine(LoadSceneAsync(sceneName, showStartDay: true));
-        }
+        }*/
 
-        private void ShowLoadingUI()
+        /*private void ShowLoadingUI()
         {
             Time.timeScale = 1f;
             loadingScreen.SetActive(true);
             panelEndOfDay.SetActive(false);
-        }
+        }*/
 
-        private void StartTextFade()
+        /*private void StartTextFade()
         {
             if (_fadeCoroutine != null)
                 StopCoroutine(_fadeCoroutine);
-        }
+        }*/
 
-        private IEnumerator LoadSceneAsync(string sceneName, bool showStartDay)
-        {
-            var op = SceneManager.LoadSceneAsync(sceneName);
-            op.allowSceneActivation = false;
-
-            // Отслеживаем прогресс загрузки
-            while (!op.isDone)
-            {
-                LoadingProgressUpdated?.Invoke(op.progress);
-
-                if (op.progress >= 0.9f)
-                {
-                    yield return new WaitForSeconds(inputDelay);
-
-                    // Уведомляем о начале ожидания ввода
-                    WaitingForInputStarted?.Invoke();
-                    waitingForInput = true;
-
-                    yield return StartCoroutine(WaitForUserInput(showStartDay, op));
-                    yield break;
-                }
-                yield return null;
-            }
-        }
-
-
-        private IEnumerator WaitForUserInput(bool showStartDay, AsyncOperation op)
+        private IEnumerator WaitForUserInput(AsyncOperation op)
         {
             while (!Input.anyKeyDown) yield return null;
             waitingForInput = false;
@@ -132,11 +137,13 @@ namespace Game
                 StopCoroutine(_fadeCoroutine);
 
             waitingForInput = false;
-
+            
             AudioManager.Instance.ReloadVolumeSettings();
             AudioManager.Instance.ChangeMusicForScene(targetSceneName);
 
-            if (showStartDay && panelStartOfDay != null)
+            WaitingForInputEnded?.Invoke();
+
+            /*if (showStartDay && panelStartOfDay != null)
             {
                 panelStartOfDay.SetActive(true);
                 yield return new WaitForSeconds(startDayDuration);
@@ -148,13 +155,13 @@ namespace Game
             {
                 op.allowSceneActivation = true;
                 yield return new WaitUntil(() => op.isDone);
-            }
+            }*/
 
-            loadingScreen.SetActive(false);
+            // loadingScreen.SetActive(false);
 
-            IsLoading = false;
+            // IsLoading = false;
 
-            //LoadingFinished?.Invoke();
+            // LoadingFinished?.Invoke();
         }
 
         private IEnumerator ShowStartupIntro()

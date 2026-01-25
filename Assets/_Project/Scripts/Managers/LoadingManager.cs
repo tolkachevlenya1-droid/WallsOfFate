@@ -1,7 +1,9 @@
 ﻿using Game.Quest;
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -15,19 +17,37 @@ namespace Game
         public event Action<float> LoadingProgressUpdated;
         public event Action WaitingForInputStarted;
 
+        private readonly string loadingSceneName = "LoadingScene";
         public bool IsLoading { get; private set; }
-        public void LoadScene(string sceneName)
+        public void LoadSceneAsync(string sceneName)
         {
-            /*targetSceneName = sceneName;
-            ShowLoadingUI();
+            SceneManager.LoadScene(loadingSceneName);            
+
+            Scene loadingScene = SceneManager.GetActiveScene();
 
             IsLoading = true;
             LoadingStarted?.Invoke();
 
-            AudioManager.Instance.ActivateLoadingSnapshot();
-            AudioManager.Instance.PlayLoadingMusic();
+            var op = SceneManager.LoadSceneAsync(sceneName);
+            op.allowSceneActivation = false;
 
-            StartCoroutine(LoadSceneAsync(sceneName, showStartDay: false));*/
+            var controller = loadingScene.GetRootGameObjects()
+                .SelectMany(go => go.GetComponentsInChildren<LoadingScreenController>())
+                .First();
+
+            controller.ActivateLoading(op);
+            controller.WaitingForInputEnded += () =>
+            {
+                var loadedScene = SceneManager.GetSceneByName(sceneName);
+                SceneManager.SetActiveScene(loadedScene);
+                IsLoading = false;
+                LoadingFinished?.Invoke();
+            };
+        }
+
+        public void LoadScene(string sceneName)
+        {
+            SceneManager.LoadScene(sceneName);
         }
     }
 }
