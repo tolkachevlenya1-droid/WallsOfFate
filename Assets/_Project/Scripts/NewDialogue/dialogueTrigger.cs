@@ -2,18 +2,21 @@
 using UnityEngine;
 using static DialogueDatabase;
 
-public class dialogueTrigger : MonoBehaviour
+namespace Game
 {
-
-    [SerializeField] private GameObject dialogueManager;
-
-    private void OnTriggerStay(Collider other)
+    public class DialogueTrigger : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            DialogueGraph dialogueGraph = this.GetComponents<DialogueGraph>().Where(t => t.GetName() == name).FirstOrDefault();
-            dialogueManager.GetComponent<DialogueManager>().StartDialogue(dialogueGraph);
 
+        [SerializeField] private GameObject dialogueManager;
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                DialogueGraph dialogueGraph = this.GetComponents<DialogueGraph>().Where(t => t.GetName() == name).FirstOrDefault();
+                dialogueManager.GetComponent<DialogueManager>().StartDialogue(dialogueGraph);
+            }
         }
     }
 }
+

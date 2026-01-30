@@ -1,9 +1,8 @@
-﻿using Quest;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
+using Game.Quest;
+using Resources = UnityEngine.Resources;
 
 public class InventoryLogicEnd : MonoBehaviour
 {

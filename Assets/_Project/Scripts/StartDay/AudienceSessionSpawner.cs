@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Quest;
+using Game.Quest;
+using Game;
+using Zenject;
 
 public class AudienceSessionSpawner : MonoBehaviour
 {
@@ -20,23 +22,16 @@ public class AudienceSessionSpawner : MonoBehaviour
 
     /* ───────────────────────────────────────────────────────────── */
 
-    private void Start()
+    private LoadingManager _loadingManager;
+
+    [Inject]
+    private void Construct(LoadingManager loadingManager)
     {
-        // Если открыт loading-экран — дождаться его закрытия
-        if (LoadingScreenManager.Instance != null &&
-            LoadingScreenManager.Instance.IsLoading)
-        {
-            LoadingScreenManager.Instance.LoadingFinished += OnLoadingClosed;
-        }
-        else
-        {
-            PrepareQueueAndStart();
-        }
+        _loadingManager = loadingManager;
     }
 
-    private void OnLoadingClosed()
+    private void Start()
     {
-        LoadingScreenManager.Instance.LoadingFinished -= OnLoadingClosed;
         PrepareQueueAndStart();
     }
 
@@ -94,15 +89,6 @@ public class AudienceSessionSpawner : MonoBehaviour
     private void EndSession()
     {
         ////Debug.Log("<color=yellow>Приём окончен — переходим в MainRoom</color>");
-        LoadingScreenManager.Instance.LoadScene("MainRoom");
-    }
-
-    private void OnDestroy()
-    {
-        //if (DialogueManager.HasInstance)
-        //    DialogueManager.GetInstance().DialogueFinished -= OnDialogueFinished;
-
-        if (LoadingScreenManager.Instance != null)
-            LoadingScreenManager.Instance.LoadingFinished -= OnLoadingClosed;
+        this._loadingManager.LoadSceneAsync("MainRoom");
     }
 }

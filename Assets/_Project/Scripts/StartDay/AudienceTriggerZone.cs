@@ -8,7 +8,7 @@ namespace Game
     {
         [SerializeField] private Transform throne;
 
-        private void OnTriggerEnter(Collider other)
+       /* private void OnTriggerEnter(Collider other)
         {
             // ищем скрипт диалога на вошедшем объекте
             DialogueTrigger dlg = other.GetComponent<DialogueTrigger>();
@@ -56,6 +56,6 @@ namespace Game
         {
             yield return new WaitForSeconds(time);
             dlg.Triggered();
-        }
+        }*/
     }
 }

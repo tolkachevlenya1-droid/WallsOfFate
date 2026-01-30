@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace GameResources
+namespace Game
 {
     public class ResourcesUI : MonoBehaviour
     {
@@ -37,17 +37,17 @@ namespace GameResources
         #endregion
 
         private void Awake() {
-            GameResources.GoldChanged += OnGoldChanged;
-            GameResources.FoodChanged += OnFoodChanged;
-            GameResources.PeopleSatisfactionChanged += OnPeopleSatisfactionChanged;
-            GameResources.CastleStrengthChanged += OnCastleStrengthChanged;
+            Player.Resources.GoldChanged += OnGoldChanged;
+            Player.Resources.FoodChanged += OnFoodChanged;
+            Player.Resources.PeopleSatisfactionChanged += OnPeopleSatisfactionChanged;
+            Player.Resources.CastleStrengthChanged += OnCastleStrengthChanged;
         }
 
         private void OnDestroy() {
-            GameResources.GoldChanged -= OnGoldChanged;
-            GameResources.FoodChanged -= OnFoodChanged;
-            GameResources.PeopleSatisfactionChanged -= OnPeopleSatisfactionChanged;
-            GameResources.CastleStrengthChanged -= OnCastleStrengthChanged;
+            Player.Resources.GoldChanged -= OnGoldChanged;
+            Player.Resources.FoodChanged -= OnFoodChanged;
+            Player.Resources.PeopleSatisfactionChanged -= OnPeopleSatisfactionChanged;
+            Player.Resources.CastleStrengthChanged -= OnCastleStrengthChanged;
         }
 
         #region Unity lifecycle
@@ -75,10 +75,10 @@ namespace GameResources
         #region Updating helpers
         private void UpdateAllResources(bool forceUpdate = false)
         {
-            UpdateResource(ref lastGold, GameResources.Gold, goldText, forceUpdate);
-            UpdateResource(ref lastFood, GameResources.Food, foodText, forceUpdate);
-            UpdateResource(ref lastSatisfaction, GameResources.PeopleSatisfaction, satisfactionText, forceUpdate);
-            UpdateResource(ref lastStrength, GameResources.CastleStrength, strengthText, forceUpdate);
+            UpdateResource(ref lastGold, Player.Resources.Gold, goldText, forceUpdate);
+            UpdateResource(ref lastFood, Player.Resources.Food, foodText, forceUpdate);
+            UpdateResource(ref lastSatisfaction, Player.Resources.PeopleSatisfaction, satisfactionText, forceUpdate);
+            UpdateResource(ref lastStrength, Player.Resources.CastleStrength, strengthText, forceUpdate);
         }
 
         private void UpdateResource(ref int lastValue,
