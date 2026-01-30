@@ -1,223 +1,187 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
-public class GameProcess : MonoBehaviour
-{
+public class GameProcess : MonoBehaviour {
+    [Header("References")]
     [SerializeField] private MineSpawner _mineSpawner;
-    public GameObject Player;
-    public GameObject Enemy;
+    [SerializeField] private PlayerMove _playerMove;
+    [SerializeField] private AIController _enemyController;
 
-    IReadOnlyList<Mine> _healMines;
-    IReadOnlyList<Mine> _damageMines;
-    IReadOnlyList<Mine> _buffMines;
-    IReadOnlyList<Mine> _debuffMines;
+    private IReadOnlyList<Mine> _healMines;
+    private IReadOnlyList<Mine> _damageMines;
+    private IReadOnlyList<Mine> _buffMines;
+    private IReadOnlyList<Mine> _debuffMines;
 
-    private PlayerMove PlayerMove;
-    private AIController EnemyMove;
+    public MiniGamePlayer PlayerChar { get; private set; }
+    public MiniGamePlayer EnemyChar { get; private set; }
 
-    public MiniGamePlayer PlayerChar;
-    public MiniGamePlayer EnemyChar;
+    private bool _isInitialized = false;
 
-    [Inject]
-    private void Construct([Inject(Id = "Player")] PlayerMove player, [Inject(Id = "Enemy")] AIController enemy)
-    {
-        UpdateReferences(player, enemy);
-    }
+    public event Action<bool> OnEndGame;
 
 
-    public void UpdateReferences(PlayerMove player, AIController enemy)
-    {
-        Player = player.gameObject;
-        Enemy = enemy.gameObject;
+    public void Initialize() {
+        if (_isInitialized) return;
 
-        PlayerMove = player;
-        EnemyMove = enemy;
+        if (_mineSpawner == null) _mineSpawner = FindObjectOfType<MineSpawner>();
+        if (_playerMove == null) _playerMove = FindObjectOfType<PlayerMove>();
+        if (_enemyController == null) _enemyController = FindObjectOfType<AIController>();
 
-        PlayerChar = Player.GetComponent<MiniGamePlayer>();
-        EnemyChar = Enemy.GetComponent<MiniGamePlayer>();
-
-        // Unsubscribe from previous events if they exist
-        if (PlayerChar != null && PlayerMove != null)
-        {
-            PlayerChar.OnSpeedChanged -= PlayerMove.ChangeSpeed;
-            PlayerChar.OnSpeedChanged += PlayerMove.ChangeSpeed;
-        }
-        if (EnemyChar != null && EnemyMove != null)
-        {
-            EnemyChar.OnSpeedChanged -= EnemyMove.ChangeSpeed;
-            EnemyChar.OnSpeedChanged += EnemyMove.ChangeSpeed;
-        }
-    }
-
-    public event Action<string, string> OnEndGame;
-
-    private void OnEnable()
-    {
         InitializeLogic();
+        _isInitialized = true;
     }
 
-    private void InitializeLogic()
-    {
-        _mineSpawner = GameObject.FindGameObjectWithTag("MineSpawner").GetComponent<MineSpawner>();
+    private void InitializeLogic() {
+        if (_playerMove == null || _enemyController == null) {
+            Debug.LogError("РќРµ СѓРґР°Р»РѕСЃСЊ РЅР°Р№С‚Рё PlayerMove РёР»Рё AIController!");
+            return;
+        }
 
-        // Получаем список мин с MineSpawner
+        PlayerChar = _playerMove.GetComponent<MiniGamePlayer>();
+        EnemyChar = _enemyController.GetComponent<MiniGamePlayer>();
+
+        if (PlayerChar != null && _playerMove != null) {
+            PlayerChar.OnSpeedChanged -= _playerMove.ChangeSpeed;
+            PlayerChar.OnSpeedChanged += _playerMove.ChangeSpeed;
+        }
+
+        if (EnemyChar != null && _enemyController != null) {
+            EnemyChar.OnSpeedChanged -= _enemyController.ChangeSpeed;
+            EnemyChar.OnSpeedChanged += _enemyController.ChangeSpeed;
+        }
+
+        // РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРєРё РјРёРЅ
         _healMines = _mineSpawner.HealMines;
         _damageMines = _mineSpawner.DamageMines;
         _buffMines = _mineSpawner.BuffMines;
         _debuffMines = _mineSpawner.DebuffMines;
 
-        // Для каждой мины подписываемся на событие
+        // РџРѕРґРїРёСЃС‹РІР°РµРјСЃСЏ РЅР° СЃРѕР±С‹С‚РёСЏ РјРёРЅ
         SubscribeToMineEvents(_healMines);
         SubscribeToMineEvents(_damageMines);
         SubscribeToMineEvents(_buffMines);
         SubscribeToMineEvents(_debuffMines);
     }
 
-    private void FixedUpdate()
-    {
-        SubscribeToMineEvents(_debuffMines);
-        if ((PlayerChar.Health <= 0 && !PlayerChar.isDead) || (EnemyChar.Health <= 0 && !EnemyChar.isDead))
-        {
-            string winner, loser;
-            if (PlayerChar.Health > 0)
-            {
-                winner = PlayerChar.Name;
-                loser = EnemyChar.Name;
+    private void FixedUpdate() {
+        if (!_isInitialized || PlayerChar == null || EnemyChar == null) return;
+
+        if ((PlayerChar.Health <= 0 && !PlayerChar.isDead) ||
+            (EnemyChar.Health <= 0 && !EnemyChar.isDead)) {
+            bool playerWin;
+            if (PlayerChar.Health > 0) {
+                playerWin = true;
             }
-            else
-            {
-                winner = EnemyChar.Name;
-                loser = PlayerChar.Name;
+            else {
+                playerWin = false;
             }
 
-            PlayerChar.Health = 0;
-            EnemyChar.Health = 0;
             PlayerChar.isDead = true;
             EnemyChar.isDead = true;
 
-            OnEndGame?.Invoke(winner, loser);
+            OnEndGame?.Invoke(playerWin);
         }
     }
 
-    private void SubscribeToMineEvents(IEnumerable<Mine> mines)
-    {
-        foreach (Mine mine in mines)
-        {
-            // Получаем префаб и компонент TriggerHandler
-            GameObject minePrefab = mine.MineGameObject;
-            TriggerHandler mineTriggerHandler = minePrefab.GetComponent<TriggerHandler>();
 
-            if (mineTriggerHandler != null)
-            {
-                // Подписываемся на событие OnMineTriggered
-                mineTriggerHandler.OnObjectEnteredTrigger += (triggeredObject, objectWhoTriger) =>
-                {
-                    HandleTriggeredObject(triggeredObject, objectWhoTriger);
-                };
+    private void SubscribeToMineEvents(IEnumerable<Mine> mines) {
+        if (mines == null) return;
+
+        foreach (Mine mine in mines) {
+            GameObject minePrefab = mine.MineGameObject;
+            if (minePrefab == null) continue;
+
+            TriggerHandler mineTriggerHandler = minePrefab.GetComponent<TriggerHandler>();
+            if (mineTriggerHandler != null) {
+                // РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Рµ РїРѕРґРїРёСЃРєРё Рё РґРѕР±Р°РІР»СЏРµРј РЅРѕРІС‹Рµ
+                mineTriggerHandler.OnObjectEnteredTrigger -= HandleMineTrigger;
+                mineTriggerHandler.OnObjectEnteredTrigger += HandleMineTrigger;
             }
         }
     }
 
-    private void HandleTriggeredObject(GameObject triggeredObject, GameObject objectWhoTriger)
-    {
-        // Определяем, к какой категории мин принадлежит объект
+    private void HandleMineTrigger(GameObject triggeredObject, GameObject objectWhoTriger) {
         Mine mine = FindMineByGameObject(triggeredObject);
-
-        if (mine != null)
-        {
+        if (mine != null) {
             HandleMineTriggered(mine, objectWhoTriger);
-        }
-        else
-        {
-            //Debug.LogWarning($"Не удалось определить, к какой мине принадлежит объект {triggeredObject.name}.");
         }
     }
 
-    private Mine FindMineByGameObject(GameObject triggeredObject)
-    {
-        // Проверяем во всех списках
-        Mine mine = FindMineInList(triggeredObject, _healMines);
-        if (mine != null)
-        {
-            return mine;
+    private Mine FindMineByGameObject(GameObject triggeredObject) {
+        if (_healMines != null) {
+            var mine = FindMineInList(triggeredObject, _healMines);
+            if (mine != null) return mine;
         }
 
-        mine = FindMineInList(triggeredObject, _damageMines);
-        if (mine != null)
-        {
-            return mine;
+        if (_damageMines != null) {
+            var mine = FindMineInList(triggeredObject, _damageMines);
+            if (mine != null) return mine;
         }
 
-        mine = FindMineInList(triggeredObject, _buffMines);
-        if (mine != null)
-        {
-            return mine;
+        if (_buffMines != null) {
+            var mine = FindMineInList(triggeredObject, _buffMines);
+            if (mine != null) return mine;
         }
 
-        mine = FindMineInList(triggeredObject, _debuffMines);
-        if (mine != null)
-        {
-            return mine;
+        if (_debuffMines != null) {
+            var mine = FindMineInList(triggeredObject, _debuffMines);
+            if (mine != null) return mine;
         }
 
-        // Если не найдено, возвращаем null
         return null;
     }
 
-    private Mine FindMineInList(GameObject triggeredObject, IEnumerable<Mine> mines)
-    {
-        foreach (Mine mine in mines)
-        {
-            if (mine.MineGameObject == triggeredObject)
-            {
+    private Mine FindMineInList(GameObject triggeredObject, IEnumerable<Mine> mines) {
+        foreach (Mine mine in mines) {
+            if (mine.MineGameObject == triggeredObject) {
                 return mine;
             }
         }
-
         return null;
     }
 
-    private void HandleMineTriggered(Mine givedMine, GameObject givedPlayer)
-    {
-        MiniGamePlayer givedPlayerChar = givedPlayer.GetComponent<MiniGamePlayer>();
-        MiniGamePlayer playerChar = Player.GetComponent<MiniGamePlayer>();
-        MiniGamePlayer enemyChar = Enemy.GetComponent<MiniGamePlayer>();
+    private void HandleMineTriggered(Mine givedMine, GameObject givedPlayer) {
+        if (PlayerChar == null || EnemyChar == null) return;
 
-        if (givedMine is HealMine healMine)
-        {
+        MiniGamePlayer givedPlayerChar = givedPlayer.GetComponent<MiniGamePlayer>();
+        if (givedPlayerChar == null) return;
+
+        if (givedMine is HealMine healMine) {
             healMine.Heal(givedPlayerChar);
         }
-        else if (givedMine is DamageMine damageMine)
-        {
+        else if (givedMine is DamageMine damageMine) {
             if (givedPlayerChar.Name == "Player")
-                damageMine.Damage(enemyChar, playerChar);
+                damageMine.Damage(EnemyChar, PlayerChar);
             else
-                damageMine.Damage(playerChar, enemyChar);
+                damageMine.Damage(PlayerChar, EnemyChar);
         }
-        else if (givedMine is BuffSpeedMine buffSpeedMine)
-        {
-            MineExplosion(buffSpeedMine, Player, Enemy);
+        else if (givedMine is BuffSpeedMine buffSpeedMine) {
+            MineExplosion(buffSpeedMine, _playerMove.gameObject, _enemyController.gameObject);
         }
 
         givedMine.SetActive(false);
     }
 
-    private async void MineExplosion(BuffSpeedMine mine, params GameObject[] objects)
-    {
-        Vector3 initialMinePosition = mine.MineGameObject.transform.position;
+    private async void MineExplosion(BuffSpeedMine mine, params GameObject[] objects) {
+        if (mine == null) return;
 
-        // Ждем паузу в 3 секунды
+        Vector3 initialMinePosition = mine.MineGameObject.transform.position;
         await Task.Delay(mine.GetTimeBeforeExplosion());
 
-        // Находим все объекты на определенном расстоянии от мины
         List<MiniGamePlayer> affectedPlayers = mine.FindDistanceToMine(initialMinePosition, objects);
-
-        // Передаем найденные объекты в метод BuffSpeedList
         await mine.BuffSpeedList(affectedPlayers);
+    }
+
+    private void OnDestroy() {
+        if (PlayerChar != null && _playerMove != null) {
+            PlayerChar.OnSpeedChanged -= _playerMove.ChangeSpeed;
+        }
+        if (EnemyChar != null && _enemyController != null) {
+            EnemyChar.OnSpeedChanged -= _enemyController.ChangeSpeed;
+        }
     }
 }

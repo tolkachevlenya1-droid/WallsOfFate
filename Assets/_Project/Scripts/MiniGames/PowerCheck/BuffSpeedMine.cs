@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -12,15 +12,15 @@ public class BuffSpeedMine : Mine
     private uint Damage;
     private bool IsDebuff;
 
-    // Словарь для отслеживания активных баффов
+    // РЎР»РѕРІР°СЂСЊ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ Р°РєС‚РёРІРЅС‹С… Р±Р°С„С„РѕРІ
     private Dictionary<MiniGamePlayer, bool> activeBuffs = new Dictionary<MiniGamePlayer, bool>();
 
-    public BuffSpeedMine(uint number, float сooldown, GameObject mine, float speedbuff, float buffcooldown, int timebeforeexplosion, float radius, uint damage, bool isDebuff)
-        : base(number, сooldown, mine)
+    public BuffSpeedMine(uint number, float СЃooldown, GameObject mine, float speedbuff, float buffcooldown, int timebeforeexplosion, float radius, uint damage, bool isDebuff)
+        : base(number, СЃooldown, mine)
     {
         this.SpeedBuff = speedbuff;
         this.BuffCooldown = buffcooldown;
-        this.TimeBeforeExplosion = timebeforeexplosion * 1000;
+        this.TimeBeforeExplosion = timebeforeexplosion;
         this.MaxRadius = radius;
         this.Damage = damage;
         this.IsDebuff = isDebuff;
@@ -32,24 +32,24 @@ public class BuffSpeedMine : Mine
 
     public async Task BuffSpeed(MiniGamePlayer player)
     {
-        // Проверяем, есть ли активный бафф на данном объекте
+        // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё Р°РєС‚РёРІРЅС‹Р№ Р±Р°С„С„ РЅР° РґР°РЅРЅРѕРј РѕР±СЉРµРєС‚Рµ
         if (activeBuffs.ContainsKey(player) && activeBuffs[player])
         {
             //Debug.LogWarning($"Buff is already active for {player.name}");
-            return; // Не применяем бафф повторно
+            return; // РќРµ РїСЂРёРјРµРЅСЏРµРј Р±Р°С„С„ РїРѕРІС‚РѕСЂРЅРѕ
         }
 
         activeBuffs[player] = true;
 
         try
         {
-            // Применяем начальный бафф
+            // РџСЂРёРјРµРЅСЏРµРј РЅР°С‡Р°Р»СЊРЅС‹Р№ Р±Р°С„С„
             player.TakeSpeedboost(this.SpeedBuff, IsDebuff);
             player.TakeDamage(this.Damage);
 
             await Task.Delay((int)(this.BuffCooldown * 1000));
 
-            // Убираем бафф
+            // РЈР±РёСЂР°РµРј Р±Р°С„С„
             player.TakeSpeedboost(1f, IsDebuff);
         }
         finally
@@ -75,7 +75,7 @@ public class BuffSpeedMine : Mine
 
         foreach (var obj in playerspositions)
         {
-            if (obj != null) // Проверяем, что объект не null
+            if (obj != null) // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РѕР±СЉРµРєС‚ РЅРµ null
             {
                 float distance = Vector3.Distance(minePosition, obj.transform.position);
                 if (distance <= this.MaxRadius)

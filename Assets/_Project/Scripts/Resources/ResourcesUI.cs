@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Resources = Game.Player.Resources;
 
-namespace Game
+namespace GameResources
 {
-    /// <summary>
-    /// Displays numerical resources and animates colour/value changes.
-    /// </summary>
     public class ResourcesUI : MonoBehaviour
     {
         #region Inspector
@@ -40,43 +36,49 @@ namespace Game
         private readonly Dictionary<TMP_Text, Coroutine> runningCoroutines = new();
         #endregion
 
+        private void Awake() {
+            GameResources.GoldChanged += OnGoldChanged;
+            GameResources.FoodChanged += OnFoodChanged;
+            GameResources.PeopleSatisfactionChanged += OnPeopleSatisfactionChanged;
+            GameResources.CastleStrengthChanged += OnCastleStrengthChanged;
+        }
+
+        private void OnDestroy() {
+            GameResources.GoldChanged -= OnGoldChanged;
+            GameResources.FoodChanged -= OnFoodChanged;
+            GameResources.PeopleSatisfactionChanged -= OnPeopleSatisfactionChanged;
+            GameResources.CastleStrengthChanged -= OnCastleStrengthChanged;
+        }
+
         #region Unity lifecycle
         private void Start() => UpdateAllResources(forceUpdate: true);
+        #endregion
 
-        private void Update()
-        {
-            var dialogueManager = DialogueManager.GetInstance();
+        #region Event handlers
+        private void OnGoldChanged(int newGold) {
+            UpdateResource(ref lastGold, newGold, goldText, true);
+        }
 
-            int gold = ((Ink.Runtime.IntValue)dialogueManager.GetVariablesState("Gold")).value;
-            int food = ((Ink.Runtime.IntValue)dialogueManager.GetVariablesState("Food")).value;
-            int peopleSat = ((Ink.Runtime.IntValue)dialogueManager.GetVariablesState("PeopleSatisfaction")).value;
-            int castleStr = ((Ink.Runtime.IntValue)dialogueManager.GetVariablesState("CastleStrength")).value;
+        private void OnFoodChanged(int newFood) {
+            UpdateResource(ref lastFood, newFood, foodText, true);
+        }
 
-            if (!dialogueManager.DialogueIsPlaying)
-            {
-                Resources.ChangeGold(gold);
-                Resources.ChangeFood(food);
-                Resources.ChangePeopleSatisfaction(peopleSat);
-                Resources.ChangeCastleStrength(castleStr);
+        private void OnPeopleSatisfactionChanged(int newSatisfaction) {
+            UpdateResource(ref lastSatisfaction, newSatisfaction, satisfactionText, true);
+        }
 
-                // Сбрасываем Ink‑переменные, чтобы не применять одно и то же изменение дважды.
-                dialogueManager.SetVariableState("Gold", 0);
-                dialogueManager.SetVariableState("Food", 0);
-                dialogueManager.SetVariableState("PeopleSatisfaction", 0);
-                dialogueManager.SetVariableState("CastleStrength", 0);
-            }
-
-            UpdateAllResources();
+        private void OnCastleStrengthChanged(int newStrength) {
+            UpdateResource(ref lastStrength, newStrength, strengthText, true);
         }
         #endregion
 
         #region Updating helpers
         private void UpdateAllResources(bool forceUpdate = false)
         {
-            UpdateResource(ref lastGold, Resources.Gold, goldText, forceUpdate);
-            UpdateResource(ref lastFood, Resources.Food, foodText, forceUpdate);
-            UpdateResource(ref lastSatisfaction, Resources.PeopleSatisfaction, satisfactionText, forceUpdate);
-            UpdateResource(ref lastStrength, Resources.CastleStrength, strengthText, forceUpdate);
+            UpdateResource(ref lastGold, GameResources.Gold, goldText, forceUpdate);
+            UpdateResource(ref lastFood, GameResources.Food, foodText, forceUpdate);
+            UpdateResource(ref lastSatisfaction, GameResources.PeopleSatisfaction, satisfactionText, forceUpdate);
+            UpdateResource(ref lastStrength, GameResources.CastleStrength, strengthText, forceUpdate);
         }
 
         private void UpdateResource(ref int lastValue,

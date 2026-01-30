@@ -1,0 +1,441 @@
+сокровище магната
+сокровище деда
+
+День 1:
+1. Молот кузнецу
+2. Сокровище кузнеца
+	магнат подходит к кузнецу и кузнец рассказывает главному герою(магнату), что отец кузнеца зарыл где-то во дворе много амуниции которой можно снабдить войско, только кузнецу некогда заниматься поиском так как он занят ковкой брони для армии. магнат должен найти во дворе камень. и тогда мощь замка+
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Кузнец
+	# portrait: blacksmith
+	# layout: right
+	Пан, мой отец перед смертью зарыл во дворе целый склад доспехов. Но мне сейчас некогда искать - вся кузница завалена заказами для армии.
+
+	*   Где именно искать?
+	    # speaker: Кузнец
+	    # portrait: blacksmith
+	    # layout: left
+	    -> askLocation
+
+	*   Сам ищи свои сокровища
+	    # speaker: Кузнец
+	    # portrait: blacksmith
+	    # layout: left
+	    -> refuseHelp
+
+	=== askLocation ===
+	    Говорил, что под камнем с выбитым крестом. У северной стены.
+	    # speaker: Кузнец
+	    # portrait: blacksmith
+	    # layout: left
+	    ~ TalkedWithMagnate = true
+	    -> END
+
+	=== refuseHelp ===
+	    Как знаете. Только потом не жалуйтесь, что армия недоснабжена.
+	    # speaker: Кузнец
+	    # portrait: blacksmith
+	    # layout: left
+	    -> END
+3. Мобилизация деда(воина)
+день 2:
+1. Потеряное послание от Витовта
+	Гонец сообщает что кто-то украл отчеты о состании замка. гг(магнат) идет на склад и там расследует улики. там он находит потерянный отчет о состоянии замка а также улики указывающе на прибывание(кулон и рассыпаная мука, сюда также пойдет отчет) в подвале человека(для этого вывода также придумай диалог, на основе улик должна реализовываться логическая цепочка). походя по складу гг(магнат) обнаружит отдыхающего вора(это пьяный плотник из квеста по мобилизации). с ним также происходит в диалог в котором выесняется что пьяному плотнику предложили 30 серебреников за то чтобы он сливал информацию о замке. в диалоге будет вариант либо казнить тогда PeopleSatisfaction- и CastleStrength+, или пощадить тогда Food- CastleStrength+
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Гонец
+	# portrait: messenger
+	# layout: right
+	Пан, беда! Кто-то украл отчеты о состоянии замка! Последний раз их видели на складе.
+
+	*   Отправлюсь расследовать
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> investigateWarehouse
+
+	*   Пусть стража разбирается
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> dismissTheft
+
+	=== investigateWarehouse ===
+	    Благодарю, пан! В отчетах были стратегические данные!
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    ~ TalkedWithMagnate = true
+	    -> END
+
+	=== dismissTheft ===
+	    Как прикажете... но это может быть опасно.
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> END
+	   INCLUDE ../GlobalSettings/global.ink
+	# speaker: Магнат
+	# portrait: magnate
+	# layout: right
+	(разглядывая найденные улики)
+	1. Отчет - цел, но явно кто-то его изучал
+	2. Этот кулон... я где-то видел такой герб
+	3. Свежая мука - кто-то недавно тут был
+
+	*   [Изучить кулон подробнее]
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> analyzePendant
+
+	*   [Проследить за рассыпанной мукой]
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> followFlour
+
+	=== analyzePendant ===
+	    Да это же герб Радзивиллов! Но зачем им наши отчеты...
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> connectClues
+
+	=== followFlour ===
+	    Следы ведут в подвал... и свежие - не более часа назад.
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> connectClues
+
+	=== connectClues ===
+	    (собирая мысли воедино)
+	    Значит: кто-то из Радзивиллов прислал шпиона,
+	    тот взял отчет и бежал через подвал,
+	    но что-то его спугнуло - бросил кулон...
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> realization
+
+	=== realization ===
+	    И мука свежая... предатель еще в замке!
+	    Нужно проверить подвал.
+	    # speaker: Магнат
+	    # portrait: magnate
+	    # layout: right
+	    -> END
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Плотник
+	# portrait: drunk_carpenter
+	# layout: right
+	(икая) Н-не убивайте... Мне всего лишь 30 серебреников предложили...
+
+	*   Казнить предателя!
+	    # speaker: Плотник
+	    # portrait: drunk_carpenter
+	    # layout: left
+	    -> executeTraitor
+
+	*   Помиловать, но изгнать
+	    # speaker: Плотник
+	    # portrait: drunk_carpenter
+	    # layout: left
+	    -> exileTraitor
+
+	=== executeTraitor ===
+	    Нет! Я больше не... (звук удара)
+	    # speaker: Плотник
+	    # portrait: drunk_carpenter
+	    # layout: left
+	    ~ PeopleSatisfaction -= 1
+	    ~ CastleStrength += 2
+	    -> END
+
+	=== exileTraitor ===
+	    Заберите свой хлеб... я ухожу...
+	    # speaker: Плотник
+	    # portrait: drunk_carpenter
+	    # layout: left
+	    ~ Food -= 10
+	    ~ CastleStrength += 1
+	    -> END
+2. Мобилизация(болванчики)
+	глава стражи говорит магнату что 3 простолюдина отказываются вступать в дружину. после чего главный герой(магнат) должен бегать по двору и провзаимодействовать с 3мя болванчиками. у каждого должны быть разные диалоги но суть должна одна. что-то типо: "я не хочу умирать", и вариантов ответа будет 2: либо заплатить, тогда золото- мощь армии+. или заставить их силой(переменная powerCheck), тогда лояльность населения- мощь армии+. 
+	для мобилизации челяди:
+	1. Старый крестьянин
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Старый крестьянин  
+	# portrait: old_peasant  
+	# layout: right  
+	Мой век уже короток, пан... Зачем мне гибнуть в вашей дружине?  
+
+	*   Вот монета. Иди и воюй.  
+	    # speaker: Старый крестьянин  
+	    # portrait: old_peasant  
+	    # layout: left  
+	    -> payOldPeasant  
+
+	*   Ты пойдешь, или я велю высечь тебя!  
+	    # speaker: Старый крестьянин  
+	    # portrait: old_peasant  
+	    # layout: left  
+	    -> forceOldPeasant  
+
+	=== payOldPeasant ===  
+	    Эх... Ладно, возьму. Только похороните как положено, если что.  
+	    # speaker: Старый крестьянин  
+	    # portrait: old_peasant  
+	    # layout: left  
+	    ~ Gold -= 1  
+	    ~ CastleStrength += 1  
+	    -> END  
+
+	=== forceOldPeasant ===  
+	    (Кашляет) Черт бы вас побрал...  
+	    # speaker: Старый крестьянин  
+	    # portrait: old_peasant  
+	    # layout: left  
+	    ~ PeopleSatisfaction -= 1  
+	    ~ CastleStrength += 1  
+	    ~ PowerCheckStart = true  
+	    -> END  
+	2. Молодой ткач
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Ткач  
+	# portrait: young_weaver  
+	# layout: right  
+	У меня жена и дитя! Я не могу бросить их ради вашей войны!  
+
+	*   Вот золото. Корми семью, но иди в строй.  
+	    # speaker: Ткач  
+	    # portrait: young_weaver  
+	    # layout: left  
+	    -> payWeaver  
+
+	*   Если откажешься, твою семью выгонят из дома!  
+	    # speaker: Ткач  
+	    # portrait: young_weaver  
+	    # layout: left  
+	    -> forceWeaver  
+
+	=== payWeaver ===  
+	    (Со слезами) Пусть хоть жена не голодает...  
+	    # speaker: Ткач  
+	    # portrait: young_weaver  
+	    # layout: left  
+	    ~ Gold -= 1  
+	    ~ CastleStrength += 1  
+	    -> END  
+
+	=== forceWeaver ===  
+	    (Сжимает кулаки) Я вас запомню, пан...  
+	    # speaker: Ткач  
+	    # portrait: young_weaver  
+	    # layout: left  
+	    ~ PeopleSatisfaction -= 1  
+	    ~ CastleStrength += 1  
+	    ~ PowerCheckStart = true  
+	    -> END  
+	3. Пьяный плотник
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Плотник  
+	# portrait: drunk_carpenter  
+	# layout: right  
+	Ха! Я лучше бочки буду колотить, чем мечи!  
+
+	*   Держи серебро и перестань брюзжать.  
+	    # speaker: Плотник  
+	    # portrait: drunk_carpenter  
+	    # layout: left  
+	    -> payDrunk  
+
+	*   Стража! Взять его в кандалы!  
+	    # speaker: Плотник  
+	    # portrait: drunk_carpenter  
+	    # layout: left  
+	    -> forceDrunk  
+
+	=== payDrunk ===  
+	    (Хмыкает) Ну, за такую цену и повоюем...  
+	    # speaker: Плотник  
+	    # portrait: drunk_carpenter  
+	    # layout: left  
+	    ~ Gold -= 1  
+	    ~ CastleStrength += 1  
+	    -> END  
+
+	=== forceDrunk ===  
+	    (Бормочет) Чтоб вам пусто было...  
+	    # speaker: Плотник  
+	    # portrait: drunk_carpenter  
+	    # layout: left  
+	    ~ PeopleSatisfaction -= 1  
+	    ~ CastleStrength += 1  
+	    ~ PowerCheckStart = true  
+	    -> END
+3. Сокровище магната
+	Гонец говорит магнату что он перелистывал старые архивы и заметил что где-то в замке скорее всего оставлено сокровище от его дедушки. 
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Гонец
+	# portrait: messenger
+	# layout: right
+	Пан, перелистывал я старые архивы и нашел любопытную запись - ваш дед спрятал в замке семейное сокровище!
+
+	*   Где именно искать?
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> askDetails
+
+	*   Старые сказки...
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> dismissClaim
+
+	=== askDetails ===
+	    В записи сказано: "Под защитой каменного стража". Думаю, это статуя в главном зале.
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    ~ TalkedWithMagnate = true
+	    -> END
+
+	=== dismissClaim ===
+	    Как знаете, пан. Но я бы проверил...
+	    # speaker: Гонец
+	    # portrait: messenger
+	    # layout: left
+	    -> END
+День 3.
+1. Дипломатия с главарем
+	во дворе появляется глава армии противника и предлагает переговоры. диалог должен загончиться 2 вариантами: либо мы откупаемя от главы армии, или сражаемся с ним(PowerCheckStart = true).
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Главарь армии
+	# portrait: enemy_warlord
+	# layout: right
+	Слушай, магнат! Мой отряд у твоих ворот. Давай договоримся по-хорошему - мне нужно 100 золотых за мир.
+
+	*   Вот твоё золото, убирайся!
+	    # speaker: Главарь армии
+	    # portrait: enemy_warlord
+	    # layout: left
+	    -> payOff
+
+	*   Лучше я тебя повешу на этих воротах!
+	    # speaker: Главарь армии
+	    # portrait: enemy_warlord
+	    # layout: left
+	    -> fightHim
+
+	=== payOff ===
+	    (смеётся) Мудрое решение! До следующего раза...
+	    # speaker: Главарь армии
+	    # portrait: enemy_warlord
+	    # layout: left
+	    ~ Gold -= 100
+	    -> END
+
+	=== fightHim ===
+	    Тогда встречай смерть! К оружию!
+	    # speaker: Главарь армии
+	    # portrait: enemy_warlord
+	    # layout: left
+	    ~ PowerCheckStart = true
+	    -> END
+2. Сталь для оружия
+3. Суд Витовта
+	гонец сообщает что соседская вотчина подверглась осаде и отуда запрашивают воинов и золото или еду и ремеслеников. в 1м случае CastleStrength- Gold, во втором случае Food- PeopleSatisfaction -
+	INCLUDE ../GlobalSettings/global.ink
+	# speaker: Гонец соседней вотчины
+	# portrait: neighbor_messenger
+	# layout: right
+	Вести от Радзивилов! Пан, их замок осажден! Радзивиллы просят помощи - либо воинов и золото, либо провиант с ремесленниками!
+
+	*   Отправлю 10 воинов и 50 золота
+	    # speaker: Гонец соседней вотчины
+	    # portrait: neighbor_messenger
+	    # layout: left
+	    -> sendTroops
+
+	*   Выделю 20 возов еды и 3 ремесленников
+	    # speaker: Гонец соседней вотчины
+	    # portrait: neighbor_messenger
+	    # layout: left
+	    -> sendSupplies
+
+	=== sendTroops ===
+	    Благодарю! Ваши воины укрепят наши стены!
+	    # speaker: Гонец соседней вотчины
+	    # portrait: neighbor_messenger
+	    # layout: left
+	    ~ CastleStrength -= 1
+	    ~ Gold -= 50
+	    -> END
+
+	=== sendSupplies ===
+	    Это спасет наши семьи от голода...
+	    # speaker: Гонец соседней вотчины
+	    # portrait: neighbor_messenger
+	    # layout: left
+	    ~ Food -= 20
+	    ~ PeopleSatisfaction -= 1
+	    -> END
+
+
+	    
+        {
+          "Id": 1,
+          "InProgress": false,
+          "Complite": false,
+          "OpenNPS": "ChiefGuard",
+          "CurrentTaskId": 0,
+          "OpenDialog": "Blacksmith/SmithyForgeDialoge/",
+          "Evidence": null,
+          "Prime": false,
+          "Tasks": [
+            {
+              "Id": 0,
+              "TaskInfo": "Найти 3 беглых крестьян",
+              "IsDone": false,
+              "ForNPS": "servant",
+              "RequeredTasksIds": [],
+              "RequeredDialog": "Servants/ServantMobilisation/0",
+              "Resources": {
+                "Gold": 0,
+                "Food": 0,
+                "PeopleSatisfaction": 0,
+                "CastleStrength": 0
+              },
+            },
+            {
+              "Id": 1,
+              "TaskInfo": "Найти 2 беглых крестьян",
+              "IsDone": false,
+              "ForNPS": "servant",
+              "RequeredTasksIds": [0],
+              "RequeredDialog": "Servants/ServantMobilisation/1",
+              "Resources": {
+                "Gold": 0,
+                "Food": 0,
+                "PeopleSatisfaction": 0,
+                "CastleStrength": 0
+              }
+            },
+            {
+              "Id": 2,
+              "TaskInfo": "Найти 1 беглого крестьяна",
+              "IsDone": false,
+              "ForNPS": "servant",
+              "RequeredTasksIds": [0],
+              "RequeredDialog": "Servants/ServantMobilisation/2",
+              "Resources": {
+                "Gold": 0,
+                "Food": 0,
+                "PeopleSatisfaction": 0,
+                "CastleStrength": 0
+              }
+            }
+          ]
+        },
