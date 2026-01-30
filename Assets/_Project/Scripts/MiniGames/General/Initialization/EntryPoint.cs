@@ -34,20 +34,20 @@ public class EntryPoint : MonoBehaviour {
     }
     #endregion
 
-    #region Minigame Data Structures
+    #region Mini-game Data Structures
     [System.Serializable]
     public class MiniGameData {
-        public DialogueGraph.MiniGameType minigameType;
+        public MiniGameType minigameType;
         public int difficultyLevel;
         public Dictionary<string, object> customParameters;
 
         public MiniGameData() {
             difficultyLevel = 0;
-            minigameType = DialogueGraph.MiniGameType.None;
+            minigameType = MiniGameType.None;
             customParameters = new Dictionary<string, object>();
         }
 
-        public MiniGameData(DialogueGraph.MiniGameType type, Dictionary<string, object> gameVariables) {
+        public MiniGameData(MiniGameType type, Dictionary<string, object> gameVariables) {
             minigameType = type;
             customParameters = gameVariables;
             difficultyLevel = 0;
@@ -73,19 +73,14 @@ public class EntryPoint : MonoBehaviour {
             return;
         }
 
-        // Создаем GameProcess
         GameObject managerObj = new GameObject("MinigameManager");
         MinigameManager minigameManager = managerObj.AddComponent<MinigameManager>();
         DontDestroyOnLoad(managerObj);
 
         Debug.Log("Создан новый MinigameManager");
 
-        // Передаем данные в формате JSON
         string jsonData = launchData.ToJson();
 
-        // Подписываемся на события GameProcess
-
-        // Уведомляем подписчиков
         minigameManager.StartMinigame(launchData);
 
         Debug.Log($"Мини-игра запущена: {launchData.minigameType}");

@@ -57,9 +57,9 @@ public class MinigameManager : MonoBehaviour {
         }
     }
 
-    private string GetSceneForMinigameType(DialogueGraph.MiniGameType type) {
+    private string GetSceneForMinigameType(MiniGameType type) {
         switch (type) {
-            case DialogueGraph.MiniGameType.PowerCheck:
+            case MiniGameType.PowerCheck:
                 return powerCheckScene;
             default:
                 Debug.LogWarning($"Тип мини-игры {type} не настроен. Использую сцену по умолчанию.");

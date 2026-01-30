@@ -61,7 +61,7 @@ namespace Player {
             }
         }
 
-        public void IncreaceStrength() {
+        public void IncreaseStrength() {
             if (_playerStas.FreePoints > 0 && _playerStas.Strength <= 4) {
                 _playerStas.FreePoints--;
                 _playerStas.AddStrength(1);
@@ -69,7 +69,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceInt() { 
+        public void IncreaseInt() { 
             if (_playerStas.FreePoints > 0 && _playerStas.Int <= 4) {
                 _playerStas.FreePoints--;
                 _playerStas.AddInt(1);
@@ -77,7 +77,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceDex() { 
+        public void IncreaseDex() { 
             if (_playerStas.FreePoints > 0 && _playerStas.Dex <= 4) {
                 _playerStas.FreePoints--;
                 _playerStas.AddDex(1);
@@ -85,7 +85,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreacePerceept() { 
+        public void IncreasePercept() { 
             if (_playerStas.FreePoints > 0 && _playerStas.Percept <= 4) {
                 _playerStas.FreePoints--;
                 _playerStas.AddPerceept(1);
@@ -93,7 +93,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceMystic() { 
+        public void IncreaseMystic() { 
             if (_playerStas.FreePoints > 0 && _playerStas.Mystic <= 4)  {
                 _playerStas.FreePoints--;
                 _playerStas.AddMystic(1);
@@ -102,7 +102,7 @@ namespace Player {
             ActivateConfirmationButton();
         }     
         
-        public void DecreaceStrength() { 
+        public void DecreaseStrength() { 
             if (_playerStas.FreePoints >= 0) {
                 if(_playerStas.Strength != 0) _playerStas.FreePoints++;
                 _playerStas.AddStrength(-1);
@@ -110,7 +110,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceInt() {
+        public void DecreaseInt() {
             if(_playerStas.FreePoints >= 0) {
                 if (_playerStas.Int != 0) _playerStas.FreePoints++;
                 _playerStas.AddInt(-1);
@@ -118,7 +118,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceDex() {
+        public void DecreaseDex() {
             if(_playerStas.FreePoints >= 0) {
                 if (_playerStas.Dex != 0) _playerStas.FreePoints++;
                 _playerStas.AddDex(-1);
@@ -126,7 +126,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreacePerceept() {
+        public void DecreasePercept() {
             if (_playerStas.FreePoints >= 0) {
                 if (_playerStas.Percept != 0) _playerStas.FreePoints++;
                 _playerStas.AddPerceept(-1);
@@ -134,7 +134,7 @@ namespace Player {
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceMystic() {
+        public void DecreaseMystic() {
             if (_playerStas.FreePoints >= 0) {
                 if (_playerStas.Mystic != 0) _playerStas.FreePoints++;
                 _playerStas.AddMystic(-1);

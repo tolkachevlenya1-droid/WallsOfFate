@@ -279,8 +279,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: DecreaceMystic
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: DecreaseMystic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -658,8 +658,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: IncreaceStrength
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: IncreaseStrength
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -826,8 +826,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: DecreacePerceept
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: DecreasePercept
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1034,8 +1034,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: IncreaceDex
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: IncreaseDex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1852,8 +1852,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: IncreaceInt
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: IncreaseInt
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2200,8 +2200,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: IncreacePerceept
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: IncreasePercept
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2532,7 +2532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4262200fb67a4ce488706a8a9b8dc3ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StatsAmount: 8
   StatsPool: {fileID: 1791229102}
   Strength: {fileID: 1297099545}
   Int: {fileID: 981887481}
@@ -3007,8 +3006,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: DecreaceDex
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: DecreaseDex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3179,8 +3178,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: DecreaceInt
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: DecreaseInt
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3573,8 +3572,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: IncreaceMystic
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: IncreaseMystic
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4993,8 +4992,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1153424337}
-        m_TargetAssemblyTypeName: GamePlayerStats.StatsController, Assembly-CSharp
-        m_MethodName: DecreaceStrength
+        m_TargetAssemblyTypeName: Player.StatsController, Assembly-CSharp
+        m_MethodName: DecreaseStrength
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

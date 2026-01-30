@@ -128,7 +128,7 @@ public class DialogueManager : MonoBehaviour {
     }
 
     MiniGameData GetParamsOfMinigame() {
-        DialogueGraph.MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MinigameType;
+        MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MinigameType;
         Dictionary<string, object> minigameParams = _currentDialogue.sentences[CurrentID].MinigameParams;
 
         return new MiniGameData(minigameType, minigameParams);

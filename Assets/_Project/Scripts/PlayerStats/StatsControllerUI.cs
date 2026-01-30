@@ -21,6 +21,9 @@ namespace Player
         [SerializeField] private GameObject Mystic;
         [SerializeField] private GameObject MysticMainIconShadow;
 
+        [SerializeField] private Sprite statOnIcon;
+        [SerializeField] private Sprite statOfIcon;
+
         private Player.Stats _playerStas;
 
         [Inject]
@@ -80,7 +83,7 @@ namespace Player
 
         private void SetAllComponentsFalse(GameObject obj, GameObject objShadow) {
             for (int i = 0; i < obj.transform.childCount; i++) {
-                Strength.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = false;
+                Strength.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOfIcon;
             }
             objShadow.SetActive(false);
         }
@@ -90,7 +93,7 @@ namespace Player
                 SetAllComponentsFalse(Strength, StrengthMainIconShadow);
                 int amount = _playerStas.Strength;
                 for (int i = 0; i < Strength.transform.childCount && amount > 0; i++, amount--) {
-                    Strength.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
+                    Strength.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
                 if (amount > 0) {
                     StrengthMainIconShadow.gameObject.SetActive(true);
@@ -103,7 +106,7 @@ namespace Player
                 SetAllComponentsFalse(Int, IntMainIconShadow);
                 int amount = _playerStas.Int;
                 for (int i = 0; i < Int.transform.childCount && amount > 0; i++, amount--) {
-                    Int.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
+                    Int.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
                 if (amount > 0) {
                     IntMainIconShadow.gameObject.SetActive(true);
@@ -116,7 +119,7 @@ namespace Player
                 SetAllComponentsFalse(Dex, DexMainIconShadow);
                 int amount = _playerStas.Dex;
                 for (int i = 0; i < Dex.transform.childCount && amount > 0; i++, amount--) {
-                    Dex.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
+                    Dex.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
                 if (amount > 0) {
                     DexMainIconShadow.gameObject.SetActive(true);
@@ -129,7 +132,7 @@ namespace Player
                 SetAllComponentsFalse(Percept, PerceptMainIconShadow);
                 int amount = _playerStas.Percept;
                 for (int i = 0; i < Percept.transform.childCount && amount > 0; i++, amount--) {
-                    Percept.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
+                    Percept.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
                 if (amount > 0) {
                     PerceptMainIconShadow.gameObject.SetActive(true);
@@ -142,7 +145,7 @@ namespace Player
                 SetAllComponentsFalse(Mystic, MysticMainIconShadow);
                 int amount = _playerStas.Mystic;
                 for (int i = 0; i < Mystic.transform.childCount && amount > 0; i++, amount--) {
-                    Mystic.transform.GetChild(i).gameObject.GetComponent<Image>().enabled = true;
+                    Mystic.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
                 if (amount > 0) {
                     MysticMainIconShadow.gameObject.SetActive(true);
