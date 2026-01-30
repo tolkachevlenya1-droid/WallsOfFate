@@ -1,14 +1,22 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using UnityEngine;
+using Zenject;
 
-namespace GamePlayerStats {
+namespace Player {
     public class StatsSaveLoader : ISaveLoader {
+
+        private Player.Stats _playerStas;
+
+        [Inject]
+        private void Construct(Player.Stats playerStats) {
+            _playerStas = playerStats;
+        }
         public bool LoadData() {
             if (Repository.TryGetData("GameResources", out ResourceData data)) {
-                PlayerStats.Strength = data.Strength;
-                PlayerStats.Dex = data.Dex;
-                PlayerStats.Percept = data.Percept;
-                PlayerStats.Mystic = data.Mystic;
+                _playerStas.Strength = data.Strength;
+                _playerStas.Dex = data.Dex;
+                _playerStas.Percept = data.Percept;
+                _playerStas.Mystic = data.Mystic;
                 //Debug.Log("Loaded resources data");
                 return true;
             }
@@ -30,10 +38,10 @@ namespace GamePlayerStats {
                 };
 
                 var defaultData = JsonConvert.DeserializeObject<ResourceData>(textAsset.text, settings);
-                PlayerStats.Strength = defaultData.Strength;
-                PlayerStats.Dex = defaultData.Dex;
-                PlayerStats.Percept = defaultData.Percept;
-                PlayerStats.Mystic = defaultData.Mystic;
+                _playerStas.Strength = defaultData.Strength;
+                _playerStas.Dex = defaultData.Dex;
+                _playerStas.Percept = defaultData.Percept;
+                _playerStas.Mystic = defaultData.Mystic;
             }
             catch (JsonException ex) {
                 //Debug.LogError($"JSON error: {ex.Message}");
@@ -42,10 +50,10 @@ namespace GamePlayerStats {
 
         public void SaveData() {
             var data = new ResourceData {
-                Strength = PlayerStats.Strength,
-                Dex = PlayerStats.Dex,
-                Percept = PlayerStats.Percept,
-                Mystic = PlayerStats.Mystic
+                Strength = _playerStas.Strength,
+                Dex = _playerStas.Dex,
+                Percept = _playerStas.Percept,
+                Mystic = _playerStas.Mystic
             };
             Repository.SetData("GameResources", data);
             //Debug.Log("Saved resources data");

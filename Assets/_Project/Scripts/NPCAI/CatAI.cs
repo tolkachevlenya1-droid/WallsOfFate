@@ -67,6 +67,10 @@ public class CatAI : MonoBehaviour
     float _pendingSpeed;
     State _afterTurnState;
 
+    [Inject]
+    public void Construct(PlayerMoveController playerMoveController) {
+        _player = playerMoveController.gameObject.transform;
+    }
 
     /* ──────────────────────────────────────────────────────────────── */
 

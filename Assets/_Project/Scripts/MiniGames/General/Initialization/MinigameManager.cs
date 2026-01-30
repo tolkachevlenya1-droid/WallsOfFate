@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static EntryPoint;
 
+public enum MiniGameType {
+    None = 0,
+    PowerCheck = 1
+}
 
 
 public class MinigameManager : MonoBehaviour {
@@ -45,7 +49,8 @@ public class MinigameManager : MonoBehaviour {
         string sceneToLoad = GetSceneForMinigameType(gameData.minigameType);
 
         if (!string.IsNullOrEmpty(sceneToLoad)) {
-            SceneManager.LoadScene(sceneToLoad);
+            //SceneManager.LoadScene(sceneToLoad);
+            LoadingScreenManager.Instance.LoadScene(sceneToLoad);
         }
         else {
             Debug.LogError($"Не определена сцена для мини-игры типа: {gameData.minigameType}");
@@ -104,7 +109,8 @@ public class MinigameManager : MonoBehaviour {
         }
 
         // Возвращаемся в предыдущую сцену
-        SceneManager.LoadScene(_previousScene);
+        LoadingScreenManager.Instance.LoadScene(_previousScene);
+        //SceneManager.LoadScene(_previousScene);
         Destroy(this.gameObject);
     }
 

@@ -5282,6 +5282,8 @@ MonoBehaviour:
     isOption: 0
     isAnswer: 0
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5294,6 +5296,8 @@ MonoBehaviour:
     isOption: 0
     isAnswer: 0
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5306,6 +5310,8 @@ MonoBehaviour:
     isOption: 0
     isAnswer: 0
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5318,6 +5324,8 @@ MonoBehaviour:
     isOption: 1
     isAnswer: 1
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5330,6 +5338,8 @@ MonoBehaviour:
     isOption: 1
     isAnswer: 0
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5342,6 +5352,8 @@ MonoBehaviour:
     isOption: 1
     isAnswer: 1
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5354,10 +5366,13 @@ MonoBehaviour:
     isOption: 0
     isAnswer: 0
     StartMinigame: 0
+    MinigameType: 0
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
     CastleStrength: 1
+  Portrait: Characters/Portraits/1 messenger
 --- !u!1 &7363507171811652826
 GameObject:
   m_ObjectHideFlags: 0

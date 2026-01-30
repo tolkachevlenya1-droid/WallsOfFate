@@ -504,6 +504,7 @@ MonoBehaviour:
     Food: 0
     PeopleSatisfaction: 0
     CastleStrength: 0
+  Portrait: Characters/Portraits/guardnorm
 --- !u!1 &7298632446334417603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5069730896729484537, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}

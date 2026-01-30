@@ -13,6 +13,7 @@ public class DialogueManager : MonoBehaviour {
 
     [SerializeField] GameObject PlayerPanel;
     [SerializeField] GameObject NPCPanel;
+    [SerializeField] Image NPCPortrait;
     [SerializeField] RectTransform SpawnPoint;
     [SerializeField] float panelSpacing = 10f; 
     [SerializeField] int maxPanelsOnScreen = 5; 
@@ -155,12 +156,16 @@ public class DialogueManager : MonoBehaviour {
 
             ClearSpawnedPanels();
 
-            if (DialogueUI != null) {
-                DialogueUI.SetActive(true);
-            }
 
             IsInDialogue = true;
             CurrentID = 0;
+
+            if (DialogueUI != null) {
+                Sprite mySprite = Resources.Load<Sprite>(_currentDialogue.Portrait);
+                NPCPortrait.sprite = mySprite;
+
+                DialogueUI.SetActive(true);
+            }
 
             bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePannel);
 
@@ -328,6 +333,7 @@ public class DialogueManager : MonoBehaviour {
         OptionIDs.Clear();
         OptionChosed = false;
 
+        // Включает кнопки
         foreach (var b in optionButtons) {
             if (b != null && b.transform.childCount > 0) {
                 TMP_Text buttonText = b.transform.GetChild(0).GetComponent<TMP_Text>();
