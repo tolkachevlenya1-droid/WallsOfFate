@@ -55,12 +55,12 @@ public class AIController : MonoBehaviour
 
     private void RefreshFields()
     {
-        if (!_mineSpawner) _mineSpawner = FindObjectOfType<MineSpawner>();
+        if (!_mineSpawner) _mineSpawner = FindFirstObjectByType<MineSpawner>();
         if (!_thisStats) _thisStats = GetComponent<MiniGamePlayer>();
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
 
         if (!_playerStats || !_playerTf) {
-            PlayerMove player = FindObjectOfType<PlayerMove>();
+            PlayerMove player = FindFirstObjectByType<PlayerMove>();
             if (player != null) {
                 _playerTf = player.transform;
                 _playerStats = player.GetComponent<MiniGamePlayer>();

@@ -91,7 +91,7 @@ namespace Game
         {
             if (MineSpawnerObject == null)
             {
-                MineSpawnerObject = FindObjectOfType<MineSpawner>();
+                MineSpawnerObject = FindFirstObjectByType<MineSpawner>();
             }
         }
 
@@ -99,7 +99,7 @@ namespace Game
         {
             if (GameProcessObject == null)
             {
-                GameProcessObject = FindObjectOfType<GameProcess>();
+                GameProcessObject = FindFirstObjectByType<GameProcess>();
             }
         }
 

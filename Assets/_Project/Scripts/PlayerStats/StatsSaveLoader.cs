@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Game.Data;
+using Newtonsoft.Json;
 using UnityEngine;
 using Zenject;
 
 namespace Player {
-    public class StatsSaveLoader : ISaveLoader {
+    public class StatsSaveLoader {
 
         private Player.Stats _playerStas;
 
@@ -44,7 +45,7 @@ namespace Player {
                 _playerStas.Mystic = defaultData.Mystic;
             }
             catch (JsonException ex) {
-                //Debug.LogError($"JSON error: {ex.Message}");
+                Debug.LogError($"JSON error: {ex.Message}");
             }
         }
 

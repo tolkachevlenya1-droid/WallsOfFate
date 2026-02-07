@@ -27,9 +27,9 @@ public class GameProcess : MonoBehaviour {
     public void Initialize() {
         if (_isInitialized) return;
 
-        if (_mineSpawner == null) _mineSpawner = FindObjectOfType<MineSpawner>();
-        if (_playerMove == null) _playerMove = FindObjectOfType<PlayerMove>();
-        if (_enemyController == null) _enemyController = FindObjectOfType<AIController>();
+        if (_mineSpawner == null) _mineSpawner = FindFirstObjectByType<MineSpawner>();
+        if (_playerMove == null) _playerMove = FindFirstObjectByType<PlayerMove>();
+        if (_enemyController == null) _enemyController = FindFirstObjectByType<AIController>();
 
         InitializeLogic();
         _isInitialized = true;
