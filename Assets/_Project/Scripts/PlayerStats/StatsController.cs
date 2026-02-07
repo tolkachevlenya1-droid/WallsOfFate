@@ -1,10 +1,9 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
+using Zenject;
 
-namespace GamePlayerStats {
+namespace Player {
     public class StatsController : MonoBehaviour {
-        [SerializeField] private int StatsAmount;
-
         [SerializeField] private TMP_Text StatsPool;
         [SerializeField] private TMP_Text Strength;
         [SerializeField] private TMP_Text Int;
@@ -14,22 +13,11 @@ namespace GamePlayerStats {
 
         [SerializeField] private GameObject ConfirmatiionButton;
 
-        void Start() {
-            PlayerStats.OnStrengthChanged += UpdateStrengthUI;
-            PlayerStats.OnDexChanged += UpdateIntUI;
-            PlayerStats.OnDexChanged += UpdateDexUI;
-            PlayerStats.OnPerceptChanged += UpdatePerceptUI;
-            PlayerStats.OnMysticChanged += UpdateMysticUI;
+        private Player.Stats _playerStas;
 
-            UpdateAllStatsUI();
-        }
-
-        void OnDestroy() {
-            PlayerStats.OnStrengthChanged -= UpdateStrengthUI;
-            PlayerStats.OnDexChanged -= UpdateIntUI;
-            PlayerStats.OnDexChanged -= UpdateDexUI;
-            PlayerStats.OnPerceptChanged -= UpdatePerceptUI;
-            PlayerStats.OnMysticChanged -= UpdateMysticUI;
+        [Inject]
+        private void Construct(Player.Stats playerStats) {
+            _playerStas = playerStats;
         }
 
         private void UpdateStrengthUI(int newValue) {
@@ -54,102 +42,102 @@ namespace GamePlayerStats {
         }
 
         private void UpdateAllStatsUI() {
-            UpdateStrengthUI(PlayerStats.Strength);
-            UpdateIntUI(PlayerStats.Int);
-            UpdateDexUI(PlayerStats.Dex);
-            UpdatePerceptUI(PlayerStats.Percept);
-            UpdateMysticUI(PlayerStats.Mystic);
+            UpdateStrengthUI(_playerStas.Strength);
+            UpdateIntUI(_playerStas.Int);
+            UpdateDexUI(_playerStas.Dex);
+            UpdatePerceptUI(_playerStas.Percept);
+            UpdateMysticUI(_playerStas.Mystic);
             UpdateStatsPoolUI();
         }
 
         private void ActivateConfirmationButton() {
-            if (StatsAmount == 0) ConfirmatiionButton.SetActive(true);
+            if (_playerStas.FreePoints == 0) ConfirmatiionButton.SetActive(true);
             else ConfirmatiionButton.SetActive(false);
         }
 
         private void UpdateStatsPoolUI() {
             if (StatsPool != null) {
-                StatsPool.text = $"Amount: {StatsAmount}";
+                StatsPool.text = $"Amount: {_playerStas.FreePoints}";
             }
         }
 
-        public void IncreaceStrength() {
-            if (StatsAmount > 0) {
-                StatsAmount--;
-                PlayerStats.ChangeStrength(1);
+        public void IncreaseStrength() {
+            if (_playerStas.FreePoints > 0 && _playerStas.Strength <= 4) {
+                _playerStas.FreePoints--;
+                _playerStas.AddStrength(1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceInt() { 
-            if (StatsAmount > 0) {
-                StatsAmount--;
-                PlayerStats.ChangeInt(1);
+        public void IncreaseInt() { 
+            if (_playerStas.FreePoints > 0 && _playerStas.Int <= 4) {
+                _playerStas.FreePoints--;
+                _playerStas.AddInt(1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceDex() { 
-            if (StatsAmount > 0) {
-                StatsAmount--;
-                PlayerStats.ChangeDex(1);
+        public void IncreaseDex() { 
+            if (_playerStas.FreePoints > 0 && _playerStas.Dex <= 4) {
+                _playerStas.FreePoints--;
+                _playerStas.AddDex(1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreacePerceept() { 
-            if (StatsAmount > 0) {
-                StatsAmount--;
-                PlayerStats.ChangePerceept(1);
+        public void IncreasePercept() { 
+            if (_playerStas.FreePoints > 0 && _playerStas.Percept <= 4) {
+                _playerStas.FreePoints--;
+                _playerStas.AddPerceept(1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void IncreaceMystic() { 
-            if (StatsAmount > 0)  {
-                StatsAmount--;
-                PlayerStats.ChangeMystic(1);
+        public void IncreaseMystic() { 
+            if (_playerStas.FreePoints > 0 && _playerStas.Mystic <= 4)  {
+                _playerStas.FreePoints--;
+                _playerStas.AddMystic(1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }     
         
-        public void DecreaceStrength() { 
-            if (StatsAmount >= 0) {
-                if(PlayerStats.Strength != 0) StatsAmount++;
-                PlayerStats.ChangeStrength(-1);
+        public void DecreaseStrength() { 
+            if (_playerStas.FreePoints >= 0) {
+                if(_playerStas.Strength != 0) _playerStas.FreePoints++;
+                _playerStas.AddStrength(-1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceInt() {
-            if(StatsAmount >= 0) {
-                if (PlayerStats.Int != 0) StatsAmount++;
-                PlayerStats.ChangeInt(-1);
+        public void DecreaseInt() {
+            if(_playerStas.FreePoints >= 0) {
+                if (_playerStas.Int != 0) _playerStas.FreePoints++;
+                _playerStas.AddInt(-1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceDex() {
-            if(StatsAmount >= 0) {
-                if (PlayerStats.Dex != 0) StatsAmount++;
-                PlayerStats.ChangeDex(-1);
+        public void DecreaseDex() {
+            if(_playerStas.FreePoints >= 0) {
+                if (_playerStas.Dex != 0) _playerStas.FreePoints++;
+                _playerStas.AddDex(-1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreacePerceept() {
-            if (StatsAmount >= 0) {
-                if (PlayerStats.Percept != 0) StatsAmount++;
-                PlayerStats.ChangePerceept(-1);
+        public void DecreasePercept() {
+            if (_playerStas.FreePoints >= 0) {
+                if (_playerStas.Percept != 0) _playerStas.FreePoints++;
+                _playerStas.AddPerceept(-1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();
         }
-        public void DecreaceMystic() {
-            if (StatsAmount >= 0) {
-                if (PlayerStats.Mystic != 0) StatsAmount++;
-                PlayerStats.ChangeMystic(-1);
+        public void DecreaseMystic() {
+            if (_playerStas.FreePoints >= 0) {
+                if (_playerStas.Mystic != 0) _playerStas.FreePoints++;
+                _playerStas.AddMystic(-1);
             }
             UpdateAllStatsUI();
             ActivateConfirmationButton();

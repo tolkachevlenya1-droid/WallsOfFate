@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class MiniGamePlayer : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class MiniGamePlayer : MonoBehaviour
     [SerializeField] private float minPulseDuration = 0.2f;
     [SerializeField] private float pulseDecayFactor = 0.8f;
 
+    private Player.Stats _playerStats;
     private bool underDebuff;
     private Coroutine pulseCoroutine;
 
@@ -90,12 +92,18 @@ public class MiniGamePlayer : MonoBehaviour
 
     public event Action<float, bool> OnSpeedChanged;
 
+    [Inject]
+    public void Construct(Player.Stats playerStats) {
+            _playerStats = playerStats;
+    }
+
+
     private void OnEnable()
     {
         ResetHealth();
-        speedModifier += GamePlayerStats.PlayerStats.Dex;
-        damage += Convert.ToUInt32(GamePlayerStats.PlayerStats.Strength);
-        minDamage += Convert.ToUInt32(GamePlayerStats.PlayerStats.Strength);
+        speedModifier += _playerStats.Dex;
+        damage += Convert.ToUInt32(_playerStats.Strength);
+        minDamage += Convert.ToUInt32(_playerStats.Strength);
     }
 
     public string GetName() {
