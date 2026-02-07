@@ -4,25 +4,27 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [System.Serializable]
-public class DialogueGraph : MonoBehaviour 
+public class DialogueGraph : MonoBehaviour
 {
-   [SerializeField]
-   private string DialogueName; /*{ get; private set; }*/
+    [SerializeField]
+    private string DialogueName; /*{ get; private set; }*/
 
-   [SerializeField]
-   public List<Node> sentences = new List<Node>();
-    
-   public string GetName() {
+    [SerializeField]
+    public List<Node> sentences = new List<Node>();
+
+    public string GetName()
+    {
         return DialogueName;
     }
 
-    public enum MiniGameType {
+    public enum MiniGameType
+    {
         None = 0,
         PowerCheck = 1
     }
 
     [System.Serializable]
-   public class Node
+    public class Node
     {
         #region GraphVariables 
         public int id;
@@ -42,19 +44,25 @@ public class DialogueGraph : MonoBehaviour
 
         private Dictionary<string, object> _cachedParams;
 
-        public Dictionary<string, object> MinigameParams {
-            get {
-                if (_cachedParams == null || _cachedParams.Count == 0) {
-                    try {
+        public Dictionary<string, object> MinigameParams
+        {
+            get
+            {
+                if (_cachedParams == null || _cachedParams.Count == 0)
+                {
+                    try
+                    {
                         _cachedParams = JsonConvert.DeserializeObject<Dictionary<string, object>>(_parametersJson);
                     }
-                    catch {
+                    catch
+                    {
                         _cachedParams = new Dictionary<string, object>();
                     }
                 }
                 return _cachedParams;
             }
-            set {
+            set
+            {
                 _cachedParams = value;
                 _parametersJson = JsonConvert.SerializeObject(value, Formatting.Indented);
             }
@@ -75,5 +83,5 @@ public class DialogueGraph : MonoBehaviour
         }
 
         public Node() { }
-    }   
+    }
 }
