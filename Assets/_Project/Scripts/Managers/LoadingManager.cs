@@ -40,6 +40,10 @@ namespace Game
             {
                 var loadedScene = SceneManager.GetSceneByName(sceneName);
                 SceneManager.SetActiveScene(loadedScene);
+
+                AudioManager.Instance.ReloadVolumeSettings();
+                AudioManager.Instance.ChangeMusicForScene(sceneName);
+
                 IsLoading = false;
                 LoadingFinished?.Invoke();
             };
@@ -48,6 +52,9 @@ namespace Game
         public void LoadScene(string sceneName)
         {
             SceneManager.LoadScene(sceneName);
+
+            AudioManager.Instance.ReloadVolumeSettings();
+            AudioManager.Instance.ChangeMusicForScene(sceneName);
         }
     }
 }
