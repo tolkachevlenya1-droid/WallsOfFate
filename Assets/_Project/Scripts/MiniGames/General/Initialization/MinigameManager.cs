@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,12 +29,14 @@ namespace Game
 
         public MiniGameData CurrentGameData => _currentGameData;
 
-        private LoadingManager _loadingManager;
+        private LoadingManager loadingManager;
+        private PlayerManager playerManager;
 
         [Inject]
-        private void Construct(LoadingManager loadingManager)
+        private void Construct(LoadingManager loadingManager, PlayerManager playerManager)
         {
-            _loadingManager = loadingManager;
+            this.loadingManager = loadingManager;
+            this.playerManager = playerManager;
         }
 
         void Awake()
@@ -69,7 +72,7 @@ namespace Game
 
             if (!string.IsNullOrEmpty(sceneToLoad))
             {
-                this._loadingManager.LoadSceneAsync(sceneToLoad);
+                this.loadingManager.LoadSceneAsync(sceneToLoad);
             }
             else
             {
@@ -143,7 +146,7 @@ namespace Game
             }
 
             // Возвращаемся в предыдущую сцену
-            this._loadingManager.LoadSceneAsync(_previousScene);
+            this.loadingManager.LoadSceneAsync(_previousScene);
             //SceneManager.LoadScene(_previousScene);
             Destroy(this.gameObject);
         }
@@ -153,19 +156,19 @@ namespace Game
             // Проверяем и обрабатываем золото
             if (!string.IsNullOrEmpty(resourcesDict["Gold"]))
                 if (int.TryParse(resourcesDict["Gold"], out int goldChange))
-                    Player.Resources.ChangeGold(goldChange);
+                    playerManager.PlayerData.AddResource(ResourceType.Gold, goldChange);
 
             if (!string.IsNullOrEmpty(resourcesDict["Food"]))
                 if (int.TryParse(resourcesDict["Food"], out int goldChange))
-                    Player.Resources.ChangeFood(goldChange);
+                    playerManager.PlayerData.AddResource(ResourceType.Food, goldChange);
 
             if (!string.IsNullOrEmpty(resourcesDict["PeopleSatisfaction"]))
                 if (int.TryParse(resourcesDict["PeopleSatisfaction"], out int goldChange))
-                    Player.Resources.ChangePeopleSatisfaction(goldChange);
+                    playerManager.PlayerData.AddResource(ResourceType.PeopleSatisfaction, goldChange);
 
             if (!string.IsNullOrEmpty(resourcesDict["CastleStrength"]))
                 if (int.TryParse(resourcesDict["CastleStrength"], out int goldChange))
-                    Player.Resources.ChangeCastleStrength(goldChange);
+                    playerManager.PlayerData.AddResource(ResourceType.CastleStrength, goldChange);
         }
     }
 }

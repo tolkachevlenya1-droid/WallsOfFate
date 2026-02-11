@@ -232,10 +232,10 @@ namespace Game.Quest
 
         private void ApplyResources()
         {
-            Player.Resources.ChangeGold(Resources.Gold);
+            /*Player.Resources.ChangeGold(Resources.Gold);
             Player.Resources.ChangeFood(Resources.Food);
             Player.Resources.ChangePeopleSatisfaction(Resources.PeopleSatisfaction);
-            Player.Resources.ChangeCastleStrength(Resources.CastleStrength);
+            Player.Resources.ChangeCastleStrength(Resources.CastleStrength);*/
         }
     }
 }

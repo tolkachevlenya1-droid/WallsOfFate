@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealMine : Mine
+namespace Game
 {
-    public HealMine(uint number, float ñooldown, GameObject mine) : base(number, ñooldown, mine) {}
-
-    public void Heal(MiniGamePlayer player)
+    public class HealMine : Mine
     {
-        player.TakeHeal();
+        public HealMine(uint number, float ñooldown, GameObject mine) : base(number, ñooldown, mine) { }
+
+        public void Heal(MiniGamePlayer player)
+        {
+            player.TakeHeal();
+        }
     }
 }
+

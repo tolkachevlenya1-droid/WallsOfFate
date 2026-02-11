@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Game.Data;
+using Zenject;
 
 namespace Game
 {
-    public enum ResourceType { Gold, Food, PeopleSatisfaction, CastleStrength }
-
     [RequireComponent(typeof(Collider))]
     public class InteractableItem : MonoBehaviour, ITriggerable
     {
@@ -36,6 +36,14 @@ namespace Game
         private Transform _player;
         private bool _hasBeenUsed = false;
         public bool HasBeenUsed => _hasBeenUsed;
+
+        private PlayerManager playerManager;
+
+        [Inject]
+        private void Construct(PlayerManager playerManager)
+        {
+            this.playerManager = playerManager;
+        }
 
         void Awake()
         {
@@ -120,21 +128,7 @@ namespace Game
             string sceneName = SceneManager.GetActiveScene().name;
             InteractableItemCollection.SetItemState(sceneName, gameObject.name, _hasBeenUsed);
 
-            switch (resourceType)
-            {
-                case ResourceType.Gold:
-                    Player.Resources.ChangeGold(amount);
-                    break;
-                case ResourceType.Food:
-                    Player.Resources.ChangeFood(amount);
-                    break;
-                case ResourceType.PeopleSatisfaction:
-                    Player.Resources.ChangePeopleSatisfaction(amount);
-                    break;
-                case ResourceType.CastleStrength:
-                    Player.Resources.ChangeCastleStrength(amount);
-                    break;
-            }
+            playerManager.PlayerData.AddResource(resourceType, amount);
 
             if (floatingTextPrefab != null && _player != null)
             {

@@ -16,7 +16,7 @@ namespace Game
 
         private void Awake()
         {
-            Player.Resources.GoldChanged += OnGoldChanged;
+            /*Player.Resources.GoldChanged += OnGoldChanged;
             Player.Resources.FoodChanged += OnFoodChanged;
             Player.Resources.PeopleSatisfactionChanged += OnPeopleSatisfactionChanged;
             Player.Resources.CastleStrengthChanged += OnCastleStrengthChanged;
@@ -27,7 +27,7 @@ namespace Game
                 else if (textField.key == "food") textField.value.text = Player.Resources.Food.ToString();
                 else if (textField.key == "satisfaction") textField.value.text = Player.Resources.PeopleSatisfaction.ToString();
                 else if (textField.key == "strength") textField.value.text = Player.Resources.CastleStrength.ToString();
-            }
+            }*/
         }
         private void OnGoldChanged(int newValue)
         {

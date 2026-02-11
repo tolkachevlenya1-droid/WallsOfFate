@@ -8,7 +8,6 @@ using static Game.EntryPoint;
 
 namespace Game
 {
-
     public class DialogueManager : MonoBehaviour
     {
         #region UI
@@ -347,11 +346,10 @@ namespace Game
             if (_currentDialogue == null || CurrentID < 0 || CurrentID >= _currentDialogue.sentences.Count)
                 return;
 
-            Player.Resources.ChangeGold(_currentDialogue.sentences[CurrentID].Gold);
+            /* Player.Resources.ChangeGold(_currentDialogue.sentences[CurrentID].Gold);
             Player.Resources.ChangeFood(_currentDialogue.sentences[CurrentID].Food);
             Player.Resources.ChangePeopleSatisfaction(_currentDialogue.sentences[CurrentID].PeopleSatisfaction);
-            Player.Resources.ChangeCastleStrength(_currentDialogue.sentences[CurrentID].CastleStrength);
-
+            Player.Resources.ChangeCastleStrength(_currentDialogue.sentences[CurrentID].CastleStrength); */
         }
 
         public void DisplayNextSentence(int NodeID)

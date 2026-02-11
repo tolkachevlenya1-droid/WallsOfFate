@@ -12,7 +12,6 @@ namespace Game.Data
             PlayerSaveLoader.LoadData();
             CollectionSaveLoader.LoadData();
             QuestSaveLoader.LoadData();
-            ResourceSaveLoader.LoadData();
         }
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace Game.Data
             //PlayerSaveLoader.SaveData();
             CollectionSaveLoader.SaveData();
             QuestSaveLoader.SaveData();
-            ResourceSaveLoader.SaveData();
             Repository.SetUserProgress(true);
             Repository.SaveState();
         }

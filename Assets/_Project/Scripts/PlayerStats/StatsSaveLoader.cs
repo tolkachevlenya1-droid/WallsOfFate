@@ -6,12 +6,13 @@ using Zenject;
 namespace Player {
     public class StatsSaveLoader {
 
-        private Player.Stats _playerStas;
+        /*private Player.Stats _playerStas;
 
         [Inject]
         private void Construct(Player.Stats playerStats) {
             _playerStas = playerStats;
         }
+
         public bool LoadData() {
             if (Repository.TryGetData("GameResources", out ResourceData data)) {
                 _playerStas.Strength = data.Strength;
@@ -58,14 +59,6 @@ namespace Player {
             };
             Repository.SetData("GameResources", data);
             //Debug.Log("Saved resources data");
-        }
-    }
-
-    [System.Serializable]
-    public class ResourceData {
-        public int Strength;
-        public int Dex;
-        public int Percept;
-        public int Mystic;
+        }*/
     }
 }
