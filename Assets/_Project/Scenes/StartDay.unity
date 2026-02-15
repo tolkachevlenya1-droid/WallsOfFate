@@ -4068,7 +4068,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.SceneContext
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 887299834}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -8693,7 +8694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   confirmButton: {fileID: 1685302477}
-  declineButton: {fileID: 0}
+  declineButton: {fileID: 1229351962}
 --- !u!1 &1718405384
 GameObject:
   m_ObjectHideFlags: 0
