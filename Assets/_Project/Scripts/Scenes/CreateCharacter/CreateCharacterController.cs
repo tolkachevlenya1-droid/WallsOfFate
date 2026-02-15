@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Game
@@ -21,10 +22,13 @@ namespace Game
 
         private PlayerManager playerManager;
 
+        private LoadingManager loadingManager;
+
         [Inject]
-        private void Construct(PlayerManager playerManager)
+        private void Construct(PlayerManager playerManager, LoadingManager loadingManager)
         {
             this.playerManager = playerManager;
+            this.loadingManager = loadingManager;
         }
 
         private Dictionary<StatType, TMP_Text> statTextFields;
@@ -39,6 +43,9 @@ namespace Game
                 { StatType.Percept, Percept },
                 { StatType.Mystic, Mystic }
             };
+
+            ConfirmatiionButton.GetComponent<Button>().onClick.AddListener(() => OnContfirmationButtonClick());
+
             UpdateAllStatsUI();
         }
 
@@ -72,7 +79,7 @@ namespace Game
         {
             if (StatsPool != null)
             {
-                StatsPool.text = $"Amount: { playerManager.PlayerData.FreePoints }";
+                StatsPool.text = $"Amount: {playerManager.PlayerData.FreePoints}";
             }
         }
 
@@ -146,6 +153,11 @@ namespace Game
 
             UpdateAllStatsUI();
             ActivateConfirmationButton();
+        }
+
+        private void OnContfirmationButtonClick()
+        {
+            loadingManager.LoadSceneAsync("StartDay");
         }
     }
 }

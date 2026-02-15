@@ -25,7 +25,7 @@ namespace Game
         [Tooltip("Time (seconds) to fade back from green/red to white")]
         [SerializeField] private float colourReturnDuration = 0.4f;
         [Tooltip("Delay (seconds) between each +1 / -1 increment")]
-        [SerializeField] private float valueStepDelay = 0.015f;
+        [SerializeField] private float valueStepDelay = 0.15f;
         [SerializeField] private Color increaseColour = Color.green;
         [SerializeField] private Color decreaseColour = Color.red;
         [SerializeField] private Color normalColour = Color.white;

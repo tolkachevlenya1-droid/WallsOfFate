@@ -4,7 +4,6 @@ using Zenject;
 
 namespace Game
 {
-
     public class CameraObstacleTransparency : MonoBehaviour
     {
         [Header("Настройки слежения")]

@@ -2497,7 +2497,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1153424336}
   - component: {fileID: 1153424337}
-  - component: {fileID: 1153424338}
   m_Layer: 0
   m_Name: StatsController
   m_TagString: Untagged
@@ -2539,20 +2538,6 @@ MonoBehaviour:
   Percept: {fileID: 357872808}
   Mystic: {fileID: 2109714341}
   ConfirmatiionButton: {fileID: 1871534737}
---- !u!114 &1153424338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153424335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71d2acf30b14b694981462033b216238, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  newGamePanel: {fileID: 2136896937}
-  firstScene: StartDay
 --- !u!1 &1157816322
 GameObject:
   m_ObjectHideFlags: 0
@@ -4582,19 +4567,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1871534740}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1153424338}
-        m_TargetAssemblyTypeName: NewGameButton, Assembly-CSharp
-        m_MethodName: StartGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1871534740
 MonoBehaviour:
   m_ObjectHideFlags: 0
