@@ -2,57 +2,60 @@
 using UnityEngine.AI;
 using System.Collections;
 
-public class AudienceTriggerZone : MonoBehaviour
+namespace Game
 {
-    [SerializeField] private Transform throne;
-
-    private void OnTriggerEnter(Collider other)
+    public class AudienceTriggerZone : MonoBehaviour
     {
-        // ищем скрипт диалога на вошедшем объекте
-        DialogeTrigger dlg = other.GetComponent<DialogeTrigger>();
-        if (dlg == null || dlg.IsDone) return;
+        [SerializeField] private Transform throne;
 
-        // останавливаем навигацию
-        NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
-        if (agent != null)
+       /* private void OnTriggerEnter(Collider other)
         {
-            agent.isStopped = true;                        // сразу тормозим
-            StartCoroutine(StartWhenStopped(agent, dlg));  // ждём полного покоя
-        }
-        else
-        {
-            // если NPC передвигается без NavMeshAgent
-            StartCoroutine(StartAfterDelay(0.3f, dlg));
-        }
-    }
+            // ищем скрипт диалога на вошедшем объекте
+            DialogueTrigger dlg = other.GetComponent<DialogueTrigger>();
+            if (dlg == null || dlg.IsDone) return;
 
-    private IEnumerator StartWhenStopped(NavMeshAgent agent, DialogeTrigger dlg)
-    {
-        // ждём, пока агент «утрясётся» (1‑2 кадра) и точно встал
-        yield return null;
-        while (agent.pathPending ||
-               agent.remainingDistance > agent.stoppingDistance + 0.05f ||
-               agent.velocity.sqrMagnitude > 0.0001f)
-        {
-            yield return null;    // проверяем каждый кадр
+            // останавливаем навигацию
+            NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
+            if (agent != null)
+            {
+                agent.isStopped = true;                        // сразу тормозим
+                StartCoroutine(StartWhenStopped(agent, dlg));  // ждём полного покоя
+            }
+            else
+            {
+                // если NPC передвигается без NavMeshAgent
+                StartCoroutine(StartAfterDelay(0.3f, dlg));
+            }
         }
 
-        // небольшая пауза, чтобы завершилась анимация шага
-        yield return new WaitForSeconds(0.25f);
+        private IEnumerator StartWhenStopped(NavMeshAgent agent, DialogueTrigger dlg)
+        {
+            // ждём, пока агент «утрясётся» (1‑2 кадра) и точно встал
+            yield return null;
+            while (agent.pathPending ||
+                   agent.remainingDistance > agent.stoppingDistance + 0.05f ||
+                   agent.velocity.sqrMagnitude > 0.0001f)
+            {
+                yield return null;    // проверяем каждый кадр
+            }
 
-        // разворачиваемся к трону (опционально)
-        agent.transform.LookAt(new Vector3(
-        throne.position.x,
-        agent.transform.position.y,   // сохраняем высоту NPC
-        throne.position.z));
+            // небольшая пауза, чтобы завершилась анимация шага
+            yield return new WaitForSeconds(0.25f);
 
-        dlg.Triggered();          // запускаем вашу логику Ink‑диалога
-    }
+            // разворачиваемся к трону (опционально)
+            agent.transform.LookAt(new Vector3(
+            throne.position.x,
+            agent.transform.position.y,   // сохраняем высоту NPC
+            throne.position.z));
 
-    // fallback, если нет NavMeshAgent
-    private IEnumerator StartAfterDelay(float time, DialogeTrigger dlg)
-    {
-        yield return new WaitForSeconds(time);
-        dlg.Triggered();
+            dlg.Triggered();          // запускаем вашу логику Ink‑диалога
+        }
+
+        // fallback, если нет NavMeshAgent
+        private IEnumerator StartAfterDelay(float time, DialogueTrigger dlg)
+        {
+            yield return new WaitForSeconds(time);
+            dlg.Triggered();
+        }*/
     }
 }

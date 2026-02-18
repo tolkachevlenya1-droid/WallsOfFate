@@ -4,11 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
-namespace Quest
+namespace Game.Quest
 {
-    [System.Serializable]
-    public struct QuestResources
+    [Serializable]
+    public struct Resources
     {
         public int Gold;
         public int Food;
@@ -16,16 +15,16 @@ namespace Quest
         public int CastleStrength;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class QuestSaveData
     {
         public int CurrentDay;
-        public List<DayData> Days = new List<DayData>();
+        public List<DayData> Days = new();
     }
 
     public static class QuestCollection
     {
-        private static QuestSaveData _saveData = new QuestSaveData();
+        private static QuestSaveData _saveData = new();
 
         public static int CurrentDayNumber
         {
@@ -36,7 +35,7 @@ namespace Quest
         public static void Initialize(QuestSaveData saveData = null)
         {
             _saveData = saveData ?? new QuestSaveData();
-            if (_saveData.Days == null) _saveData.Days = new List<DayData>();
+            _saveData.Days ??= new List<DayData>();
         }
 
         public static void AddDay(DayData day)
@@ -98,14 +97,14 @@ namespace Quest
     }
 
 
-    [System.Serializable]
+    [Serializable]
     public class DayData
     {
         public int Day;
-        public List<QuestGroup> Quests = new List<QuestGroup>();
+        public List<QuestGroup> Quests = new();
     }
 
-    [System.Serializable]
+    [Serializable]
     public class QuestGroup
     {
         public int Id;
@@ -116,7 +115,7 @@ namespace Quest
         public Evidence Evidence;
         public int CurrentTaskId;
         public bool Prime;
-        public List<QuestTask> Tasks = new List<QuestTask>();
+        public List<QuestTask> Tasks = new();
 
         public bool CheckOpen(string npcName)
         {
@@ -169,7 +168,7 @@ namespace Quest
                 ForNPS = task.ForNPS,
                 RequeredTasksIds = task.RequeredTasksIds?.ToArray(), // Копируем массив
                 RequeredDialog = task.RequeredDialog,
-                Resources = new QuestResources
+                Resources = new Resources
                 {
                     Gold = task.Resources.Gold,
                     Food = task.Resources.Food,
@@ -212,7 +211,7 @@ namespace Quest
         public string ForNPS;
         public int[] RequeredTasksIds;
         public string RequeredDialog;
-        public QuestResources Resources;
+        public Resources Resources;
 
         public void CompleteTask()
         {
@@ -233,10 +232,10 @@ namespace Quest
 
         private void ApplyResources()
         {
-            GameResources.GameResources.ChangeGold(Resources.Gold);
-            GameResources.GameResources.ChangeFood(Resources.Food);
-            GameResources.GameResources.ChangePeopleSatisfaction(Resources.PeopleSatisfaction);
-            GameResources.GameResources.ChangeCastleStrength(Resources.CastleStrength);
+            /*Player.Resources.ChangeGold(Resources.Gold);
+            Player.Resources.ChangeFood(Resources.Food);
+            Player.Resources.ChangePeopleSatisfaction(Resources.PeopleSatisfaction);
+            Player.Resources.ChangeCastleStrength(Resources.CastleStrength);*/
         }
     }
 }

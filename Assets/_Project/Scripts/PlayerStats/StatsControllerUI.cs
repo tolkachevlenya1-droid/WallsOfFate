@@ -1,159 +1,147 @@
-﻿using TMPro;
-using UnityEngine;
-using Zenject;
+﻿using Game;
+using Game.Data;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Player
 {
     public class StatsControllerUI : MonoBehaviour
     {
+        [SerializeField] private GameObject StatsPool;
         [SerializeField] private GameObject Strength;
+        [SerializeField] private GameObject StrengthMainIconShadow;
         [SerializeField] private GameObject Int;
+        [SerializeField] private GameObject IntMainIconShadow;
         [SerializeField] private GameObject Dex;
+        [SerializeField] private GameObject DexMainIconShadow;
         [SerializeField] private GameObject Percept;
+        [SerializeField] private GameObject PerceptMainIconShadow;
         [SerializeField] private GameObject Mystic;
+        [SerializeField] private GameObject MysticMainIconShadow;
 
         [SerializeField] private Sprite statOnIcon;
         [SerializeField] private Sprite statOfIcon;
 
-        [Header("Параметры для пула статов")]
-        [SerializeField] private GameObject StatsPool;
-        [SerializeField] private GameObject StatsPoolIconPrefab;
-        [SerializeField] private int NumberCirclesInLine;
-        [SerializeField] private int LineSpacing;
-        [SerializeField] private int IntercharSpacing;
-        
-        private List<GameObject> StatsPrefabsList;
-
-        private Player.Stats _playerStas;
+        private PlayerManager playerManager;
 
         [Inject]
-        private void Construct(Player.Stats playerStats) {
-            _playerStas = ProjectContext.Instance.Container.Resolve<Player.Stats>();
-        }
-
-        private void Start() {
-            StatsPrefabsList = new List<GameObject>();
+        private void Construct(PlayerManager playerManager) {
+            this.playerManager = playerManager;
         }
 
         #region ButtonMethods
 
         public void ChangeStrength(Image buttImage) {
-            if (buttImage.sprite == statOfIcon) IncreaceStrength();
-            else DecreaceStrength();
+            if (buttImage.enabled == false) IncreaseStat(StatType.Strength);
+            else DecreaseStat(StatType.Strength);
         }
 
         public void ChangeInt(Image buttImage) {
-            if (buttImage.sprite == statOfIcon) IncreaceInt();
-            else DecreaceInt();
+            if (buttImage.enabled == false) IncreaseStat(StatType.Int);
+            else DecreaseStat(StatType.Int);
         }
+
         public void ChangeDex(Image buttImage) {
-            if (buttImage.sprite == statOfIcon) IncreaceDex();
-            else DecreaceDex();
+            if (buttImage.enabled == false) IncreaseStat(StatType.Dex);
+            else DecreaseStat(StatType.Dex);
         }
+
         public void ChangePercept(Image buttImage) {
-            if (buttImage.sprite == statOfIcon) IncreacePercept();
-            else DecreacePercept();
+            if (buttImage.enabled == false) IncreaseStat(StatType.Percept);
+            else DecreaseStat(StatType.Percept);
         }
+
         public void ChangeMyst(Image buttImage) {
-            if (buttImage.sprite == statOfIcon) IncreaceMystic();
-            else DecreaceMystic();
+            if (buttImage.enabled == false) IncreaseStat(StatType.Mystic);
+            else DecreaseStat(StatType.Mystic);
         }
 
         #endregion
 
         #region Update
 
-        private void SetAllComponentsFalse(GameObject obj) {
+        private void SetAllComponentsFalse(GameObject obj, GameObject objShadow) {
             for (int i = 0; i < obj.transform.childCount; i++) {
-                obj.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOfIcon;
+                Strength.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOfIcon;
             }
+            objShadow.SetActive(false);
         }
 
         private void UpdateStrengthUI() {
             if (Strength != null) {
-                SetAllComponentsFalse(Strength);
-                int amount = _playerStas.Strength;
+                SetAllComponentsFalse(Strength, StrengthMainIconShadow);
+                int amount = playerManager.PlayerData.GetStat(StatType.Strength);
                 for (int i = 0; i < Strength.transform.childCount && amount > 0; i++, amount--) {
                     Strength.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
+                }
+                if (amount > 0) {
+                    StrengthMainIconShadow.gameObject.SetActive(true);
                 }
             }
         }
 
         private void UpdateIntUI() {
             if (Int != null) {
-                SetAllComponentsFalse(Int);
-                int amount = _playerStas.Int;
+                SetAllComponentsFalse(Int, IntMainIconShadow);
+                int amount = playerManager.PlayerData.GetStat(StatType.Int);
                 for (int i = 0; i < Int.transform.childCount && amount > 0; i++, amount--) {
                     Int.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
+                }
+                if (amount > 0) {
+                    IntMainIconShadow.gameObject.SetActive(true);
                 }
             }
         }
 
         private void UpdateDexUI() {
             if (Dex != null) {
-                SetAllComponentsFalse(Dex);
-                int amount = _playerStas.Dex;
+                SetAllComponentsFalse(Dex, DexMainIconShadow);
+                int amount = playerManager.PlayerData.GetStat(StatType.Dex);
                 for (int i = 0; i < Dex.transform.childCount && amount > 0; i++, amount--) {
                     Dex.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
+                }
+                if (amount > 0) {
+                    DexMainIconShadow.gameObject.SetActive(true);
                 }
             }
         }
 
         private void UpdatePerceptUI() {
             if (Percept != null) {
-                SetAllComponentsFalse(Percept);
-                int amount = _playerStas.Percept;
+                SetAllComponentsFalse(Percept, PerceptMainIconShadow);
+                int amount = playerManager.PlayerData.GetStat(StatType.Percept);
                 for (int i = 0; i < Percept.transform.childCount && amount > 0; i++, amount--) {
                     Percept.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
+                }
+                if (amount > 0) {
+                    PerceptMainIconShadow.gameObject.SetActive(true);
                 }
             }
         }
 
         private void UpdateMysticUI() {
             if (Mystic != null) {
-                SetAllComponentsFalse(Mystic);
-                int amount = _playerStas.Mystic;
+                SetAllComponentsFalse(Mystic, MysticMainIconShadow);
+                int amount = playerManager.PlayerData.GetStat(StatType.Mystic);
                 for (int i = 0; i < Mystic.transform.childCount && amount > 0; i++, amount--) {
                     Mystic.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = statOnIcon;
                 }
-            }
-
-        }
-
-        #region StatsPool
-
-        private void UpdateStatsPoolUI() {
-            ClearPoints();
-            DrawPoints();
-        }
-
-        private void DrawPoints() {
-            int numOfLines = (int)Mathf.Ceil((float)_playerStas.FreePoints / (float)NumberCirclesInLine);
-            for (int i = 0; i < numOfLines; i++) {
-                for (int j = 0; j < NumberCirclesInLine && j < _playerStas.FreePoints; j++) {
-                    Vector3 position = StatsPool.transform.position;
-                    if (StatsPrefabsList.Count != 0) {
-                        position.x += IntercharSpacing * j;
-                        position.y -= LineSpacing * i;
-                    }
-                    GameObject obj = Instantiate(StatsPoolIconPrefab, position, Quaternion.identity, StatsPool.transform);
-                    StatsPrefabsList.Add(obj);
+                if (amount > 0) {
+                    MysticMainIconShadow.gameObject.SetActive(true);
                 }
             }
+
         }
 
-        private void ClearPoints() {
-            StatsPrefabsList.Clear();
-
-            List<Transform> StatsPoolChild = new List<Transform>();
-            for (int i = 0; i < StatsPool.transform.childCount; i++) {
-                Destroy(StatsPool.transform.GetChild(i).gameObject);
+        private void UpdateStatsPoolUI() {
+            if (StatsPool != null) {
+                StatsPool.GetComponent<TMP_Text>().text = playerManager.PlayerData.FreePoints.ToString();
             }
         }
-        #endregion
 
         public void UpdateAllStatsUI() {
             UpdateStrengthUI();
@@ -167,81 +155,20 @@ namespace Player
 
         #region Utility
 
+        private void IncreaseStat(StatType stat)
+        {
+            playerManager.IncreaseStat(stat);
 
-        private void IncreaceStrength() {
-            if (_playerStas.FreePoints > 0 && _playerStas.Strength <= 4) {
-                _playerStas.AddFreePoints(-1);
-                _playerStas.AddStrength(1);
-            }
             UpdateAllStatsUI();
         }
 
-        private void IncreaceInt() {
-            if (_playerStas.FreePoints > 0 && _playerStas.Int <= 4) {
-                _playerStas.AddFreePoints(-1);
-                _playerStas.AddInt(1);
-            }
+        private void DecreaseStat(StatType stat)
+        {
+            playerManager.DecreaseStat(stat);
+
             UpdateAllStatsUI();
         }
 
-        private void IncreaceDex() {
-            if (_playerStas.FreePoints > 0 && _playerStas.Dex <= 4) {
-                _playerStas.AddFreePoints(-1);
-                _playerStas.AddDex(1);
-            }
-            UpdateAllStatsUI();
-        }
-
-        private void IncreacePercept() {
-            if (_playerStas.FreePoints > 0 && _playerStas.Percept <= 4) {
-                _playerStas.AddFreePoints(-1);
-                _playerStas.AddPerceept(1);
-            }
-            UpdateAllStatsUI();
-        }
-
-        private void IncreaceMystic() {
-            if (_playerStas.FreePoints > 0 && _playerStas.Mystic <= 4) {
-                _playerStas.AddFreePoints(-1);
-                _playerStas.AddMystic(1);
-            }
-            UpdateAllStatsUI();
-        }
-        private void DecreaceStrength() {
-            if (_playerStas.FreePoints >= 0) {
-                if (_playerStas.Strength != 0) _playerStas.AddFreePoints(1);
-                _playerStas.AddStrength(-1);
-            }
-            UpdateAllStatsUI();
-        }
-        private void DecreaceInt() {
-            if (_playerStas.FreePoints >= 0) {
-                if (_playerStas.Int != 0) _playerStas.AddFreePoints(1);
-                _playerStas.AddInt(-1);
-            }
-            UpdateAllStatsUI();
-        }
-        private void DecreaceDex() {
-            if (_playerStas.FreePoints >= 0) {
-                if (_playerStas.Dex != 0) _playerStas.AddFreePoints(1);
-                _playerStas.AddDex(-1);
-            }
-            UpdateAllStatsUI();
-        }
-        private void DecreacePercept() {
-            if (_playerStas.FreePoints >= 0) {
-                if (_playerStas.Percept != 0) _playerStas.AddFreePoints(1);
-                _playerStas.AddPerceept(-1);
-            }
-            UpdateAllStatsUI();
-        }
-        private void DecreaceMystic() {
-            if (_playerStas.FreePoints >= 0) {
-                if (_playerStas.Mystic != 0) _playerStas.AddFreePoints(1);
-                _playerStas.AddMystic(-1);
-            }
-            UpdateAllStatsUI();
-        }
         #endregion
     }
 }

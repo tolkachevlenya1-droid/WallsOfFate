@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Scripts.Infrastructure
+namespace Game
 {
     public class ScenePlayerLocator : MonoInstaller
     {

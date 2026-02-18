@@ -25,6 +25,10 @@ TagManager:
   - GameProcessor
   - PowerCheckCamera
   - Rat
+  - StartGameButton
+  - ContinueGameButton
+  - SettingsButton
+  - ExitGameButton
   layers:
   - Default
   - TransparentFX

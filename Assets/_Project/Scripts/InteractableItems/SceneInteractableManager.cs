@@ -3,103 +3,108 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[DefaultExecutionOrder(1000)]        // Start сработает после Start всех предметов
-public class SceneInteractableManager : MonoBehaviour
+namespace Game
 {
-    /* ─────────────  НАСТРОЙКИ  ───────────── */
-
-    [Header("Сколько предметов спавнить (минимум / максимум, включительно)")]
-    [SerializeField] private int minItemsToEnable = 3;
-    [SerializeField] private int maxItemsToEnable = 6;
-
-    [Header("Перетащите сюда ВСЕ InteractableItem, которые могут появляться")]
-    [SerializeField] private List<InteractableItem> items = new();   // только вручную
-
-    /* ─────────────────────────────────────── */
-
-    private int itemsToEnableThisRun;   // выбранное число для текущего старта
-
-    private void OnValidate()
+    [DefaultExecutionOrder(1000)]        // Start сработает после Start всех предметов
+    public class SceneInteractableManager : MonoBehaviour
     {
-        // Удалить null-ссылки и дубликаты
-        items = items.Where(i => i != null)
-                     .Distinct()
-                     .ToList();
+        /* ─────────────  НАСТРОЙКИ  ───────────── */
 
-        // Корректируем диапазон относительно размера списка
-        int maxPossible = items.Count;
+        [Header("Сколько предметов спавнить (минимум / максимум, включительно)")]
+        [SerializeField] private int minItemsToEnable = 3;
+        [SerializeField] private int maxItemsToEnable = 6;
 
-        if (minItemsToEnable < 1) minItemsToEnable = 1;
-        if (maxItemsToEnable < minItemsToEnable)
-            maxItemsToEnable = minItemsToEnable;
+        [Header("Перетащите сюда ВСЕ InteractableItem, которые могут появляться")]
+        [SerializeField] private List<InteractableItem> items = new();   // только вручную
 
-        if (minItemsToEnable > maxPossible) minItemsToEnable = maxPossible;
-        if (maxItemsToEnable > maxPossible) maxItemsToEnable = maxPossible;
-    }
+        /* ─────────────────────────────────────── */
 
-    private void Start()
-    {
-        if (items.Count == 0)
+        private int itemsToEnableThisRun;   // выбранное число для текущего старта
+
+        private void OnValidate()
         {
-            //Debug.LogError($"{name}: список предметов пуст — заполните его в инспекторе!");
-            return;
+            // Удалить null-ссылки и дубликаты
+            items = items.Where(i => i != null)
+                         .Distinct()
+                         .ToList();
+
+            // Корректируем диапазон относительно размера списка
+            int maxPossible = items.Count;
+
+            if (minItemsToEnable < 1) minItemsToEnable = 1;
+            if (maxItemsToEnable < minItemsToEnable)
+                maxItemsToEnable = minItemsToEnable;
+
+            if (minItemsToEnable > maxPossible) minItemsToEnable = maxPossible;
+            if (maxItemsToEnable > maxPossible) maxItemsToEnable = maxPossible;
         }
 
-        // выбираем случайное число предметов (включительно)
-        itemsToEnableThisRun = Random.Range(minItemsToEnable, maxItemsToEnable + 1);
-
-        // ждём один кадр, чтобы все InteractableItem успели выполнить Start
-        StartCoroutine(SpawnAtEndOfFrame());
-    }
-
-    private System.Collections.IEnumerator SpawnAtEndOfFrame()
-    {
-        yield return null;            // конец текущего кадра
-        SpawnFreshBatch();
-    }
-
-    /* ─────────────  СПАВН  ───────────── */
-
-    private void SpawnFreshBatch()
-    {
-        // 1. Выключаем всё
-        foreach (var it in items)
-            it.gameObject.SetActive(false);
-
-        // 2. Собираем неиспользованные
-        var candidates = items.Where(i => !i.HasBeenUsed).ToList();
-
-        // 3. Если не хватает — «реанимируем» использованные
-        int shortage = itemsToEnableThisRun - candidates.Count;
-        if (shortage > 0)
+        private void Start()
         {
-            var used = items.Where(i => i.HasBeenUsed).ToList();
-            Shuffle(used);
-
-            for (int i = 0; i < Mathf.Min(shortage, used.Count); i++)
+            if (items.Count == 0)
             {
-                used[i].ResetForRespawn();
-                candidates.Add(used[i]);
+                //Debug.LogError($"{name}: список предметов пуст — заполните его в инспекторе!");
+                return;
+            }
+
+            // выбираем случайное число предметов (включительно)
+            itemsToEnableThisRun = Random.Range(minItemsToEnable, maxItemsToEnable + 1);
+
+            // ждём один кадр, чтобы все InteractableItem успели выполнить Start
+            StartCoroutine(SpawnAtEndOfFrame());
+        }
+
+        private System.Collections.IEnumerator SpawnAtEndOfFrame()
+        {
+            yield return null;            // конец текущего кадра
+            SpawnFreshBatch();
+        }
+
+        /* ─────────────  СПАВН  ───────────── */
+
+        private void SpawnFreshBatch()
+        {
+            // 1. Выключаем всё
+            foreach (var it in items)
+                it.gameObject.SetActive(false);
+
+            // 2. Собираем неиспользованные
+            var candidates = items.Where(i => !i.HasBeenUsed).ToList();
+
+            // 3. Если не хватает — «реанимируем» использованные
+            int shortage = itemsToEnableThisRun - candidates.Count;
+            if (shortage > 0)
+            {
+                var used = items.Where(i => i.HasBeenUsed).ToList();
+                Shuffle(used);
+
+                for (int i = 0; i < Mathf.Min(shortage, used.Count); i++)
+                {
+                    used[i].ResetForRespawn();
+                    candidates.Add(used[i]);
+                }
+            }
+
+            // 4. Перемешиваем
+            Shuffle(candidates);
+
+            // 5. Включаем нужное количество
+            int count = Mathf.Min(itemsToEnableThisRun, candidates.Count);
+            for (int i = 0; i < count; i++)
+                candidates[i].gameObject.SetActive(true);
+        }
+
+        /* ─────────────  HELPERS  ───────────── */
+
+        private static void Shuffle<T>(IList<T> list)          // Fisher–Yates
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                int j = Random.Range(i, list.Count);
+                (list[i], list[j]) = (list[j], list[i]);
             }
         }
-
-        // 4. Перемешиваем
-        Shuffle(candidates);
-
-        // 5. Включаем нужное количество
-        int count = Mathf.Min(itemsToEnableThisRun, candidates.Count);
-        for (int i = 0; i < count; i++)
-            candidates[i].gameObject.SetActive(true);
     }
 
-    /* ─────────────  HELPERS  ───────────── */
-
-    private static void Shuffle<T>(IList<T> list)          // Fisher–Yates
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int j = Random.Range(i, list.Count);
-            (list[i], list[j]) = (list[j], list[i]);
-        }
-    }
 }
+

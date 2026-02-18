@@ -27,8 +27,20 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/MiniGames/PowerCheck.unity
     guid: da8627cce5e787a42b562f112709c443
   - enabled: 1
-    path: Assets/_Project/Scenes/MiniGames/Agility.unity
-    guid: f7e76babbdfb4af4c836d35d9e998f40
+    path: Assets/_Project/Scenes/StartDayScreen.unity
+    guid: 30d82111c35e22b47b650c631d03280a
+  - enabled: 1
+    path: Assets/_Project/Scenes/EndDayScreen.unity
+    guid: d85089cab505afc4b8e8dbeef71df4b6
+  - enabled: 1
+    path: Assets/_Project/Scenes/LoadingScreen.unity
+    guid: aaff2b49e872f264aa24b4c02f344df3
+  - enabled: 1
+    path: Assets/_Project/Scenes/WinScreen.unity
+    guid: 3fc144bed6dcf95409a8525b13cfb4f8
+  - enabled: 1
+    path: Assets/_Project/Scenes/NewGameIntro.unity
+    guid: 89a77634120ff354f8c167b31968f52d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 816a726db77b14b479f83b905ee881e8, type: 2}
   m_UseUCBPForAssetBundles: 0

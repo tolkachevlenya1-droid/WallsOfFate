@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Quest;
+using Game.Quest;
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Scripts.infrastructure
+namespace Game
 {
     internal class SceneNPCLocator : MonoInstaller
     {
@@ -56,7 +56,7 @@ namespace Assets.Scripts.infrastructure
         {
             // Проверяем наличие компонентов на префабе или его дочерних объектах
             CompositeTrigger compositeTrigger = prefab.GetComponentInChildren<CompositeTrigger>();
-            DialogeTrigger dialogeTrigger = prefab.GetComponentInChildren<DialogeTrigger>();
+            DialogueTrigger dialogeTrigger = prefab.GetComponentInChildren<DialogueTrigger>();
             Pickup pickup = prefab.GetComponentInChildren<Pickup>();
 
             // Если ни один из компонентов не найден, создаем NPC без дополнительных проверок
