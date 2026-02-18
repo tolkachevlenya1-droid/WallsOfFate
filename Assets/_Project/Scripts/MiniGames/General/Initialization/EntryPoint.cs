@@ -37,18 +37,21 @@ public class EntryPoint : MonoBehaviour {
     #region Mini-game Data Structures
     [System.Serializable]
     public class MiniGameData {
-        public MiniGameType minigameType;
+        public MiniGameType miniGameType;
+        public string miniGameSceneName;
         public int difficultyLevel;
         public Dictionary<string, object> customParameters;
 
         public MiniGameData() {
             difficultyLevel = 0;
-            minigameType = MiniGameType.None;
+            miniGameType = MiniGameType.None;
+            miniGameSceneName  = "";
             customParameters = new Dictionary<string, object>();
         }
 
-        public MiniGameData(MiniGameType type, Dictionary<string, object> gameVariables) {
-            minigameType = type;
+        public MiniGameData(MiniGameType miniGameTypeIn, string miniGameSceneNameIn, Dictionary<string, object> gameVariables) {
+            miniGameType = miniGameTypeIn;
+            miniGameSceneName = miniGameSceneNameIn;
             customParameters = gameVariables;
             difficultyLevel = 0;
         }
@@ -69,7 +72,7 @@ public class EntryPoint : MonoBehaviour {
 
     public void LaunchMinigame(MiniGameData launchData) {
         if (IsMinigameActive) {
-            Debug.LogWarning("Мини-игра уже запущена!");
+            Debug.LogWarning("Мини игра уже запущена!");
             return;
         }
 
@@ -83,7 +86,7 @@ public class EntryPoint : MonoBehaviour {
 
         minigameManager.StartMinigame(launchData);
 
-        Debug.Log($"Мини-игра запущена: {launchData.minigameType}");
+        Debug.Log($"Мини игра запущена: {launchData.miniGameType}");
     }
 
     #endregion

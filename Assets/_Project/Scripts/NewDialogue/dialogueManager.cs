@@ -128,10 +128,11 @@ public class DialogueManager : MonoBehaviour {
     }
 
     MiniGameData GetParamsOfMinigame() {
-        MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MinigameType;
+        MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MiniGameType;
+        string sceneName = _currentDialogue.sentences[CurrentID].MiniGameSceneName;
         Dictionary<string, object> minigameParams = _currentDialogue.sentences[CurrentID].MinigameParams;
 
-        return new MiniGameData(minigameType, minigameParams);
+        return new MiniGameData(minigameType, sceneName, minigameParams);
     }
     #endregion
 

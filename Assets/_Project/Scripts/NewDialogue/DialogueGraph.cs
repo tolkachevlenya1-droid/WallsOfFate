@@ -31,7 +31,8 @@ public class DialogueGraph : MonoBehaviour {
 
         #region GameVariables
         public bool StartMinigame;
-        public MiniGameType MinigameType = MiniGameType.None;
+        public MiniGameType MiniGameType = MiniGameType.None;
+        public string MiniGameSceneName = "";
 
         [SerializeField, TextArea(3, 5)] private string _parametersJson = "{}";
 
@@ -55,7 +56,7 @@ public class DialogueGraph : MonoBehaviour {
             }
         }
 
-        #region Rsources
+        #region Resources
         public int Gold;
         public int Food;
         public int PeopleSatisfaction;

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6094213521078699900}
   - component: {fileID: 5848981258033544571}
-  - component: {fileID: 8968850792625688946}
+  - component: {fileID: 2987275180989621299}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Zenject::Zenject.ProjectContext
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 8968850792625688946}
+  - {fileID: 2987275180989621299}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -62,7 +62,7 @@ MonoBehaviour:
       _missingHandlerDefaultResponse: 2
       _requireStrictUnsubscribe: 0
       _defaultAsyncTickPriority: 1
---- !u!114 &8968850792625688946
+--- !u!114 &2987275180989621299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,7 +71,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1480843839260135971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76b389941e4fa9646aacdee2c6a98441, type: 3}
+  m_Script: {fileID: 11500000, guid: c3081f595cba937458f903a56e0eff6a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.PersistentStatsInstaller
-  initialFreePoints: 5
+  m_EditorClassIdentifier: Assembly-CSharp::Game.GameInstaller

@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Game.MiniGame;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static EntryPoint;
 
-public class PowerCheckInstaller : MonoBehaviour
+public class PowerCheckInstaller : MonoBehaviour, IMiniGameInstaller
 {
     [Header("Player Settings")]
     public Transform StartPoint;
@@ -40,7 +41,7 @@ public class PowerCheckInstaller : MonoBehaviour
     public void InitializeWithData(MiniGameData gameData)
     {
         _gameData = gameData;
-        Debug.Log($"Инициализация мини-игры: {gameData.minigameType}");
+        Debug.Log($"Инициализация мини-игры: {gameData.miniGameType}");
         Initialize();
     }
     
@@ -76,7 +77,7 @@ public class PowerCheckInstaller : MonoBehaviour
             GameProcessObject.Initialize();
         }
         if(EndGameScreenObject != null)
-            EndGameScreenObject.OnEndGame += OnMinigameEnded;
+            EndGameScreenObject.OnEndGame += OnMiniGameEnded;
     }
     
     private void ApplyDifficulty(int difficulty)
@@ -173,7 +174,7 @@ public class PowerCheckInstaller : MonoBehaviour
         }
     }
     
-    private void OnMinigameEnded(bool playerWin)
+    public void OnMiniGameEnded(bool playerWin)
     {
         Debug.Log($"Мини-игра завершена! Победил ли игрок? {playerWin}");                    
         if (MinigameManager.Instance != null) MinigameManager.Instance.EndMinigame(playerWin);        
@@ -183,7 +184,8 @@ public class PowerCheckInstaller : MonoBehaviour
     {
         if (EndGameScreenObject != null)
         {
-            EndGameScreenObject.OnEndGame -= OnMinigameEnded;
+            EndGameScreenObject.OnEndGame -= OnMiniGameEnded;
         }
     }
+
 }

@@ -451,9 +451,9 @@ MonoBehaviour:
       \u0442\u0435\u0431\u044F \u0432 \u043A\u043E\u0442\u043B\u0435\u0442\u0443?!"
     NextNodeID: 1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: 
     Gold: 0
     Food: 0
@@ -465,9 +465,9 @@ MonoBehaviour:
     Text: "\u0414\u0430\u0432\u0430\u0439 \u0441\u043E\u0441\u0443\u043D\u043E\u043A!"
     NextNodeID: 3
     isOption: 1
-    isAnswer: 1
     StartMinigame: 1
-    MinigameType: 1
+    MiniGameType: 2
+    MiniGameSceneName: Agility
     _parametersJson: "{\n\t\"Name\": \"Guard\",\n\t\"Prefab\": \"MiniGames/PowerCheck/Enemies/GuardEnemy
       1\",\n\"Win\": {\r\n\t\t\"Resources\": {\r\n\t\t\t\"Gold\": \"+1\"\r\n\t\t}\r\n\t},\r\n\t\"Lose\":
       {\r\n\t\t\"Resources\": {\r\n\t\t\t\"Gold\": \"-1\"\r\n\t\t}\r\n\t}\n}"
@@ -481,9 +481,9 @@ MonoBehaviour:
     Text: "\u041D\u0435\u0442"
     NextNodeID: -1
     isOption: 1
-    isAnswer: 1
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: "\u041B\u0430\u0434\u043E(("
     Gold: 0
     Food: 0
@@ -496,9 +496,9 @@ MonoBehaviour:
       \u043C\u0430\u0441\u043B\u043E\u043C!!"
     NextNodeID: -1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: 
     Gold: 0
     Food: 0

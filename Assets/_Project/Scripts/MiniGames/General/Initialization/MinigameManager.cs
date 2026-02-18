@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Game.MiniGame;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Game;
 using static EntryPoint;
 
+[System.Serializable]
 public enum MiniGameType {
     None = 0,
-    PowerCheck = 1
+    PowerCheck = 1,
+    Agility = 2
 }
 
 
@@ -14,9 +18,7 @@ public class MinigameManager : MonoBehaviour {
     public static MinigameManager Instance { get; private set; }
 
     [Header("Minigame Scenes")]
-    [SerializeField] private string powerCheckScene = "PowerCheck";
     [SerializeField] private string castleDefenseScene = "CastleDefenseMinigame";
-    // Добавьте другие сцены по необходимости
 
     private MiniGameData _currentGameData;
     private Dictionary<string, object> _lastResult;
@@ -46,41 +48,42 @@ public class MinigameManager : MonoBehaviour {
         _currentGameData = gameData;
         _previousScene = SceneManager.GetActiveScene().name;
 
-        string sceneToLoad = GetSceneForMinigameType(gameData.minigameType);
+        string sceneToLoad = gameData.miniGameSceneName;
 
         if (!string.IsNullOrEmpty(sceneToLoad)) {
             //SceneManager.LoadScene(sceneToLoad);
             LoadingScreenManager.Instance.LoadScene(sceneToLoad);
         }
         else {
-            Debug.LogError($"Не определена сцена для мини-игры типа: {gameData.minigameType}");
-        }
-    }
-
-    private string GetSceneForMinigameType(MiniGameType type) {
-        switch (type) {
-            case MiniGameType.PowerCheck:
-                return powerCheckScene;
-            default:
-                Debug.LogWarning($"Тип мини-игры {type} не настроен. Использую сцену по умолчанию.");
-                return powerCheckScene;
+            Debug.LogError($"Не определена сцена для мини-игры типа: {gameData.miniGameType}");
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        if (scene.name == powerCheckScene || scene.name == castleDefenseScene) {
-            Invoke(nameof(InitializeMinigame), 0.1f);
-        }
+        Invoke(nameof(InitializeMinigame), 0.1f);
     }
 
     private void InitializeMinigame() {
-        PowerCheckInstaller installer = FindObjectOfType<PowerCheckInstaller>();
+        IMiniGameInstaller installer = FindInstallerByInterface();
         if (installer != null) {
             installer.InitializeWithData(_currentGameData);
         }
         else {
             Debug.LogError("MiniGameInstaller не найден на сцене мини-игры!");
         }
+    }
+
+    IMiniGameInstaller FindInstallerByInterface() {
+        MonoBehaviour[] allBehaviours = FindObjectsOfType<MonoBehaviour>();
+
+        foreach (MonoBehaviour behaviour in allBehaviours) {
+            if (behaviour is IMiniGameInstaller installer) {
+                return installer;
+            }
+        }
+
+        Debug.LogWarning("IMiniGameInstaller не найден на сцене!");
+        return null;
     }
 
     public void EndMinigame(bool playerWon) {
@@ -108,14 +111,11 @@ public class MinigameManager : MonoBehaviour {
             Debug.LogError($"Error processing minigame result: {e.Message}");
         }
 
-        // Возвращаемся в предыдущую сцену
         LoadingScreenManager.Instance.LoadScene(_previousScene);
-        //SceneManager.LoadScene(_previousScene);
         Destroy(this.gameObject);
     }
 
     private void ProcessResources(Dictionary<string, string> resourcesDict) {
-        // Проверяем и обрабатываем золото
         if (!string.IsNullOrEmpty(resourcesDict["Gold"]))
             if (int.TryParse(resourcesDict["Gold"], out int goldChange))
                 GameResources.GameResources.ChangeGold(goldChange);
