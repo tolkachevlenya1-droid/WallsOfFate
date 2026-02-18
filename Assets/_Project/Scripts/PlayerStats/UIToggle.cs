@@ -1,5 +1,7 @@
 ﻿using Player;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIToggle : MonoBehaviour
 {
@@ -11,15 +13,9 @@ public class UIToggle : MonoBehaviour
             targetObject.SetActive(newState);
             if(newState) {
                 transform.GetComponent<StatsControllerUI>().UpdateAllStatsUI();
+                Time.timeScale = 0;
             }
+            else Time.timeScale = 1;
         }
-    }
-
-    public void EnableObject() {
-        if (targetObject != null) targetObject.SetActive(true);
-    }
-
-    public void DisableObject() {
-        if (targetObject != null) targetObject.SetActive(false);
     }
 }
