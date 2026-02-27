@@ -20,7 +20,7 @@ namespace Game
         private LoadingManager loadingManager;
 
         [Inject]
-        private void Init(LoadingManager loadingManager)
+        private void Construct(LoadingManager loadingManager)
         {
             this.loadingManager = loadingManager;
         }

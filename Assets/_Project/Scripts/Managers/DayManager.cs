@@ -25,8 +25,8 @@ namespace Game
         {
             if (newDayButton != null)
                 newDayButton.onClick.AddListener(ShowEndOfDay);
-            //else
-            //Debug.LogWarning("DayManager: newDayButton не назначена!");
+            else
+                Debug.LogWarning("DayManager: newDayButton не назначена!");
         }
 
         private void Update()

@@ -33,7 +33,7 @@ namespace Game
             playerAnimator = GetComponent<PlayerAnimator>();
             if (playerAnimator == null)
             {
-                //Debug.LogError("InteractManager: Не найден компонент PlayerAnimator!");
+                Debug.LogError("InteractManager: Не найден компонент PlayerAnimator!");
             }
 
         }

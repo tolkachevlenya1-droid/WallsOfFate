@@ -4113,10 +4113,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 417bee7abd9f5b246a140c0f85d236a0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  StartPoint: {fileID: 1890123944}
-  Prefab: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
-  Parent: {fileID: 2859251394975671733}
+  m_EditorClassIdentifier: Assembly-CSharp::Game.ScenePlayerLocator
+  StartPoint: {fileID: 392258294426946198}
+  Prefab: {fileID: 1025207163224887340}
+  Parent: {fileID: 1323262236}
   CameraTransform: {fileID: 4053043660626195217}
 --- !u!1 &895580117
 GameObject:
@@ -6544,7 +6544,7 @@ Transform:
   - {fileID: 154814569}
   - {fileID: 393039104}
   - {fileID: 706285932}
-  - {fileID: 2047566053}
+  - {fileID: 392258294426946198}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 43, z: 0}
 --- !u!1 &1326116668
@@ -8375,10 +8375,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainCharacterStartDay
       objectReference: {fileID: 0}
+    - target: {fileID: 7970423783262537202, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8059408201855690858}
+    - targetCorrespondingSourceObject: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8059408201855690868}
+    - targetCorrespondingSourceObject: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8059408201855690867}
+    - targetCorrespondingSourceObject: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8059408201855690866}
   m_SourcePrefab: {fileID: 100100000, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
 --- !u!1 &1671121835
 GameObject:
@@ -10929,11 +10945,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2037596631}
   m_CullTransparentMesh: 1
---- !u!4 &2047566053 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 392258294931892313, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
-  m_PrefabInstance: {fileID: 1645830863}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2065321397
 GameObject:
   m_ObjectHideFlags: 0
@@ -11574,6 +11585,11 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!4 &392258294426946198 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 392258294931892313, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+  m_PrefabInstance: {fileID: 1645830863}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &418061042470720541
 Transform:
   m_ObjectHideFlags: 0
@@ -12029,6 +12045,11 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
   m_IsActive: 1
+--- !u!1 &1025207163224887340 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1025207163794879203, guid: 3c12a657ff1a93b498efff0d319e90e9, type: 3}
+  m_PrefabInstance: {fileID: 1645830863}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1046683259457883815
 GameObject:
   m_ObjectHideFlags: 0
@@ -15850,7 +15871,7 @@ PrefabInstance:
     - target: {fileID: -6050418262163192570, guid: 44a0de0f766c9634eb66f1d56b7edc9d, type: 3}
       propertyPath: _player
       value: 
-      objectReference: {fileID: 2047566053}
+      objectReference: {fileID: 392258294426946198}
     - target: {fileID: -6050418262163192570, guid: 44a0de0f766c9634eb66f1d56b7edc9d, type: 3}
       propertyPath: runSpeed
       value: 3
@@ -16078,6 +16099,106 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!65 &8059408201855690858
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025207163224887340}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.5060625, y: 1.1713501, z: 1.0000001}
+  m_Center: {x: -0.046356164, y: 0.27432495, z: 4.55}
+--- !u!114 &8059408201855690866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025207163224887340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562f9208b70636841a06170ce3eec486, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.PlayerMoveController
+  moveSpeed: 3
+  runMultiplier: 1.5
+  rotationSpeed: 10
+  gravity: 9.81
+  cameraTransform: {fileID: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  stopThreshold: 0.1
+  clickRunThreshold: 0.3
+  holdThreshold: 0.2
+  walkingPitch: 1
+  runningPitch: 1.5
+  _dialogueManager: {fileID: 0}
+--- !u!195 &8059408201855690867
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025207163224887340}
+  m_Enabled: 1
+  m_AgentTypeID: 2
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &8059408201855690868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025207163224887340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9ca5c2987e88b74aaf4f0ec5a6382bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.MiniGamePlayer
+  playerName: 
+  playerNameForGame: 
+  maxHealth: 0
+  health: 0
+  minDamage: 1
+  damage: 1
+  speed: 0
+  speedModifier: 0
+  minHealingAmount: 1
+  healingAmount: 1
+  isDead: 0
+  floatingTextWorldPrefab: {fileID: 0}
+  playerRenderer: {fileID: 0}
+  flashDuration: 0.2
+  Portrait: 
+  initialBuffPulseDuration: 1
+  initialDebuffPulseDuration: 1
+  minPulseDuration: 0.2
+  pulseDecayFactor: 0.8
 --- !u!1 &8074194699672020493
 GameObject:
   m_ObjectHideFlags: 0

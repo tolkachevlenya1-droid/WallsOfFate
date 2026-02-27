@@ -20,8 +20,6 @@ namespace Game.Data
         Mystic
     }
 
-
-
     public class Player
     {
 
@@ -49,12 +47,14 @@ namespace Game.Data
 
         public int GetStat(StatType type) => stats[type];
 
-        public void AddStat(StatType type, int delta) {
+        public void AddStat(StatType type, int delta)
+        {
             stats[type] = Math.Max(stats[type] + delta, 0);
             StatChanged?.Invoke(type, stats[type]);
         }
 
-        public void SetStat(StatType type, int value) {
+        public void SetStat(StatType type, int value)
+        {
             stats[type] = Math.Max(value, 0);
             StatChanged?.Invoke(type, stats[type]);
         }
@@ -70,12 +70,14 @@ namespace Game.Data
 
         public event Action<ResourceType, int> ResourceChanged;
 
-        public void AddResource(ResourceType type, int delta) {
+        public void AddResource(ResourceType type, int delta)
+        {
             resources[type] = Math.Max(resources[type] + delta, 0);
             ResourceChanged?.Invoke(type, resources[type]);
         }
 
-        public void SetResource(ResourceType type, int value) {
+        public void SetResource(ResourceType type, int value)
+        {
             resources[type] = Math.Max(value, 0);
             ResourceChanged?.Invoke(type, resources[type]);
         }
