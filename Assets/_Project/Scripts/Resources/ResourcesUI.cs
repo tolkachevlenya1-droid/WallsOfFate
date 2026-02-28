@@ -61,7 +61,7 @@ namespace Game
             playerManager.PlayerData.ResourceChanged -= OnResourceChanged;
         }
 
-        #region Unity lifecycle
+        #region Unity life-cycle
         private void Start()
         {
             resourceTextFields = new Dictionary<ResourceType, TMP_Text> {
