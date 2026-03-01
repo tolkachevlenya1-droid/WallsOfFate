@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 namespace Game
 {
     #region Mini-game Data Structures
@@ -43,6 +44,8 @@ namespace Game
 
     public class EntryPoint : MonoBehaviour
     {
+        [Inject] private DiContainer container;
+
         #region Singleton
         private static EntryPoint _instance;
         public static EntryPoint Instance
@@ -78,9 +81,15 @@ namespace Game
         }
         #endregion
 
-        #region Minigame Management
+        #region MiniGame Management
 
         public bool IsMinigameActive => MinigameManager.Instance != null && MinigameManager.Instance.transform.gameObject.activeSelf;
+
+        [Inject]
+        private void Construct(DiContainer container)
+        {
+            this.container = container;
+        }
 
         public void LaunchMinigame(MiniGameData launchData)
         {
@@ -90,9 +99,11 @@ namespace Game
                 return;
             }
 
-            GameObject managerObj = new GameObject("MinigameManager");
-            MinigameManager minigameManager = managerObj.AddComponent<MinigameManager>();
-            DontDestroyOnLoad(managerObj);
+            //GameObject managerObj = new GameObject("MinigameManager");
+            //MinigameManager minigameManager = managerObj.AddComponent<MinigameManager>();
+            //DontDestroyOnLoad(managerObj);
+            MinigameManager minigameManager = container.InstantiateComponentOnNewGameObject<MinigameManager>("MinigameManager");
+            DontDestroyOnLoad(minigameManager.gameObject);
 
             Debug.Log("Создан новый MinigameManager");
 

@@ -29,7 +29,6 @@ namespace Game
         private bool _interactBuffered;
         private void Awake()
         {
-
             playerAnimator = GetComponent<PlayerAnimator>();
             if (playerAnimator == null)
             {
@@ -181,27 +180,6 @@ namespace Game
 
             hasInteracted = true;
             if (interactionIndicator) interactionIndicator.SetActive(false);
-        }
-
-
-
-
-        // Метод для однократного запуска всех встреченных триггеров
-        public void TriggerAllEncounteredOnce()
-        {
-            foreach (var trigger in encounteredTriggers)
-            {
-                if (trigger != null)
-                {
-                    TryTrigger(trigger);
-                }
-            }
-        }
-
-        // Метод для получения списка всех встреченных интерактивных объектов
-        public List<ITriggerable> GetEncounteredTriggers()
-        {
-            return new List<ITriggerable>(encounteredTriggers);
         }
 
         // Метод для проверки, был ли триггер уже активирован

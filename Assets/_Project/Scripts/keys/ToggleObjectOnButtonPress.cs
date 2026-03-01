@@ -21,21 +21,19 @@ namespace Game
         [field: SerializeField]
         public GameObject TargetObject { get; private set; }
 
-        private GameObject _objectToDisable;
         private bool _isPaused = false;
 
         private LoadingManager _loadingManager;
 
         [Inject]
-        private void Construct(PlayerMoveController playerMoveController, LoadingManager loadingManager)
+        private void Construct(LoadingManager loadingManager)
         {
-            _objectToDisable = playerMoveController.gameObject;
             _loadingManager = loadingManager;
         }
 
         void Update()
         {
-            // ★ Если загрузочный экран активен — выходим и не обрабатываем Esc/другие кнопки
+            //  Если загрузочный экран активен — выходим и не обрабатываем Esc/другие кнопки
             if (_loadingManager.IsLoading)
                 return;
 

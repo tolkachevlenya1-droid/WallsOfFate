@@ -1,6 +1,7 @@
 ﻿using Ink.Parsed;
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace Game
 {
@@ -21,11 +22,15 @@ namespace Game
     public struct TriggerIvent
     {
         public InfluenceType AreaType;
+        public GameObject PlayerObj;
         public GameObject TriggerObj;
+        public bool IsEnteracted;
 
-        public TriggerIvent(InfluenceType areaType, GameObject triggerObj)
+        public TriggerIvent(InfluenceType areaType, GameObject playerObj, GameObject triggerObj, bool isEnteracted)
         {
             AreaType = areaType;
+            PlayerObj = playerObj;
+            IsEnteracted = isEnteracted;
             TriggerObj = triggerObj;
         }
     }
@@ -35,9 +40,20 @@ namespace Game
     {
         public InfluenceType AreaType;
         public InfluenceInteractionType InteractionType;
-        public ITriggerHandler Handler;
+        public string triggerObjectName;
+        //GameObject triggerObject;
+        NPCPrefabFactory npcFActory;
+        [SerializeReference]
+        public GameObject Handler;
 
         private BoxCollider boxCollider;
+
+        [Inject]
+        private void Construct(NPCPrefabFactory npcFActory)
+        {
+            //this.triggerObject = npcFActory.GetInstance(triggerObjectName);
+            this.npcFActory = npcFActory;
+        }
 
         private void Reset()
         {
@@ -75,8 +91,10 @@ namespace Game
         {
             if (Handler != null)
             {
-                TriggerIvent iventData = new TriggerIvent(AreaType, obj.gameObject);
-                Handler.Handle(iventData);
+                bool interacted = InputManager.GetInstance().GetInteractPressed();
+                GameObject triggerObject = npcFActory.GetInstance(triggerObjectName);
+                TriggerIvent iventData = new TriggerIvent(AreaType, obj.gameObject, triggerObject, interacted);
+                Handler.transform.GetComponent<ITriggerHandler>().Handle(iventData);
             }
         }
     }

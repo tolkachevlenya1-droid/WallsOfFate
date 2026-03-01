@@ -445,6 +445,25 @@ namespace Game
 
         private void CloseDialogue()
         {
+            //if (DialogueUI != null)
+            //{
+            //    DialogueUI.SetActive(false);
+            //}
+
+            //ClearSpawnedPanels();
+
+            //IsInDialogue = false;
+            //CurrentID = 0;
+            //OnFinished?.Invoke();
+            //OnMiniGameStartRequested?.Invoke(miniGameData);
+            StartCoroutine(CloseDialogueWithDelay(2f));
+        }
+
+        private IEnumerator CloseDialogueWithDelay(float delay)
+        {
+            // Ждем указанное количество секунд
+            yield return new WaitForSeconds(delay);
+
             if (DialogueUI != null)
             {
                 DialogueUI.SetActive(false);

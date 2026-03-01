@@ -27,7 +27,7 @@ namespace Game
         {
             if (Prefab == null)
             {
-                //Debug.LogError("Prefab не назначен в инспекторе!", this);
+                Debug.LogError("Prefab не назначен в инспекторе!", this);
                 return;
             }
 
