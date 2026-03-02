@@ -163,11 +163,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cf9c5931a3b3c4ba456c8213d7ebfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: BezierSolution.Runtime::BezierSolution.BezierPoint
-  m_position: {x: -1.23, y: 8.77, z: -9.0878}
+  m_position: {x: -53.1, y: 8.77, z: -25.937801}
   m_precedingControlPointLocalPosition: {x: 0.46269047, y: 0.1937857, z: -0.29696178}
-  m_precedingControlPointPosition: {x: 3.044242, y: 10.560154, z: -11.831074}
+  m_precedingControlPointPosition: {x: -48.825756, y: 10.560154, z: -28.681074}
   m_followingControlPointLocalPosition: {x: -0.46269047, y: -0.19378576, z: 0.29696184}
-  m_followingControlPointPosition: {x: -5.504242, y: 6.9798465, z: -6.3445253}
+  m_followingControlPointPosition: {x: -57.37424, y: 6.9798465, z: -23.194527}
   m_handleMode: 2
   m_normal: {x: 0, y: 1, z: 0}
   m_autoCalculatedNormalAngleOffset: 0
@@ -301,9 +301,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148310ac13c958d4c93f53cdfe985375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: BezierSolution.Runtime::BezierSolution.BezierWalkerWithSpeed
-  spline: {fileID: 629155656}
+  spline: {fileID: 0}
   travelMode: 1
-  speed: 0
+  speed: 1
   m_normalizedT: 0
   rotationLerpModifier: 10
   lookAt: 1
@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: BezierSolution.Runtime::BezierSolution.BezierWalkerWithSpeed
   spline: {fileID: 629155656}
   travelMode: 1
-  speed: 0
+  speed: -1
   m_normalizedT: 0.1
   rotationLerpModifier: 10
   lookAt: 1
@@ -1144,7 +1144,7 @@ Transform:
   m_GameObject: {fileID: 500003414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.9, y: 17.49, z: 17.7}
+  m_LocalPosition: {x: -46.27, y: 8.79, z: -14.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1199,7 +1199,7 @@ Transform:
   m_GameObject: {fileID: 629155655}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.23, y: 8.77, z: 0.15}
+  m_LocalPosition: {x: -53.1, y: 8.77, z: -16.7}
   m_LocalScale: {x: 9.2378, y: 9.2378, z: 9.2378}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1688,11 +1688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cf9c5931a3b3c4ba456c8213d7ebfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: BezierSolution.Runtime::BezierSolution.BezierPoint
-  m_position: {x: -1.1746169, y: 9.248466, z: 9.624938}
+  m_position: {x: -53.044617, y: 9.248466, z: -7.2250624}
   m_precedingControlPointLocalPosition: {x: 3.6416738, y: -0.07588035, z: 0.33703002}
-  m_precedingControlPointPosition: {x: 32.46644, y: 8.547498, z: 12.738355}
+  m_precedingControlPointPosition: {x: -19.40356, y: 8.547498, z: -4.1116457}
   m_followingControlPointLocalPosition: {x: -3.641674, y: 0.07588041, z: -0.33703}
-  m_followingControlPointPosition: {x: -34.81567, y: 9.949433, z: 6.5115232}
+  m_followingControlPointPosition: {x: -86.68567, y: 9.949433, z: -10.338478}
   m_handleMode: 2
   m_normal: {x: 0, y: 1, z: 0}
   m_autoCalculatedNormalAngleOffset: 0
@@ -2140,6 +2140,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707644534}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1745079670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1745079671}
+  m_Layer: 0
+  m_Name: SplineSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1745079671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745079670}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5.26, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774994566
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,11 +2326,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cf9c5931a3b3c4ba456c8213d7ebfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: BezierSolution.Runtime::BezierSolution.BezierPoint
-  m_position: {x: 1.3024297, y: 8.77, z: 2.0919714}
+  m_position: {x: -50.56757, y: 8.77, z: -14.758029}
   m_precedingControlPointLocalPosition: {x: -1, y: 0, z: 0}
-  m_precedingControlPointPosition: {x: -7.93537, y: 8.77, z: 2.0919714}
+  m_precedingControlPointPosition: {x: -59.805367, y: 8.77, z: -14.758029}
   m_followingControlPointLocalPosition: {x: 1, y: 0, z: 0}
-  m_followingControlPointPosition: {x: 10.54023, y: 8.77, z: 2.0919714}
+  m_followingControlPointPosition: {x: -41.32977, y: 8.77, z: -14.758029}
   m_handleMode: 2
   m_normal: {x: -0, y: -1, z: -0}
   m_autoCalculatedNormalAngleOffset: 0
@@ -2469,6 +2500,57 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8616276468678558677, guid: 5d7e9c51bb1b48f4387d6992748577b8, type: 3}
+--- !u!1 &1957662415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1957662417}
+  - component: {fileID: 1957662416}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1957662416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957662415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f925d8f46f6e49469131c7ecdf0684b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.PatternController
+  SplinePrefab: {fileID: 629155656}
+  WalkerPrefab: {fileID: 111765749}
+  SpawnedWalkers: []
+  Spline: {fileID: 0}
+  WalkersNumber: 5
+  SplineSpawnPoint: {fileID: 1745079671}
+  SplineParent: {fileID: 1957662417}
+--- !u!4 &1957662417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957662415}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40.2, y: 2.2929, z: -15.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1977959368
 GameObject:
   m_ObjectHideFlags: 0
@@ -2602,3 +2684,5 @@ SceneRoots:
   - {fileID: 347968490}
   - {fileID: 1791994116}
   - {fileID: 1602494703}
+  - {fileID: 1957662417}
+  - {fileID: 1745079671}

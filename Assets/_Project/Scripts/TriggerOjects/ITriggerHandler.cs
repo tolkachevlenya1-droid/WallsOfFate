@@ -1,7 +1,9 @@
-﻿namespace Game
+﻿using UnityEngine;
+
+namespace Game
 {
     public interface ITriggerHandler
     {
-        public void Handle(TriggerIvent iventData);
+        public void Handle(TriggerEvent iventData);
     }
 }

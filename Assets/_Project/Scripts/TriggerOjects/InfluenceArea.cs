@@ -19,14 +19,14 @@ namespace Game
         Exit = 2,
     }
 
-    public struct TriggerIvent
+    public struct TriggerEvent
     {
         public InfluenceType AreaType;
         public GameObject PlayerObj;
         public GameObject TriggerObj;
         public bool IsEnteracted;
 
-        public TriggerIvent(InfluenceType areaType, GameObject playerObj, GameObject triggerObj, bool isEnteracted)
+        public TriggerEvent(InfluenceType areaType, GameObject playerObj, GameObject triggerObj, bool isEnteracted)
         {
             AreaType = areaType;
             PlayerObj = playerObj;
@@ -42,9 +42,10 @@ namespace Game
         public InfluenceInteractionType InteractionType;
         public string triggerObjectName;
         //GameObject triggerObject;
-        NPCPrefabFactory npcFActory;
-        [SerializeReference]
-        public GameObject Handler;
+        NPCPrefabFactory npcFactory;
+        //[SerializeReference]
+        //public GameObject Handler;
+        public event Action<TriggerEvent> OnEventTriggered;
 
         private BoxCollider boxCollider;
 
@@ -52,7 +53,7 @@ namespace Game
         private void Construct(NPCPrefabFactory npcFActory)
         {
             //this.triggerObject = npcFActory.GetInstance(triggerObjectName);
-            this.npcFActory = npcFActory;
+            this.npcFactory = npcFActory;
         }
 
         private void Reset()
@@ -89,13 +90,15 @@ namespace Game
 
         private void InvokeEvent(Collider obj)
         {
-            if (Handler != null)
-            {
-                bool interacted = InputManager.GetInstance().GetInteractPressed();
-                GameObject triggerObject = npcFActory.GetInstance(triggerObjectName);
-                TriggerIvent iventData = new TriggerIvent(AreaType, obj.gameObject, triggerObject, interacted);
-                Handler.transform.GetComponent<ITriggerHandler>().Handle(iventData);
-            }
+            bool interacted = InputManager.GetInstance().GetInteractPressed();
+            GameObject triggerObject = npcFactory.GetInstance(triggerObjectName);
+            TriggerEvent iventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted);
+            OnEventTriggered?.Invoke(iventData);
+            //if (Handler != null)
+            //{
+
+            //    //Handler.transform.GetComponent<ITriggerHandler>().Handle(iventData);
+            //}
         }
     }
 }

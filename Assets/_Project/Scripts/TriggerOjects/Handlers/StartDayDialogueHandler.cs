@@ -7,8 +7,21 @@ using UnityEngine;
 namespace Game
 {
     internal class StartDayDialogueHandler : MonoBehaviour, ITriggerHandler
-    {   
-        public void Handle(TriggerIvent iventData)
+    {
+        [SerializeField] private InfluenceArea influenceAria;
+
+        private void OnEnable()
+        {
+            influenceAria.OnEventTriggered += Handle;
+        }
+
+
+        private void OnDisable()
+        {
+            influenceAria.OnEventTriggered -= Handle;
+        }
+
+        public void Handle(TriggerEvent iventData)
         {
             DialogueGraph dialogueGraph;
             DialogueManager _dialogueManager = DialogueManager.Instance;

@@ -13,7 +13,7 @@ namespace Game
         public Transform Parent; // Родительский объект для NPC
 
         public List<Transform> StartPoints; // Список точек старта для каждого NPC
-        public List<bool> EnableCheck;
+        //public List<bool> EnableCheck;
 
         public override void InstallBindings()
         {
@@ -42,26 +42,27 @@ namespace Game
                 // Проверяем наличие нужных компонентов на префабе или его дочерних объектах
                 //bool shouldInstantiate = CheckQuestConditions(prefab);
 
-                if (/*shouldInstantiate || */!EnableCheck[i])
-                {
-                    // Получаем позицию и поворот из Transform точки старта
-                    Vector3 spawnPosition = startPoint.position;
-                    Quaternion spawnRotation = startPoint.rotation;
-                    string npcName = prefab.name;
+                Vector3 spawnPosition = startPoint.position;
+                Quaternion spawnRotation = startPoint.rotation;
+                string npcName = prefab.name;
 
-                    factory.Create(npcName, spawnPosition, spawnRotation, Parent);
+                factory.Create(npcName, spawnPosition, spawnRotation, Parent);
+                
+                //if (/*shouldInstantiate || */!EnableCheck[i])
+                //{
+                //    // Получаем позицию и поворот из Transform точки старта
 
-                    // Инстанцируем NPC
-                    // GameObject instance = Instantiate(prefab, spawnPosition, spawnRotation, Parent);
-                    // Container.Bind<GameObject>()
-                    //.WithId(prefab.name)
-                    //.FromInstance(prefab)
-                    //.AsCached();
-                }
-                else
-                {
-                    Debug.Log($"NPC {prefab.name} не создан, так как не выполнены условия квеста.");
-                }
+                //    // Инстанцируем NPC
+                //    // GameObject instance = Instantiate(prefab, spawnPosition, spawnRotation, Parent);
+                //    // Container.Bind<GameObject>()
+                //    //.WithId(prefab.name)
+                //    //.FromInstance(prefab)
+                //    //.AsCached();
+                //}
+                //else
+                //{
+                //    Debug.Log($"NPC {prefab.name} не создан, так как не выполнены условия квеста.");
+                //}
             }
         }
 

@@ -9,9 +9,21 @@ namespace Game
     internal class DialogueHandler : MonoBehaviour, ITriggerHandler
     {
         [Header("Dialogue Settings")]
-        [SerializeField] private string _defaultDialogue;
+        //[SerializeField] private string defaultDialogue;
+        [SerializeField] private InfluenceArea influenceAria;
 
-        public void Handle(TriggerIvent iventData)
+        private void OnEnable()
+        {
+            influenceAria.OnEventTriggered += Handle;   
+        }
+
+
+        private void OnDisable()
+        {
+            influenceAria.OnEventTriggered -= Handle;
+        }
+
+        public void Handle(TriggerEvent iventData)
         {
             DialogueManager _dialogueManager = DialogueManager.Instance;
             if (iventData.IsEnteracted && !_dialogueManager.IsInDialogue)

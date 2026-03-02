@@ -1458,7 +1458,7 @@ MonoBehaviour:
   buffDamage: 0
   speedDebufCooldown: 1
   speedDebuf: 0
-  debuffTime: 2
+  debuffTime: 1.5
   debuffTimeBeforeExplosion: 0
   debuffRadiusOfExplosion: 1.5
   debuffDamage: 3

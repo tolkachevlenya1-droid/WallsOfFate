@@ -2732,7 +2732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.InfluenceArea
   AreaType: 1
   InteractionType: 1
-  Handler: {fileID: 1247579764}
+  triggerObjectName: 
 --- !u!65 &476124448
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4117,6 +4117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 887299833}
   - component: {fileID: 887299832}
+  - component: {fileID: 887299835}
   - component: {fileID: 887299834}
   m_Layer: 0
   m_Name: SceneContext
@@ -4140,6 +4141,7 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 887299834}
+  - {fileID: 887299835}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -4188,6 +4190,21 @@ MonoBehaviour:
   Prefab: {fileID: 1025207163794879203, guid: d3834e299c311c346a7da2b37b4246b7, type: 3}
   Parent: {fileID: 2859251394975671733}
   CameraTransform: {fileID: 4053043660626195217}
+--- !u!114 &887299835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887299831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e0dc873868c0f4a86ad6d888c68480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.SceneNPCLocator
+  NPC: []
+  Parent: {fileID: 0}
+  StartPoints: []
 --- !u!1 &895580117
 GameObject:
   m_ObjectHideFlags: 0
@@ -6024,6 +6041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4b3b8b34efe134583159dad6d34a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.StartDayDialogHandler
+  influenceAria: {fileID: 476124447}
 --- !u!4 &1247579766
 Transform:
   m_ObjectHideFlags: 0
