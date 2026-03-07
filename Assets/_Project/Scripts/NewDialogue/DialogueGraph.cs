@@ -36,7 +36,7 @@ namespace Game
 
             #region GameVariables
             public bool StartMinigame;
-            public MiniGameType MiniGameType = MiniGameType.None;
+            public MiniGame.MiniGameType MiniGameType = MiniGame.MiniGameType.None;
             public string MiniGameSceneName = "";
 
             [SerializeField, TextArea(3, 5)] private string _parametersJson = "{}";

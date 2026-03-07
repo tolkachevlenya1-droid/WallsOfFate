@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class MiniGamePlayer : MonoBehaviour
     {

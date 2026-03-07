@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static Game.EntryPoint;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class PowerCheckInstaller : MonoBehaviour, IMiniGameInstaller
     {
@@ -84,7 +83,6 @@ namespace Game
         private void ApplyDifficulty(int difficulty)
         {
             Debug.Log($"Установлена сложность: {difficulty}");
-            // Здесь можно настроить параметры игры в зависимости от сложности
         }
 
         private void BindMineSpawner()

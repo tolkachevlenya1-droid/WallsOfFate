@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class BuffSpeedMine : Mine
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame
 {
     [System.Serializable]
     public enum MiniGameType
