@@ -5,22 +5,19 @@ using System.Linq;
 
 namespace Game
 {
-    [Serializable]
-    public class QuestSaveData
+    public enum QuestStatus
     {
-        public int CurrentDay;
-        public List<DayData> Days = new();
+        NotStarted,
+        InProgress,
+        Completed
     }
 
-    public static class QuestCollection
+    [Serializable]
+    public class Quest
     {
-        private static QuestSaveData _saveData = new();
+        public readonly int Id;
 
-        public static int CurrentDayNumber
-        {
-            get => _saveData.CurrentDay;
-            private set => _saveData.CurrentDay = value;
-        }
+
 
         public static void Initialize(QuestSaveData saveData = null)
         {
