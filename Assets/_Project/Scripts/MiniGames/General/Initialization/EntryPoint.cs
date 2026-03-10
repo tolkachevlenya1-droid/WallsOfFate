@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using Game.MiniGame;
+
 namespace Game
 {
     #region Mini-game Data Structures

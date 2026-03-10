@@ -5,20 +5,22 @@ using System.Text;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Game
+namespace Game.MiniGame.Agility
 {
-    internal class PatternController : MonoBehaviour
+    public class PatternController : MonoBehaviour
     {
         public BezierSolution.BezierSpline SplinePrefab;
         public BezierSolution.BezierWalkerWithSpeed WalkerPrefab;
 
-        public List<BezierSolution.BezierWalkerWithSpeed> SpawnedWalkers;
-        public BezierSolution.BezierSpline Spline;
+        public List<BezierSolution.BezierWalkerWithSpeed> SpawnedWalkers = new List<BezierSolution.BezierWalkerWithSpeed>();
+        private BezierSolution.BezierSpline Spline;
 
         public int WalkersNumber;
 
         public Transform SplineSpawnPoint;
         public Transform SplineParent;
+
+        public float LifeTime;
 
         private void Awake()
         {
@@ -26,6 +28,30 @@ namespace Game
             for (int i = 0; i < WalkersNumber; i++)
             {
                 SpawnWalker(i);
+            }
+        }
+              
+
+        public void Cleanup()
+        {
+            StopAllCoroutines();
+
+            if (SpawnedWalkers != null && SpawnedWalkers.Count > 0)
+            {
+                foreach (var walker in SpawnedWalkers)
+                {
+                    if (walker != null && walker.gameObject != null)
+                    {
+                        Destroy(walker.gameObject);
+                    }
+                }
+                SpawnedWalkers.Clear();
+            }
+
+            if (Spline != null && Spline.gameObject != null)
+            {
+                Destroy(Spline.gameObject);
+                Spline = null;
             }
         }
 

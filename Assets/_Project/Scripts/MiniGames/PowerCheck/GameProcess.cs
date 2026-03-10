@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class GameProcess : MonoBehaviour
     {

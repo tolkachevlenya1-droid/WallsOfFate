@@ -9,11 +9,10 @@ namespace Game
 {
     internal class SceneNPCLocator : MonoInstaller
     {
-        public List<GameObject> NPC; // Список NPC префабов
-        public Transform Parent; // Родительский объект для NPC
+        public List<GameObject> NPC;
+        public Transform Parent; 
 
-        public List<Transform> StartPoints; // Список точек старта для каждого NPC
-        //public List<bool> EnableCheck;
+        public List<Transform> StartPoints; 
 
         public override void InstallBindings()
         {

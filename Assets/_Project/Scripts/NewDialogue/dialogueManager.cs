@@ -21,7 +21,7 @@ namespace Game
         [SerializeField] Image NPCPortrait;
         [SerializeField] RectTransform SpawnPoint;
         [SerializeField] float panelSpacing = 10f;
-        [SerializeField] int maxPanelsOnScreen = 5;
+        [SerializeField] GameObject resourcesUI;
         #endregion
 
         #region MainInfo
@@ -97,44 +97,6 @@ namespace Game
         }
 
         #region PannelsUI
-        private void ShiftAllPanelsUp()
-        {
-            if (spawnedPanels.Count < 1) return;
-
-            for (int i = 0; i < spawnedPanels.Count; i++)
-            {
-                GameObject panel = spawnedPanels[i];
-                if (panel != null)
-                {
-                    RectTransform rectTransform = panel.GetComponent<RectTransform>();
-                    if (rectTransform != null)
-                    {
-                        Vector2 newPosition = Vector2.zero;
-                        newPosition.y += rectTransform.anchoredPosition.y + panelSpacing;
-                        rectTransform.anchoredPosition = newPosition;
-                    }
-                }
-            }
-        }
-
-        private void RecalculatePanelPositions()
-        {
-            float currentY = 0f;
-
-            for (int i = 0; i < spawnedPanels.Count; i++)
-            {
-                GameObject panel = spawnedPanels[i];
-                if (panel != null)
-                {
-                    RectTransform rectTransform = panel.GetComponent<RectTransform>();
-                    if (rectTransform != null)
-                    {
-                        rectTransform.anchoredPosition = new Vector2(0, currentY);
-                        currentY += rectTransform.rect.height + panelSpacing;
-                    }
-                }
-            }
-        }
 
         private void ClearSpawnedPanels()
         {
@@ -163,7 +125,7 @@ namespace Game
 
         MiniGameData GetParamsOfMinigame()
         {
-            MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MiniGameType;
+            MiniGame.MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MiniGameType;
             string sceneName = _currentDialogue.sentences[CurrentID].MiniGameSceneName;
             Dictionary<string, object> minigameParams = _currentDialogue.sentences[CurrentID].MinigameParams;
 
@@ -198,7 +160,9 @@ namespace Game
                 _currentDialogue = currentDialogue;
 
                 ClearSpawnedPanels();
-
+                if (resourcesUI != null) {
+                    resourcesUI.gameObject.SetActive(false);
+                }
 
                 IsInDialogue = true;
                 CurrentID = 0;
@@ -239,7 +203,6 @@ namespace Game
                 return false;
 
             GameObject panelPrefab = null;
-            ShiftAllPanelsUp();
 
             if (_currentDialogue.sentences[CurrentID].IsMainCharacter)
             {
@@ -257,16 +220,6 @@ namespace Game
                 sentencePannel.transform.localPosition = Vector3.zero;
 
                 spawnedPanels.Add(sentencePannel);
-
-
-                if (spawnedPanels.Count > maxPanelsOnScreen)
-                {
-                    GameObject oldestPanel = spawnedPanels[0];
-                    spawnedPanels.RemoveAt(0);
-                    Destroy(oldestPanel);
-
-                    RecalculatePanelPositions();
-                }
 
                 return true;
             }
@@ -330,7 +283,7 @@ namespace Game
             if (pannelSpawned)
             {
                 TMP_Text sentenceText = sentencePannel.transform.Find("Text")?.GetComponent<TMP_Text>();
-                TMP_Text nameText = sentencePannel.transform.Find("Image/NameText")?.GetComponent<TMP_Text>();
+                //TMP_Text nameText = sentencePannel.transform.Find("Image/NameText")?.GetComponent<TMP_Text>();
 
                 if (sentenceText != null)
                 {
@@ -339,10 +292,10 @@ namespace Game
 
                 SentenceWriten = false;
 
-                if (nameText != null)
-                {
-                    nameText.text = _currentDialogue.sentences[CurrentID].CharName;
-                }
+                //if (nameText != null)
+                //{
+                //    nameText.text = _currentDialogue.sentences[CurrentID].CharName;
+                //}
 
                 if (sentenceText != null)
                 {
@@ -463,6 +416,11 @@ namespace Game
         {
             // Ждем указанное количество секунд
             yield return new WaitForSeconds(delay);
+
+            if (resourcesUI != null)
+            {
+                resourcesUI.gameObject.SetActive(false);
+            }
 
             if (DialogueUI != null)
             {

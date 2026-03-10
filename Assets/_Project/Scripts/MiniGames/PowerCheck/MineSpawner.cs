@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class MineSpawner : MonoBehaviour, Unity.VisualScripting.IInitializable
     {

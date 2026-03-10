@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class EndDayScreenManager : MonoBehaviour
     {

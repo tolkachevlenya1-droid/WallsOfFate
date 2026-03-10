@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     /// <summary>AI that выбирает ближайшую «выгодную» мину и перемещается к ней.</summary>
     [RequireComponent(typeof(NavMeshAgent))]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     [RequireComponent(typeof(MiniGamePlayer))]
     public class PlayerMove : MonoBehaviour

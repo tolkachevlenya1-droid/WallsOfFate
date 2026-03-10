@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using Zenject.SpaceFighter;
 
-namespace Game
+namespace Game.MiniGame.PowerCheck
 {
     public class HealthBarManager : MonoBehaviour
     {
