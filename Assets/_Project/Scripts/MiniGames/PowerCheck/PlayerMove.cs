@@ -73,7 +73,7 @@ namespace Game.MiniGame.PowerCheck
 
             if (_debuffEffect == null)
             {
-                //Debug.LogWarning("�������� ������ � ������ 'Indication' �� ������.");
+                Debug.LogWarning("�������� ������ � ������ 'Indication' �� ������.");
             }
         }
 

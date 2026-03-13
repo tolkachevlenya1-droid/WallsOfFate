@@ -160,10 +160,29 @@ namespace Game.MiniGame.PowerCheck
                 _currentTarget = _targets.Dequeue();
                 if (!MineExists(_currentTarget)) continue;
 
-                if (NavMesh.SamplePosition(_currentTarget, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+                //Debug.Log($"Trying to set destination to: {_currentTarget}");
+                //Debug.Log($"Agent is on NavMesh: {_agent.isOnNavMesh}");
+
+                bool isOnNavMesh = NavMesh.SamplePosition(_currentTarget, out NavMeshHit hit, 2f, NavMesh.AllAreas);
+                //Debug.Log($"Target is on NavMesh: {isOnNavMesh}");
+
+                if (isOnNavMesh)
                 {
                     _agent.SetDestination(hit.position);
-                    return;
+
+                    // Проверяем, успешно ли установлен путь
+                    if (_agent.pathStatus != NavMeshPathStatus.PathInvalid)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Path is invalid to target: {_currentTarget}");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Target not on NavMesh: {_currentTarget}");
                 }
             }
             RebuildTargets();

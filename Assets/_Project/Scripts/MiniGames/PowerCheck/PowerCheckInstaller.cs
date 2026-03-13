@@ -11,6 +11,7 @@ namespace Game.MiniGame.PowerCheck
         public GameObject PlayerPrefab;
         public Transform Parent;
         public Transform CameraTransform;
+        public FXManager FXPlayerObject;
 
         [Header("HP Bar Settings")]
         public Transform CanvasTransform;
@@ -20,6 +21,7 @@ namespace Game.MiniGame.PowerCheck
         [Header("Enemy Settings")]
         public Transform SpawnPoint;
         public GameObject EnemyPrefab;
+        public FXManager FXEnemyObject;
 
         [Header("Game Settings")]
         public MineSpawner MineSpawnerObject;
@@ -35,7 +37,7 @@ namespace Game.MiniGame.PowerCheck
         void Start()
         {
             // Ждем, пока MinigameManager инициализирует данные
-            //Invoke(nameof(Initialize), 0.2f);
+            Invoke(nameof(Initialize), 0.2f);
         }
 
         public void InitializeWithData(MiniGameData gameData)
@@ -63,18 +65,25 @@ namespace Game.MiniGame.PowerCheck
             InitializeCameraTransform();
             BindMineSpawner();
             BindGameProcess();
-            CreatePlayer();
-            CreateEnemy();
+            GameObject player = CreatePlayer();
+            GameObject enemy = CreateEnemy();
             SetupForbiddenSpawnPoints();
 
             if (MineSpawnerObject != null)
             {
                 MineSpawnerObject.Initialize();
             }
-
+            if (FXPlayerObject != null)
+            {
+                FXPlayerObject.Initialize(player.GetComponent<MiniGamePlayer>());
+            }
+            if (FXEnemyObject != null)
+            {
+                FXEnemyObject.Initialize(enemy.GetComponent<MiniGamePlayer>());
+            }
             if (GameProcessObject != null)
             {
-                GameProcessObject.Initialize();
+                GameProcessObject.Initialize(FXPlayerObject, FXEnemyObject);
             }
             if (EndGameScreenObject != null)
                 EndGameScreenObject.OnEndGame += OnMiniGameEnded;
@@ -101,11 +110,13 @@ namespace Game.MiniGame.PowerCheck
             }
         }
 
-        private void CreatePlayer()
+        private GameObject CreatePlayer()
         {
-            if (PlayerPrefab == null || StartPoint == null) return;
+            GameObject playerObj = null;
 
-            GameObject playerObj = Instantiate(PlayerPrefab, StartPoint.position,
+            if (PlayerPrefab == null || StartPoint == null) return playerObj;
+
+            playerObj = Instantiate(PlayerPrefab, StartPoint.position,
                 PlayerPrefab.transform.rotation, Parent);
 
             PlayerInstance = playerObj.GetComponent<PlayerMove>();
@@ -120,17 +131,23 @@ namespace Game.MiniGame.PowerCheck
                     healthBarManager.SetHealthBar(PlayerHPBarPrefab);
                 }
             }
+
+            return playerObj;
         }
 
-        private void CreateEnemy()
+        private GameObject CreateEnemy()
         {
-            if (EnemyPrefab == null || SpawnPoint == null) return;
+            GameObject enemyObj = null;
+            if (EnemyPrefab == null || SpawnPoint == null) return enemyObj;
 
-            string pathToEnemyPrefab = (string)_gameData.customParameters["Prefab"];
-            if (!string.IsNullOrEmpty(pathToEnemyPrefab))
-                EnemyPrefab = Resources.Load<GameObject>(pathToEnemyPrefab);
+            if (_gameData != null)
+            {
+                string pathToEnemyPrefab = (string)_gameData.customParameters["EnemyPrefab"];
+                if (!string.IsNullOrEmpty(pathToEnemyPrefab))
+                    EnemyPrefab = Resources.Load<GameObject>(pathToEnemyPrefab);
+            }
 
-            GameObject enemyObj = Instantiate(EnemyPrefab, SpawnPoint.position, SpawnPoint.rotation, Parent);
+            enemyObj = Instantiate(EnemyPrefab, SpawnPoint.position, EnemyPrefab.transform.rotation, Parent);
 
             enemyObj.name = enemyObj.GetComponent<MiniGamePlayer>().GetName();
             EnemyInstance = enemyObj.GetComponent<AIController>();
@@ -145,6 +162,8 @@ namespace Game.MiniGame.PowerCheck
                     healthBarManager.SetHealthBar(EnemyHPBarPrefab);
                 }
             }
+
+            return enemyObj;
         }
 
         private void InitializeCameraTransform()

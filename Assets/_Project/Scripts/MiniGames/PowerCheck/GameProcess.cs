@@ -22,14 +22,20 @@ namespace Game.MiniGame.PowerCheck
         public MiniGamePlayer PlayerChar { get; private set; }
         public MiniGamePlayer EnemyChar { get; private set; }
 
+        private FXManager playerFX;
+        private FXManager enemyFX;
+
         private bool _isInitialized = false;
 
         public event Action<bool> OnEndGame;
 
 
-        public void Initialize()
+        public void Initialize(FXManager playerFX, FXManager enemyFx)
         {
             if (_isInitialized) return;
+
+            this.playerFX = playerFX;
+            this.enemyFX = enemyFx;
 
             if (_mineSpawner == null) _mineSpawner = FindFirstObjectByType<MineSpawner>();
             if (_playerMove == null) _playerMove = FindFirstObjectByType<PlayerMove>();
@@ -179,16 +185,42 @@ namespace Game.MiniGame.PowerCheck
             if (givedMine is HealMine healMine)
             {
                 healMine.Heal(givedPlayerChar);
+
+                if (givedPlayerChar.Name == "Player")
+                    playerFX.PlayHealingEffect();
+                else
+                    enemyFX.PlayHealingEffect();
             }
             else if (givedMine is DamageMine damageMine)
             {
                 if (givedPlayerChar.Name == "Player")
+                {
                     damageMine.Damage(EnemyChar, PlayerChar);
+                    enemyFX.PlayAttackEffect();
+                }
                 else
+                {
                     damageMine.Damage(PlayerChar, EnemyChar);
+                    playerFX.PlayAttackEffect();
+                }
             }
             else if (givedMine is BuffSpeedMine buffSpeedMine)
             {
+
+                if (buffSpeedMine.GetSpeedBuff() > 0)
+                {
+                    if (givedPlayerChar.Name == "Player")
+                        playerFX.PlayBuffedEffect();
+                    else
+                        enemyFX.PlayBuffedEffect();
+                }
+                else
+                {
+                    if (givedPlayerChar.Name == "Player")
+                        playerFX.PlaySttopedEffect();
+                    else
+                        enemyFX.PlaySttopedEffect();
+                }
                 MineExplosion(buffSpeedMine, _playerMove.gameObject, _enemyController.gameObject);
             }
 
