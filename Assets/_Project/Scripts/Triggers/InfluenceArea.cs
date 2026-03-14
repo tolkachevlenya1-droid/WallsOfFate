@@ -92,8 +92,8 @@ namespace Game
         {
             bool interacted = InputManager.GetInstance().GetInteractPressed();
             GameObject triggerObject = npcFactory.GetInstance(triggerObjectName);
-            TriggerEvent iventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted);
-            OnEventTriggered?.Invoke(iventData);
+            TriggerEvent eventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted);
+            OnEventTriggered?.Invoke(eventData);
             //if (Handler != null)
             //{
 
