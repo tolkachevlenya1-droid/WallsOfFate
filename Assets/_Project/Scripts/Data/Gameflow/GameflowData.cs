@@ -12,7 +12,7 @@ namespace Game.Data
     }
 
     [Serializable]
-    public class DayData
+    public class Day
     {
         public int Id;
         public DayPart CurrentPart;

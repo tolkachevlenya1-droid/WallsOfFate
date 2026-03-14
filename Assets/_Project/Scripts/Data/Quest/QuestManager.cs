@@ -10,8 +10,8 @@ namespace Game.Data
 
     public class QuestManager
     {
-        private Dictionary<int, QuestData> questsData;
-        private readonly Dictionary<int, QuestStatusData> questsStatusData = new();
+        private Dictionary<int, Quest> questsData;
+        private readonly Dictionary<int, QuestStatus> questsStatusData = new();
 
         public QuestManager()
         {
@@ -37,7 +37,7 @@ namespace Game.Data
                     MissingMemberHandling = MissingMemberHandling.Error
                 };
 
-                var defaultData = JsonConvert.DeserializeObject<List<QuestData>>(textAsset.text, settings);
+                var defaultData = JsonConvert.DeserializeObject<List<Quest>>(textAsset.text, settings);
                 questsData = defaultData.ToDictionary(q => q.Id);
             }
             catch (JsonException ex)
@@ -50,14 +50,14 @@ namespace Game.Data
         {
             foreach (var quest in questsData.Values)
             {
-                questsStatusData.Add(quest.Id, new QuestStatusData
+                questsStatusData.Add(quest.Id, new QuestStatus
                 {
                     QuestId = quest.Id,
-                    Status = QuestStatus.NotStarted,
-                    TasksStatusData = quest.Tasks.ToDictionary(t => t.Id, t => new TaskStatusData
+                    State = QuestState.NotStarted,
+                    TasksStatusData = quest.Tasks.ToDictionary(t => t.Id, t => new TaskStatus
                     {
                         TaskId = t.Id,
-                        Status = QuestStatus.NotStarted
+                        State = QuestState.NotStarted
                     })
                 });
             }
@@ -65,14 +65,14 @@ namespace Game.Data
 
         public void LoadSavedQuestsStatus()
         {
-            if (Repository.TryGetData("QuestsStatus", out List<QuestStatusData> savedStatus))
+            if (Repository.TryGetData("QuestsStatus", out List<QuestStatus> savedStatus))
             {
                 foreach (var status in savedStatus)
                 {
-                    questsStatusData[status.QuestId].Status = status.Status;
+                    questsStatusData[status.QuestId].State = status.State;
                     foreach (var taskStatus in status.TasksStatusData)
                     {
-                        questsStatusData[status.QuestId].TasksStatusData[taskStatus.Key].Status = taskStatus.Value.Status;
+                        questsStatusData[status.QuestId].TasksStatusData[taskStatus.Key].State = taskStatus.Value.State;
                     }
                 }
 
@@ -84,6 +84,21 @@ namespace Game.Data
         {
             Repository.SetData("QuestsStatus", questsStatusData.Values.ToList());
             Debug.Log("Saved quests status data");
+        }
+
+        public QuestState GetQuestState(int questId)
+        {
+            questsStatusData.TryGetValue(questId, out QuestStatus status);
+
+            return status != null ? status.State : QuestState.NotStarted;
+        }
+
+        public void StartQuest(int questId)
+        {
+            if (questsStatusData.TryGetValue(questId, out QuestStatus status) && status.State == QuestState.NotStarted)
+            {
+                status.State = QuestState.InProgress;
+            }
         }
     }
 }

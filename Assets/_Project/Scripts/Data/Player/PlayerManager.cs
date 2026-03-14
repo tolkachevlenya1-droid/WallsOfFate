@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Game.Data
 {
     [Serializable]
-    public class ResourceData
+    public class ResourcesData
     {
         public int Gold;
         public int Food;
@@ -25,7 +25,7 @@ namespace Game.Data
 
         public void LoadSavedPlayerData()
         {
-            if (Repository.TryGetData("GameResources", out ResourceData data))
+            if (Repository.TryGetData("GameResources", out ResourcesData data))
             {
                 PlayerData.SetResource(ResourceType.Gold, data.Gold);
                 PlayerData.SetResource(ResourceType.Food, data.Food);
@@ -38,7 +38,7 @@ namespace Game.Data
 
         public void SavePlayerData()
         {
-            var data = new ResourceData
+            var data = new ResourcesData
             {
                 Gold = PlayerData.GetResource(ResourceType.Gold),
                 Food = PlayerData.GetResource(ResourceType.Food),
@@ -67,7 +67,7 @@ namespace Game.Data
                     MissingMemberHandling = MissingMemberHandling.Error
                 };
 
-                var defaultData = JsonConvert.DeserializeObject<ResourceData>(textAsset.text, settings);
+                var defaultData = JsonConvert.DeserializeObject<ResourcesData>(textAsset.text, settings);
 
                 PlayerData.SetResource(ResourceType.Gold, defaultData.Gold);
                 PlayerData.SetResource(ResourceType.Food, defaultData.Food);
@@ -82,7 +82,7 @@ namespace Game.Data
 
         public void SaveData()
         {
-            var data = new ResourceData
+            var data = new ResourcesData
             {
                 Gold = PlayerData.GetResource(ResourceType.Gold),
                 Food = PlayerData.GetResource(ResourceType.Food),
