@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Game.Quest;
 using Resources = UnityEngine.Resources;
 
 public class InventoryLogicEnd : MonoBehaviour
@@ -161,7 +160,7 @@ public class InventoryLogicEnd : MonoBehaviour
 
     public void ChangeVisibility(string pickupType)
     {
-        var completedEvidenceQuests = QuestCollection.GetAllQuestGroups()
+        /*var completedEvidenceQuests = QuestCollection.GetAllQuestGroups()
             .Where(q => q.Evidence != null &&
                        !string.IsNullOrEmpty(q.Evidence.EvidenceType))
             .ToList();
@@ -193,7 +192,7 @@ public class InventoryLogicEnd : MonoBehaviour
                 targetImage.sprite = loadedSprite;
 
             }
-        }
+        }*/
 
     }
 

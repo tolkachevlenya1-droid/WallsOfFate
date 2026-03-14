@@ -1,28 +1,34 @@
+using Zenject;
+
 namespace Game.Data
 {
-    public static class SaveLoadManager
+    public class SaveLoadManager
     {
-        /// <summary>
-        /// Полная загрузка сохранённого прогресса (в том числе позиции игрока).
-        /// Вызывается, например, при выборе "Продолжить".
-        /// </summary>
-        public static void LoadGame()
+
+        private PlayerManager playerManager;
+        private QuestManager questManager;
+
+        [Inject]
+        public SaveLoadManager(PlayerManager playerManager, QuestManager questManager) {
+            this.playerManager = playerManager;
+            this.questManager = questManager;
+        }
+
+        public void LoadGame()
         {
             Repository.LoadState();
-            PlayerSaveLoader.LoadData();
-            CollectionSaveLoader.LoadData();
-            QuestSaveLoader.LoadData();
+            playerManager.LoadSavedPlayerData();
+            questManager.LoadSavedQuestsStatus();
         }
 
         /// <summary>
         /// Полное сохранение игрового прогресса (в том числе позиции игрока).
         /// Вызывается, например, при сохранении перед выходом или при переходе в меню "Продолжить".
         /// </summary>
-        public static void SaveGame()
+        public void SaveGame()
         {
-            //PlayerSaveLoader.SaveData();
-            CollectionSaveLoader.SaveData();
-            QuestSaveLoader.SaveData();
+            playerManager.SavePlayerData();
+            questManager.SaveQuestsStatus();
             Repository.SetUserProgress(true);
             Repository.SaveState();
         }
@@ -30,7 +36,7 @@ namespace Game.Data
         /// <summary>
         /// Проверяет, есть ли сохранённый игровой прогресс.
         /// </summary>
-        public static bool CanLoad()
+        public bool CanLoad()
         {
             Repository.LoadState();
             return Repository.HasAnyData();
@@ -39,13 +45,13 @@ namespace Game.Data
         /// <summary>
         /// Очищает сохранённые данные и устанавливает флаг новой игры.
         /// </summary>
-        public static void Clear()
+        public void Clear()
         {
-            Quest.QuestCollection.ClearQuests();
             AssembledPickups.Clear();
             Repository.ClearSaveData();
             PlayerSpawnData.ClearData();
         }
+
 
     }
 }

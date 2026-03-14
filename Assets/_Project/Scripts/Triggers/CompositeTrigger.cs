@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Game.Quest;
 using System.Linq;
+using Zenject;
+using Game.Data;
 
 public class CompositeTrigger : MonoBehaviour, ITriggerable
 {
@@ -12,9 +13,17 @@ public class CompositeTrigger : MonoBehaviour, ITriggerable
     public event Action OnActivated;
     public bool IsDone { get; private set; }
 
+    private QuestManager questManager;
+
+    [Inject]
+    private void Construct(QuestManager questManager)
+    {
+        this.questManager = questManager;
+    }
+
     public void Triggered()
     {
-        var availableGroups = QuestCollection.GetAllDays()
+        /*var availableQuests = QuestCollection.GetAllDays()
             .SelectMany(d => d.Quests)
             .Where(q => q.CheckOpen(_selfName))
             .ToList();
@@ -62,33 +71,7 @@ public class CompositeTrigger : MonoBehaviour, ITriggerable
             groupToUpdate.CurrentTaskId = next != null ? next.Id : -1;
             IsDone = true;
 
-        }
+        }*/
 
-    }
-
-    private bool CanTriggerTask(QuestTask task)
-    {
-        return task.ForNPS == _selfName && task.CanComplete();
-    }
-
-    private QuestGroup UpdateGroupState(QuestGroup group)
-    {
-        bool allTasksDone = group.Tasks.All(t => t.IsDone);
-
-        return new QuestGroup
-        {
-            Id = group.Id,
-            Complite = allTasksDone,
-            InProgress = !allTasksDone,
-            OpenNPS = group.OpenNPS,
-            OpenDialog = group.OpenDialog,
-            CurrentTaskId = allTasksDone
-                ? -1
-                : group.Tasks
-                    .Where(t => !t.IsDone)
-                    .OrderBy(t => t.Id)
-                    .FirstOrDefault()?.Id ?? -1,
-            Tasks = group.Tasks
-        };
     }
 }

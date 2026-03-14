@@ -23,11 +23,7 @@ namespace Game.Data
             LoadDefaultPlayerData();
         }
 
-        public void LoadPlayerData(Player playerData) {
-            PlayerData = playerData;
-        }
-
-        public void LoadPlayerData()
+        public void LoadSavedPlayerData()
         {
             if (Repository.TryGetData("GameResources", out ResourceData data))
             {
@@ -38,6 +34,19 @@ namespace Game.Data
 
                 Debug.Log("Loaded resources data");
             }
+        }
+
+        public void SavePlayerData()
+        {
+            var data = new ResourceData
+            {
+                Gold = PlayerData.GetResource(ResourceType.Gold),
+                Food = PlayerData.GetResource(ResourceType.Food),
+                PeopleSatisfaction = PlayerData.GetResource(ResourceType.PeopleSatisfaction),
+                CastleStrength = PlayerData.GetResource(ResourceType.CastleStrength)
+            };
+            Repository.SetData("GameResources", data);
+            Debug.Log("Saved resources data");
         }
 
         private void LoadDefaultPlayerData()

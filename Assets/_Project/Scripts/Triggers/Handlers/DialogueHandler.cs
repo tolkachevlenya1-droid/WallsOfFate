@@ -1,5 +1,4 @@
-﻿using Game.Quest;
-using NUnit.Framework.Interfaces;
+﻿using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,12 +22,12 @@ namespace Game
             influenceAria.OnEventTriggered -= Handle;
         }
 
-        public void Handle(TriggerEvent iventData)
+        public void Handle(TriggerEvent eventData)
         {
             DialogueManager _dialogueManager = DialogueManager.Instance;
-            if (iventData.IsEnteracted && !_dialogueManager.IsInDialogue)
+            if (eventData.IsEnteracted && !_dialogueManager.IsInDialogue)
             {
-                var activeGroups = QuestCollection.GetActiveQuestGroups();
+                /*var activeGroups = QuestCollection.GetActiveQuestGroups();
                 QuestGroup groupToUpdate = null;
                 QuestTask taskToComplete = null;
                 DialogueGraph dialogueGraph;
@@ -36,7 +35,7 @@ namespace Game
                 foreach (var group in activeGroups)
                 {
                     taskToComplete = group.Tasks
-                        .Where(t => !t.IsDone && t.ForNPS == iventData.TriggerObj.name && t.CanComplete())
+                        .Where(t => !t.IsDone && t.ForNPS == eventData.TriggerObj.name && t.CanComplete())
                         .OrderBy(t => t.Id)
                         .FirstOrDefault();
 
@@ -63,7 +62,7 @@ namespace Game
                 // Проверка на старт новых квестов
                 var currentDay = QuestCollection.GetCurrentDayData();
                 var availableGroups = currentDay != null
-                    ? currentDay.Quests.Where(q => q.CheckOpen(iventData.TriggerObj.name)).ToList()
+                    ? currentDay.Quests.Where(q => q.CheckOpen(eventData.TriggerObj.name)).ToList()
                     : new List<QuestGroup>();
 
                 if (availableGroups.Count > 0)
@@ -76,8 +75,8 @@ namespace Game
                     return;
                 }
 
-                dialogueGraph = GetDialogueGraph(iventData.TriggerObj);
-                _dialogueManager.StartDialogue(dialogueGraph);
+                dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
+                _dialogueManager.StartDialogue(dialogueGraph);*/
             }
         }
 
@@ -89,28 +88,6 @@ namespace Game
         private DialogueGraph GetDialogueGraph(GameObject obj)
         {
             return obj.GetComponent<DialogueGraph>(); //.Where(t => t.GetName() == obj).FirstOrDefault();
-        }
-
-        private QuestGroup UpdateGroupState(QuestGroup group)
-        {
-            bool allTasksDone = group.Tasks.All(t => t.IsDone);
-
-            return new QuestGroup
-            {
-                Id = group.Id,
-                Complite = allTasksDone,
-                InProgress = !allTasksDone,
-                OpenNPS = group.OpenNPS,
-                OpenDialog = group.OpenDialog,
-                CurrentTaskId = allTasksDone
-                    ? -1
-                    : group.Tasks
-                        .Where(t => !t.IsDone)
-                        .OrderBy(t => t.Id)
-                        .FirstOrDefault()?.Id ?? -1,
-                Tasks = group.Tasks,
-                Prime = group.Prime
-            };
         }
 
     }
