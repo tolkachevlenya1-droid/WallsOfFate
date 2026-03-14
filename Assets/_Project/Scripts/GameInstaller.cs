@@ -11,6 +11,7 @@ namespace Game
             Container.Bind<LoadingManager>().AsSingle().NonLazy();
             Container.Bind<PlayerManager>().AsSingle().NonLazy();
             Container.Bind<QuestManager>().AsSingle().NonLazy();
+            Container.Bind<GameflowManager>().AsSingle().NonLazy();
             Container.Bind<SaveLoadManager>().AsSingle().NonLazy();
         }
     }

@@ -7,11 +7,14 @@ namespace Game.Data
 
         private PlayerManager playerManager;
         private QuestManager questManager;
+        private GameflowManager gameflowManager;
 
         [Inject]
-        public SaveLoadManager(PlayerManager playerManager, QuestManager questManager) {
+        public SaveLoadManager(PlayerManager playerManager, QuestManager questManager, GameflowManager gameflowManager)
+        {
             this.playerManager = playerManager;
             this.questManager = questManager;
+            this.gameflowManager = gameflowManager;
         }
 
         public void LoadGame()
@@ -19,6 +22,7 @@ namespace Game.Data
             Repository.LoadState();
             playerManager.LoadSavedPlayerData();
             questManager.LoadSavedQuestsStatus();
+            gameflowManager.LoadSavedGameflowData();
         }
 
         /// <summary>
@@ -29,6 +33,7 @@ namespace Game.Data
         {
             playerManager.SavePlayerData();
             questManager.SaveQuestsStatus();
+            gameflowManager.SaveGameflowData();
             Repository.SetUserProgress(true);
             Repository.SaveState();
         }
