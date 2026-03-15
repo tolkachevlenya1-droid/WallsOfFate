@@ -911,7 +911,6 @@ MonoBehaviour:
   - {fileID: 1543215523}
   - {fileID: 237262696}
   - {fileID: 470660103}
-  EnableCheck: 01010101
 --- !u!1001 &23496083
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1470,7 +1469,6 @@ MonoBehaviour:
   CenterPoint: {fileID: 427752884}
   spawnAreaSize: {x: 17, y: 8}
   parentTransform: {fileID: 1238570441}
-  _forbiddenSpawnPoints: []
   allowedDistanseForForrbidenSpawnPoint: 1
   yPositionOfSpawnMine: 0
   minDistanceBetweenMines: 1.25
@@ -5969,7 +5967,7 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: 781660793}
-  - {fileID: 843369241}
+  - {fileID: 0}
   - {fileID: 17890118}
   - {fileID: 2091480513}
   _installerPrefabs: []
@@ -12194,8 +12192,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaaecb713c350a94f8c30e5388fb9310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitPanel: {fileID: 452297497}
   confirmButton: {fileID: 648617688}
+  declineButton: {fileID: 0}
 --- !u!224 &298086827
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13532,7 +13530,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 332854681}
-  - component: {fileID: 332854680}
+  - component: {fileID: 332854682}
   m_Layer: 11
   m_Name: Post-Processing
   m_TagString: Untagged
@@ -13540,23 +13538,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &332854680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 332854679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 3e9a96a0347561542b0ca1b3dcc98c97, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 1
-  priority: 0.04
 --- !u!4 &332854681
 Transform:
   m_ObjectHideFlags: 0
@@ -13572,6 +13553,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &332854682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332854679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0.04
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: b39a58615dc42de4994fe39c0f6cdcfe, type: 2}
 --- !u!1 &334268788 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1611076139609504, guid: e965607d197150b43a6dabdf25ed1ac5, type: 3}
@@ -19852,9 +19850,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 230
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_sharedMaterial: {fileID: 2751913371560455912, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -24517,9 +24516,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 230
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_sharedMaterial: {fileID: 2751913371560455912, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -36572,12 +36572,18 @@ MonoBehaviour:
   PlayerPrefab: {fileID: 6542501386556089285, guid: 0732e6a9f7def7444a67411c12e1898e, type: 3}
   Parent: {fileID: 499887510}
   CameraTransform: {fileID: 1216626470}
+  FXPlayerObject: {fileID: 0}
   CanvasTransform: {fileID: 1155708104}
   PlayerHPBarPrefab: {fileID: 882619566126002653, guid: 97a6493a12c9b3b429f72a1d4c6ae529, type: 3}
   EnemyHPBarPrefab: {fileID: 3385993963981474361, guid: 55cee44462026d7479a46966e405b9fc, type: 3}
   SpawnPoint: {fileID: 977248999}
   EnemyPrefab: {fileID: 8816934456661431518, guid: c66df2a20c370b04b95cc4e57f18475c, type: 3}
+  FXEnemyObject: {fileID: 0}
   MineSpawnerObject: {fileID: 40262070}
+  GameProcessObject: {fileID: 0}
+  EndGameScreenObject: {fileID: 0}
+  PlayerInstance: {fileID: 0}
+  EnemyInstance: {fileID: 0}
 --- !u!1001 &844427498
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46657,9 +46663,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_sharedMaterial: {fileID: 6341344959473378160, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -47065,9 +47072,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_sharedMaterial: {fileID: 6341344959473378160, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -49680,10 +49688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mineSpawner: {fileID: 40262070}
-  Player: {fileID: 0}
-  Enemy: {fileID: 0}
-  PlayerChar: {fileID: 0}
-  EnemyChar: {fileID: 0}
+  _playerMove: {fileID: 0}
+  _enemyController: {fileID: 0}
 --- !u!1001 &1169387861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55242,9 +55248,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 230
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_sharedMaterial: {fileID: 2751913371560455912, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -59958,6 +59965,7 @@ MonoBehaviour:
   sliderSFX: {fileID: 1329187509}
   sliderUI: {fileID: 1621800473}
   languageDropdown: {fileID: 397514891}
+  closeButton: {fileID: 0}
 --- !u!224 &1402067440
 RectTransform:
   m_ObjectHideFlags: 0
@@ -66306,6 +66314,7 @@ GameObject:
   - component: {fileID: 1552768964}
   - component: {fileID: 1552768968}
   - component: {fileID: 1552768969}
+  - component: {fileID: 1552768970}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -66468,6 +66477,50 @@ MonoBehaviour:
   frustumSettings:
     baseSettings: {fileID: 1770500594}
     qualitySettings: {fileID: 70488332}
+--- !u!114 &1552768970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552768962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!4 &1554659884 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: cb063e835546c0349906488c5789719b, type: 3}
@@ -73197,9 +73250,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 230
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_sharedMaterial: {fileID: 2751913371560455912, guid: 64cc2993c81c8aa48a50d735ebeffef3, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -82551,9 +82605,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_sharedMaterial: {fileID: 6341344959473378160, guid: d899f02ab6b1d2446b5934db22365142, type: 2}
-  m_fontSharedMaterials: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:

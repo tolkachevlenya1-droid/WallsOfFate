@@ -5001,7 +5001,6 @@ GameObject:
   - component: {fileID: 6882138215155267680}
   - component: {fileID: -8171673951214415607}
   - component: {fileID: 8093948740783898864}
-  - component: {fileID: 2611929857105066398}
   - component: {fileID: -2152221844647822888}
   - component: {fileID: 1279535367708866392}
   - component: {fileID: 3169448042458547368}
@@ -5121,21 +5120,6 @@ MonoBehaviour:
   stepClip1: {fileID: 8300000, guid: 569cc1b8cde87c342a8f88bfb84406f0, type: 3}
   stepClip2: {fileID: 8300000, guid: cb08dd830ab07104d86c593912717494, type: 3}
   baseStepInterval: 0.5
---- !u!114 &2611929857105066398
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7280076937197616263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0996432d9ec83764eab23e8d27b623a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _defaultDialogue: Default
-  _npcName: Messenger
-  PowerCheckPrefab: {fileID: 0}
 --- !u!54 &-2152221844647822888
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5280,8 +5264,10 @@ MonoBehaviour:
     Text: text0
     NextNodeID: 1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5292,8 +5278,10 @@ MonoBehaviour:
     Text: text1
     NextNodeID: 2
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5304,8 +5292,10 @@ MonoBehaviour:
     Text: text2
     NextNodeID: 3
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5316,8 +5306,10 @@ MonoBehaviour:
     Text: text3
     NextNodeID: 6
     isOption: 1
-    isAnswer: 1
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5328,8 +5320,10 @@ MonoBehaviour:
     Text: text4
     NextNodeID: 6
     isOption: 1
-    isAnswer: 0
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5340,8 +5334,10 @@ MonoBehaviour:
     Text: text5
     NextNodeID: 6
     isOption: 1
-    isAnswer: 1
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
@@ -5352,12 +5348,15 @@ MonoBehaviour:
     Text: text6
     NextNodeID: -1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
+    _parametersJson: '{}'
     Gold: 1
     Food: 1
     PeopleSatisfaction: 1
     CastleStrength: 1
+  Portrait: 
 --- !u!1 &7363507171811652826
 GameObject:
   m_ObjectHideFlags: 0

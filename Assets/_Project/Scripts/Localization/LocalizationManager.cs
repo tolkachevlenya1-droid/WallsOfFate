@@ -2,111 +2,106 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class LocalizationManager : MonoBehaviour {
-    [System.Serializable]
-    public class LocalizedText {
-        public string key;
-        public TMPro.TMP_Text textField;
-    }
-
-    [Header("Настройки локализации")]
-    [SerializeField] private string localizationFileName = "localization";
-    [SerializeField] private List<LocalizedText> localizedTexts = new List<LocalizedText>();
-    [SerializeField] private SettingsMenu settingsMenu; 
-
-    private string currentLanguage;
-
-    private void Awake() {
-        InitializeLocalization();
-
-        if (settingsMenu != null) {
-            settingsMenu.OnLanguageChanged += OnLanguageChanged;
-        }
-    }
-
-    private void InitializeLocalization() {
-        currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-
-        LoadLocalization();
-    }
-
-    private void OnLanguageChanged(string languageValue) {
-            string newLanguage = languageValue;
-
-            if (newLanguage != currentLanguage) {
-                currentLanguage = newLanguage;
-                LoadLocalization();
-            }
-    }
-
-    private void LoadLocalization() {
-        List<LocalizationItem> localisationData = null;
-        bool flowControl = ParseLocalisationFile(out localisationData);
-        if (!flowControl) {
-            return;
+namespace Game
+{
+    // Use only via Zenject DI
+    public class LocalizationManager
+    {
+        private class LocalizationItem
+        {
+            public string key;
+            public string value;
         }
 
-        ChangeLocalisation(localisationData);
-    }
+        private readonly string localizationRoot = "Localization/";        
+        private readonly Dictionary<string, Dictionary<string, string>> localizationDictionary = new();
 
-    private void ChangeLocalisation(List<LocalizationItem> localisationData) {
-        try {
-            for (int i = 0; i < localizedTexts.Count; i++) {
-                localizedTexts[i].textField.text = localisationData.Find(el => el.key == localizedTexts[i].key).value;
-            }
+        private Dictionary<string, List<Dictionary<string, string>>> localizationConfig;
 
-            ////Debug.Log($"Локализация загружена: {localisationData.Count} записей");
-        }
-        catch (System.Exception e) {
-            Debug.LogError($"Ошибка парсинга JSON: {e.Message}");
-        }
-    }
+        private string currentLanguage;
 
-    private bool ParseLocalisationFile(out List<LocalizationItem> localisationData) {
-        localisationData = null;
-        if (settingsMenu == null)
+        public event Action OnLanguageChanged;
+
+        public LocalizationManager()
+        {
             currentLanguage = PlayerPrefs.GetString("CurrentLanguage", "en");
-        
-        string result = currentLanguage.Replace("\\", "").Replace("/", "");
-        string path = $"Localization/{result}/ui/{localizationFileName}";
 
-        TextAsset jsonFile = Resources.Load<TextAsset>(path);
+            LoadLocalization();
+        }
 
-        if (jsonFile == null) {
-            //Debug.LogError($"Файл локализации не найден: {path}");
+        public Dictionary<string, List<Dictionary<string, string>>> LocalizationConfig => localizationConfig;
 
-            if (currentLanguage != "en") {
-                string fallbackPath = $"Localization/en/ui/{localizationFileName}";
-                jsonFile = Resources.Load<TextAsset>(fallbackPath);
+        public string CurrentLanguage
+        {
+            get => currentLanguage;
+            set
+            {
+                currentLanguage = value;
+                PlayerPrefs.SetString("CurrentLanguage", value);
+                PlayerPrefs.Save();
+                OnLanguageChanged.Invoke();
+            }
+        }
 
-                if (jsonFile == null) {
-                    Debug.LogError($"Fallback файл локализации не найден: {fallbackPath}");
-                    return false;
+        public Dictionary<string, string> CurrentLocalization => localizationDictionary[currentLanguage];
+
+        public string GetLocalizedText(string path)
+        {
+            if (CurrentLocalization.ContainsKey(path)) 
+            {
+                return CurrentLocalization[path];
+            }
+
+            var segments = path.Split('/');
+            var localizationPath = string.Join("/", segments.Take(segments.Length - 1));
+            var fullPath = localizationRoot + currentLanguage + "/" + localizationPath;
+
+            var items = ParseLocalisationFile(fullPath);
+            foreach (var item in items)
+            {
+                if (!CurrentLocalization.ContainsKey(item.key))
+                {
+                    CurrentLocalization.Add(localizationPath + "/" + item.key, item.value);
                 }
             }
-            else {
-                return false;
+
+            if (CurrentLocalization.ContainsKey(path))
+            {
+                return CurrentLocalization[path];
+            } 
+            else
+            {
+                throw new Exception($"Localization key not found: {path}");
             }
         }
-        List<LocalizationItem> data = JsonConvert.DeserializeObject<List<LocalizationItem>>(jsonFile.text);
-        localisationData = data;
 
-        return true;
-    }
+        private void LoadLocalization()
+        {
+            var languages = Resources.Load<TextAsset>(localizationRoot + "languages");
+            if (languages == null)
+            {
+                throw new Exception("Languages file not found.");
+            }
+            localizationConfig = JsonConvert.DeserializeObject< Dictionary<string, List<Dictionary<string, string>>>>(languages.text);
+            foreach (var lang in localizationConfig.Keys)
+            {
+                localizationDictionary.TryAdd(lang, new Dictionary<string, string>());                
+            }
+        }
 
-    private void OnDestroy() {
-        if (settingsMenu != null) {
-            settingsMenu.OnLanguageChanged -= OnLanguageChanged;
+        private List<LocalizationItem> ParseLocalisationFile(string path)
+        {
+            var jsonFile = Resources.Load<TextAsset>(path);
+
+            if (jsonFile == null)
+            {
+                throw new Exception($"Localization file not found: {path}");
+            }
+
+            return JsonConvert.DeserializeObject<List<LocalizationItem>>(jsonFile.text);            
         }
     }
 }
 
-[System.Serializable]
-public class LocalizationItem {
-    public string key;
-    public string value;
-}

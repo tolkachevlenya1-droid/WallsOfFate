@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Assets.Scripts.TriggerOjects
+namespace Game
 {
     public class DisplayInstaller : MonoInstaller
     {

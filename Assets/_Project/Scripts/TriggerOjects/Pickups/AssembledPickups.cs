@@ -4,7 +4,7 @@ using System.Linq;
 
 public static class AssembledPickups
 {
-    private static HashSet<Pickup> pickups = new HashSet<Pickup>();
+    private static HashSet<Pickup> pickups = new();
 
     public static void AddPickup(Pickup pickup)
     {

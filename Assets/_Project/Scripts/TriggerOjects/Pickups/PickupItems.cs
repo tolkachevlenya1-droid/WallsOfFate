@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Assets.Scripts.TriggerOjects
+namespace Game
 {
     internal class PickupItems : MonoBehaviour, ICheckableTrigger
     {

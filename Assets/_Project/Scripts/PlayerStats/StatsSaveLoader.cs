@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using Game.Data;
+using Newtonsoft.Json;
 using UnityEngine;
 using Zenject;
 
 namespace Player {
-    public class StatsSaveLoader : ISaveLoader {
+    public class StatsSaveLoader {
 
-        private Player.Stats _playerStas;
+        /*private Player.Stats _playerStas;
 
         [Inject]
         private void Construct(Player.Stats playerStats) {
             _playerStas = playerStats;
         }
+
         public bool LoadData() {
             if (Repository.TryGetData("GameResources", out ResourceData data)) {
                 _playerStas.Strength = data.Strength;
@@ -44,7 +46,7 @@ namespace Player {
                 _playerStas.Mystic = defaultData.Mystic;
             }
             catch (JsonException ex) {
-                //Debug.LogError($"JSON error: {ex.Message}");
+                Debug.LogError($"JSON error: {ex.Message}");
             }
         }
 
@@ -57,14 +59,6 @@ namespace Player {
             };
             Repository.SetData("GameResources", data);
             //Debug.Log("Saved resources data");
-        }
-    }
-
-    [System.Serializable]
-    public class ResourceData {
-        public int Strength;
-        public int Dex;
-        public int Percept;
-        public int Mystic;
+        }*/
     }
 }

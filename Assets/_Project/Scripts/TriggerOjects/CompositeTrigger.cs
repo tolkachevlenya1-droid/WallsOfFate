@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Quest;
+using Game.Quest;
 using System.Linq;
 
 public class CompositeTrigger : MonoBehaviour, ITriggerable
