@@ -1,95 +1,98 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class BuffSpeedMine : Mine
+namespace Game.MiniGame.PowerCheck
 {
-    private float SpeedBuff;
-    private float BuffCooldown;
-    private int TimeBeforeExplosion;
-    private float MaxRadius;
-    private uint Damage;
-    private bool IsDebuff;
-
-    // Словарь для отслеживания активных баффов
-    private Dictionary<MiniGamePlayer, bool> activeBuffs = new Dictionary<MiniGamePlayer, bool>();
-
-    public BuffSpeedMine(uint number, float сooldown, GameObject mine, float speedbuff, float buffcooldown, int timebeforeexplosion, float radius, uint damage, bool isDebuff)
-        : base(number, сooldown, mine)
+    public class BuffSpeedMine : Mine
     {
-        this.SpeedBuff = speedbuff;
-        this.BuffCooldown = buffcooldown;
-        this.TimeBeforeExplosion = timebeforeexplosion * 1000;
-        this.MaxRadius = radius;
-        this.Damage = damage;
-        this.IsDebuff = isDebuff;
-    }
+        private float SpeedBuff;
+        private float BuffCooldown;
+        private int TimeBeforeExplosion;
+        private float MaxRadius;
+        private uint Damage;
+        private bool IsDebuff;
 
-    public float GetSpeedBuff() => this.SpeedBuff;
-    public float GetBuffCooldown() => this.BuffCooldown;
-    public int GetTimeBeforeExplosion() => this.TimeBeforeExplosion;
+        // РЎР»РѕРІР°СЂСЊ РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ Р°РєС‚РёРІРЅС‹С… Р±Р°С„С„РѕРІ
+        private Dictionary<MiniGamePlayer, bool> activeBuffs = new Dictionary<MiniGamePlayer, bool>();
 
-    public async Task BuffSpeed(MiniGamePlayer player)
-    {
-        // Проверяем, есть ли активный бафф на данном объекте
-        if (activeBuffs.ContainsKey(player) && activeBuffs[player])
+        public BuffSpeedMine(uint number, float СЃooldown, GameObject mine, float speedbuff, float buffcooldown, int timebeforeexplosion, float radius, uint damage, bool isDebuff)
+            : base(number, СЃooldown, mine)
         {
-            //Debug.LogWarning($"Buff is already active for {player.name}");
-            return; // Не применяем бафф повторно
+            this.SpeedBuff = speedbuff;
+            this.BuffCooldown = buffcooldown;
+            this.TimeBeforeExplosion = timebeforeexplosion;
+            this.MaxRadius = radius;
+            this.Damage = damage;
+            this.IsDebuff = isDebuff;
         }
 
-        activeBuffs[player] = true;
+        public float GetSpeedBuff() => this.SpeedBuff;
+        public float GetBuffCooldown() => this.BuffCooldown;
+        public int GetTimeBeforeExplosion() => this.TimeBeforeExplosion;
 
-        try
+        public async Task BuffSpeed(MiniGamePlayer player)
         {
-            // Применяем начальный бафф
-            player.TakeSpeedboost(this.SpeedBuff, IsDebuff);
-            player.TakeDamage(this.Damage);
-
-            await Task.Delay((int)(this.BuffCooldown * 1000));
-
-            // Убираем бафф
-            player.TakeSpeedboost(1f, IsDebuff);
-        }
-        finally
-        {
-            activeBuffs[player] = false;
-        }
-    }
-
-    public async Task BuffSpeedList(List<MiniGamePlayer> players)
-    {
-        foreach (var player in players)
-        {
-            if (player != null)
+            // РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё Р°РєС‚РёРІРЅС‹Р№ Р±Р°С„С„ РЅР° РґР°РЅРЅРѕРј РѕР±СЉРµРєС‚Рµ
+            if (activeBuffs.ContainsKey(player) && activeBuffs[player])
             {
-                await BuffSpeed(player);
+                //Debug.LogWarning($"Buff is already active for {player.name}");
+                return; // РќРµ РїСЂРёРјРµРЅСЏРµРј Р±Р°С„С„ РїРѕРІС‚РѕСЂРЅРѕ
+            }
+
+            activeBuffs[player] = true;
+
+            try
+            {
+                // РџСЂРёРјРµРЅСЏРµРј РЅР°С‡Р°Р»СЊРЅС‹Р№ Р±Р°С„С„
+                player.TakeSpeedboost(this.SpeedBuff, IsDebuff);
+                player.TakeDamage(this.Damage);
+
+                await Task.Delay((int)(this.BuffCooldown * 1000));
+
+                // РЈР±РёСЂР°РµРј Р±Р°С„С„
+                player.TakeSpeedboost(1f, IsDebuff);
+            }
+            finally
+            {
+                activeBuffs[player] = false;
             }
         }
-    }
 
-    public List<MiniGamePlayer> FindDistanceToMine(Vector3 minePosition, params GameObject[] playerspositions)
-    {
-        List<MiniGamePlayer> closeObjects = new List<MiniGamePlayer>();
-
-        foreach (var obj in playerspositions)
+        public async Task BuffSpeedList(List<MiniGamePlayer> players)
         {
-            if (obj != null) // Проверяем, что объект не null
+            foreach (var player in players)
             {
-                float distance = Vector3.Distance(minePosition, obj.transform.position);
-                if (distance <= this.MaxRadius)
+                if (player != null)
                 {
-                    MiniGamePlayer objChar = obj.GetComponent<MiniGamePlayer>();
-                    if (objChar != null) closeObjects.Add(objChar);
+                    await BuffSpeed(player);
                 }
             }
-            else
-            {
-                //Debug.LogWarning("One of the passed GameObjects is null.");
-            }
         }
 
-        return closeObjects;
+        public List<MiniGamePlayer> FindDistanceToMine(Vector3 minePosition, params GameObject[] playerspositions)
+        {
+            List<MiniGamePlayer> closeObjects = new List<MiniGamePlayer>();
+
+            foreach (var obj in playerspositions)
+            {
+                if (obj != null) // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РѕР±СЉРµРєС‚ РЅРµ null
+                {
+                    float distance = Vector3.Distance(minePosition, obj.transform.position);
+                    if (distance <= this.MaxRadius)
+                    {
+                        MiniGamePlayer objChar = obj.GetComponent<MiniGamePlayer>();
+                        if (objChar != null) closeObjects.Add(objChar);
+                    }
+                }
+                else
+                {
+                    //Debug.LogWarning("One of the passed GameObjects is null.");
+                }
+            }
+
+            return closeObjects;
+        }
     }
 }

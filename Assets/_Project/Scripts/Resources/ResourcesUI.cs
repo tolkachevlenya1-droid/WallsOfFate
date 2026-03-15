@@ -1,9 +1,14 @@
-﻿using System.Collections;
+﻿using Game.Data;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Resources;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
-namespace GameResources
+namespace Game
 {
     public class ResourcesUI : MonoBehaviour
     {
@@ -20,72 +25,78 @@ namespace GameResources
         [Tooltip("Time (seconds) to fade back from green/red to white")]
         [SerializeField] private float colourReturnDuration = 0.4f;
         [Tooltip("Delay (seconds) between each +1 / -1 increment")]
-        [SerializeField] private float valueStepDelay = 0.015f;
+        [SerializeField] private float valueStepDelay = 0.15f;
         [SerializeField] private Color increaseColour = Color.green;
         [SerializeField] private Color decreaseColour = Color.red;
         [SerializeField] private Color normalColour = Color.white;
         #endregion
 
         #region Private fields
-        private int lastGold;
-        private int lastFood;
-        private int lastSatisfaction;
-        private int lastStrength;
+        
+        private Dictionary<ResourceType, int> lastResourceValue = new() {
+            { ResourceType.Gold, 0 },
+            { ResourceType.Food, 0 },
+            { ResourceType.PeopleSatisfaction, 0 },
+            { ResourceType.CastleStrength, 0 }
+        };
+
+        private Dictionary<ResourceType, TMP_Text> resourceTextFields;
 
         // Stores the currently‑running coroutine for every TMP_Text so that it can be safely stopped when a new change arrives.
         private readonly Dictionary<TMP_Text, Coroutine> runningCoroutines = new();
         #endregion
 
+        private PlayerManager playerManager;
+
+        [Inject]
+        private void Construct(PlayerManager playerManager) {
+            this.playerManager = playerManager;
+        }
+
         private void Awake() {
-            GameResources.GoldChanged += OnGoldChanged;
-            GameResources.FoodChanged += OnFoodChanged;
-            GameResources.PeopleSatisfactionChanged += OnPeopleSatisfactionChanged;
-            GameResources.CastleStrengthChanged += OnCastleStrengthChanged;
+            playerManager.PlayerData.ResourceChanged += OnResourceChanged;
         }
 
         private void OnDestroy() {
-            GameResources.GoldChanged -= OnGoldChanged;
-            GameResources.FoodChanged -= OnFoodChanged;
-            GameResources.PeopleSatisfactionChanged -= OnPeopleSatisfactionChanged;
-            GameResources.CastleStrengthChanged -= OnCastleStrengthChanged;
+            playerManager.PlayerData.ResourceChanged -= OnResourceChanged;
         }
 
-        #region Unity lifecycle
-        private void Start() => UpdateAllResources(forceUpdate: true);
+        #region Unity life-cycle
+        private void Start()
+        {
+            resourceTextFields = new Dictionary<ResourceType, TMP_Text> {
+                { ResourceType.Gold, goldText },
+                { ResourceType.Food, foodText },
+                { ResourceType.PeopleSatisfaction, satisfactionText },
+                { ResourceType.CastleStrength, strengthText }
+            };
+
+            UpdateAllResources(forceUpdate: true);
+        }
         #endregion
 
         #region Event handlers
-        private void OnGoldChanged(int newGold) {
-            UpdateResource(ref lastGold, newGold, goldText, true);
-        }
-
-        private void OnFoodChanged(int newFood) {
-            UpdateResource(ref lastFood, newFood, foodText, true);
-        }
-
-        private void OnPeopleSatisfactionChanged(int newSatisfaction) {
-            UpdateResource(ref lastSatisfaction, newSatisfaction, satisfactionText, true);
-        }
-
-        private void OnCastleStrengthChanged(int newStrength) {
-            UpdateResource(ref lastStrength, newStrength, strengthText, true);
+        private void OnResourceChanged(ResourceType resource, int value) {
+            UpdateResource(resource, value, true);
         }
         #endregion
 
         #region Updating helpers
         private void UpdateAllResources(bool forceUpdate = false)
         {
-            UpdateResource(ref lastGold, GameResources.Gold, goldText, forceUpdate);
-            UpdateResource(ref lastFood, GameResources.Food, foodText, forceUpdate);
-            UpdateResource(ref lastSatisfaction, GameResources.PeopleSatisfaction, satisfactionText, forceUpdate);
-            UpdateResource(ref lastStrength, GameResources.CastleStrength, strengthText, forceUpdate);
+            var resourceTypes = Enum.GetValues(typeof(ResourceType)).Cast<ResourceType>();
+
+            foreach (var type in resourceTypes)
+            {
+                UpdateResource(type, playerManager.PlayerData.GetResource(type), forceUpdate);
+            }
         }
 
-        private void UpdateResource(ref int lastValue,
-                                    int currentValue,
-                                    TMP_Text textField,
-                                    bool forceUpdate)
+        private void UpdateResource(ResourceType resource, int currentValue, bool forceUpdate)
         {
+            var textField = resourceTextFields[resource];
+            var lastValue = lastResourceValue[resource];
+
             if (textField == null) return;
 
             // First frame or hard refresh – just set value without animation.
@@ -93,7 +104,7 @@ namespace GameResources
             {
                 textField.text = currentValue.ToString();
                 textField.color = normalColour;
-                lastValue = currentValue;
+                lastResourceValue[resource] = currentValue;
                 return;
             }
 
@@ -104,7 +115,7 @@ namespace GameResources
                 StopCoroutine(previous);
 
             runningCoroutines[textField] = StartCoroutine(AnimateResourceChange(textField, lastValue, currentValue));
-            lastValue = currentValue;
+            lastResourceValue[resource] = currentValue;
         }
         #endregion
 

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Assets.Scripts.Infrastructure
+namespace Game
 {
     public class ScenePlayerLocator : MonoInstaller
     {
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Infrastructure
         {
             if (Prefab == null)
             {
-                //Debug.LogError("Prefab не назначен в инспекторе!", this);
+                Debug.LogError("Prefab не назначен в инспекторе!", this);
                 return;
             }
 

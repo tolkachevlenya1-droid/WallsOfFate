@@ -1,171 +1,125 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 using Zenject.SpaceFighter;
 
-public class HealthBarManager : MonoBehaviour
+namespace Game.MiniGame.PowerCheck
 {
-    // Полоска здоровья (Slider), назначается через SetHealthBar
-    private Slider _healthBar;
-    // Компонент MiniGamePlayer на этом же объекте
-    private MiniGamePlayer _player;
-
-    /// <summary>
-    /// Назначает полоску здоровья (вызывается из MiniGameInstaller).
-    /// </summary>
-    /// <param name="healthBar">Slider для отображения здоровья.</param>
-    public void SetHealthBar(Slider healthBar)
+    public class HealthBarManager : MonoBehaviour
     {
-        _healthBar = healthBar;
-    }
+        private Slider _healthBar;
+        private MiniGamePlayer _player;
 
-    void Start()
-    {
-        // Активируем полоску здоровья, если объект активен и _healthBar назначен
-        if (this.gameObject.activeSelf && _healthBar != null)
+        /// <summary>
+        /// РќР°Р·РЅР°С‡Р°РµС‚ РїРѕР»РѕСЃРєСѓ Р·РґРѕСЂРѕРІСЊСЏ (РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· MiniGameInstaller).
+        /// </summary>
+        /// <param name="healthBar">Slider РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ Р·РґРѕСЂРѕРІСЊСЏ.</param>
+        public void SetHealthBar(Slider healthBar)
         {
-            _healthBar.gameObject.SetActive(true);
+            _healthBar = healthBar;
         }
 
-        // Получаем компонент MiniGamePlayer
-        _player = GetComponent<MiniGamePlayer>();
-        if (_player == null)
+        void Start()
         {
-            //Debug.LogError("Компонент MiniGamePlayer не найден!", this);
-            return;
-        }
+            // РђРєС‚РёРІРёСЂСѓРµРј РїРѕР»РѕСЃРєСѓ Р·РґРѕСЂРѕРІСЊСЏ, РµСЃР»Рё РѕР±СЉРµРєС‚ Р°РєС‚РёРІРµРЅ Рё _healthBar РЅР°Р·РЅР°С‡РµРЅ
+            if (this.gameObject.activeSelf && _healthBar != null)
+            {
+                _healthBar.gameObject.SetActive(true);
+            }
 
-        // Проверяем, назначена ли полоска здоровья
-        if (_healthBar == null)
-        {
-            //Debug.LogError("Полоска здоровья не назначена!", this);
-            return;
-        }
+            // РџРѕР»СѓС‡Р°РµРј РєРѕРјРїРѕРЅРµРЅС‚ MiniGamePlayer
+            _player = GetComponent<MiniGamePlayer>();
+            if (_player == null)
+            {
+                Debug.LogError("РљРѕРјРїРѕРЅРµРЅС‚ MiniGamePlayer РЅРµ РЅР°Р№РґРµРЅ!", this);
+                return;
+            }
 
-        // Обновляем здоровье и портрет при старте
-        UpdateHealthBar();
-        UpdatePortrait();
-    }
+            // РџСЂРѕРІРµСЂСЏРµРј, РЅР°Р·РЅР°С‡РµРЅР° Р»Рё РїРѕР»РѕСЃРєР° Р·РґРѕСЂРѕРІСЊСЏ
+            if (_healthBar == null)
+            {
+                Debug.LogError("РџРѕР»РѕСЃРєР° Р·РґРѕСЂРѕРІСЊСЏ РЅРµ РЅР°Р·РЅР°С‡РµРЅР°!", this);
+                return;
+            }
 
-    void OnDisable()
-    {
-        // Деактивируем полоску здоровья при отключении объекта
-        RemoveHealthBar();
-    }
-
-    void OnEnable()
-    {
-        // Активируем полоску здоровья при включении объекта
-        AddHealthBar();
-    }
-
-    void Update()
-    {
-        // Активируем полоску здоровья, если объект активен и _healthBar назначен
-        if (this.gameObject.activeSelf && _healthBar != null)
-        {
-            _healthBar.gameObject.SetActive(true);
-        }
-
-        // Обновляем здоровье, если player и _healthBar не null
-        if (_player != null && _healthBar != null)
-        {
+            // РћР±РЅРѕРІР»СЏРµРј Р·РґРѕСЂРѕРІСЊРµ Рё РїРѕСЂС‚СЂРµС‚ РїСЂРё СЃС‚Р°СЂС‚Рµ
             UpdateHealthBar();
+            UpdatePortrait();
         }
-    }
 
-    /// <summary>
-    /// Обновляет значение полоски здоровья и текст.
-    /// </summary>
-    private void UpdateHealthBar()
-    {
-        // Вычисляем отношение текущего здоровья к максимальному
-        float currentHealth = _player.Health;
-        float maxHealth = _player.MaxHealth;
-        _healthBar.value = currentHealth / maxHealth;
-
-        // Обновляем текст здоровья (например, "50 / 100")
-        Text healthBarText = _healthBar.GetComponentInChildren<Text>();
-        if (healthBarText != null)
+        void Update()
         {
-            healthBarText.text = $"{Mathf.Ceil(currentHealth)} / {Mathf.Ceil(maxHealth)}";
+            // РћР±РЅРѕРІР»СЏРµРј Р·РґРѕСЂРѕРІСЊРµ, РµСЃР»Рё player Рё _healthBar РЅРµ null
+            if (_player != null && _healthBar != null)
+            {
+                UpdateHealthBar();
+            }
         }
 
-        // Обновляем портрет, чтобы учесть возможные изменения player.Portrait
-        UpdatePortrait();
-    }
-
-    /// <summary>
-    /// Проверяет и обновляет спрайт портрета в дочернем Image с именем "image".
-    /// </summary>
-    private void UpdatePortrait()
-    {
-        // Проверяем, что player и _healthBar не null
-        if (_player == null || _healthBar == null)
+        /// <summary>
+        /// РћР±РЅРѕРІР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ РїРѕР»РѕСЃРєРё Р·РґРѕСЂРѕРІСЊСЏ Рё С‚РµРєСЃС‚.
+        /// </summary>
+        private void UpdateHealthBar()
         {
-            return;
+            // Р’С‹С‡РёСЃР»СЏРµРј РѕС‚РЅРѕС€РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ Р·РґРѕСЂРѕРІСЊСЏ Рє РјР°РєСЃРёРјР°Р»СЊРЅРѕРјСѓ
+            float currentHealth = _player.Health;
+            float maxHealth = _player.MaxHealth;
+            _healthBar.value = currentHealth / maxHealth;
+
+            // РћР±РЅРѕРІР»СЏРµРј С‚РµРєСЃС‚ Р·РґРѕСЂРѕРІСЊСЏ (РЅР°РїСЂРёРјРµСЂ, "50 / 100")
+            Text healthBarText = _healthBar.GetComponentInChildren<Text>();
+            if (healthBarText != null)
+            {
+                healthBarText.text = $"{Mathf.Ceil(currentHealth)} / {Mathf.Ceil(maxHealth)}";
+            }
         }
 
-        // Ищем дочерний объект с именем "image" в иерархии _healthBar.transform
-        Transform imageTransform = _healthBar.transform.Find("Image");
-        if (imageTransform == null)
+        /// <summary>
+        /// РџСЂРѕРІРµСЂСЏРµС‚ Рё РѕР±РЅРѕРІР»СЏРµС‚ СЃРїСЂР°Р№С‚ РїРѕСЂС‚СЂРµС‚Р° РІ РґРѕС‡РµСЂРЅРµРј Image СЃ РёРјРµРЅРµРј "image".
+        /// </summary>
+        private void UpdatePortrait()
         {
-            //Debug.LogWarning("Объект с именем 'image' не найден под полоской здоровья!", _healthBar);
-            return;
-        }
+            // РџСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ player Рё _healthBar РЅРµ null
+            if (_player == null || _healthBar == null)
+            {
+                return;
+            }
 
-        // Получаем компонент Image у найденного объекта
-        Image portraitImage = imageTransform.GetComponent<Image>();
-        if (portraitImage == null)
-        {
-            //Debug.LogWarning("Компонент Image не найден на объекте 'image' под полоской здоровья!", imageTransform);
-            return;
-        }
+            // РС‰РµРј РґРѕС‡РµСЂРЅРёР№ РѕР±СЉРµРєС‚ СЃ РёРјРµРЅРµРј "image" РІ РёРµСЂР°СЂС…РёРё _healthBar.transform
+            Transform imageTransform = _healthBar.transform.Find("Image");
+            if (imageTransform == null)
+            {
+                Debug.LogWarning("РћР±СЉРµРєС‚ СЃ РёРјРµРЅРµРј 'image' РЅРµ РЅР°Р№РґРµРЅ РїРѕРґ РїРѕР»РѕСЃРєРѕР№ Р·РґРѕСЂРѕРІСЊСЏ!", _healthBar);
+                return;
+            }
 
-        // Проверяем, указан ли путь к портрету
-        if (string.IsNullOrEmpty(_player.Portrait))
-        {
-            //Debug.LogWarning("player.Portrait пуст или null!", this);
-            return;
-        }
+            // РџРѕР»СѓС‡Р°РµРј РєРѕРјРїРѕРЅРµРЅС‚ Image Сѓ РЅР°Р№РґРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
+            Image portraitImage = imageTransform.GetComponent<Image>();
+            if (portraitImage == null)
+            {
+                Debug.LogWarning("РљРѕРјРїРѕРЅРµРЅС‚ Image РЅРµ РЅР°Р№РґРµРЅ РЅР° РѕР±СЉРµРєС‚Рµ 'image' РїРѕРґ РїРѕР»РѕСЃРєРѕР№ Р·РґРѕСЂРѕРІСЊСЏ!", imageTransform);
+                return;
+            }
 
-        // Загружаем спрайт из Resources/PowerCheckPortraits
-        Sprite portraitSprite = Resources.Load<Sprite>("PowerCheckPortraits/" + _player.Portrait);
-        if (portraitSprite == null)
-        {
-            //Debug.LogWarning($"Не удалось загрузить спрайт по пути 'PowerCheckPortraits/{_player.Portrait}'!", this);
-            return;
-        }
+            // РџСЂРѕРІРµСЂСЏРµРј, СѓРєР°Р·Р°РЅ Р»Рё РїСѓС‚СЊ Рє РїРѕСЂС‚СЂРµС‚Сѓ
+            if (string.IsNullOrEmpty(_player.Portrait))
+            {
+                Debug.LogWarning("player.Portrait РїСѓСЃС‚ РёР»Рё null!", this);
+                return;
+            }
 
-        // Обновляем спрайт, если текущий отличается
-        if (portraitImage.sprite != portraitSprite)
-        {
-            portraitImage.sprite = portraitSprite;
-        }
-    }
+            // Р—Р°РіСЂСѓР¶Р°РµРј СЃРїСЂР°Р№С‚ РёР· Resources/PowerCheckPortraits
+            Sprite portraitSprite = Resources.Load<Sprite>("MiniGames/PowerCheck/PowerCheckPortraits/" + _player.Portrait);
+            if (portraitSprite == null)
+            {
+                Debug.LogWarning($"РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ СЃРїСЂР°Р№С‚ РїРѕ РїСѓС‚Рё 'PowerCheckPortraits/{_player.Portrait}'!", this);
+                return;
+            }
 
-    /// <summary>
-    /// Деактивирует полоску здоровья.
-    /// </summary>
-    public void RemoveHealthBar()
-    {
-        if (_healthBar != null)
-        {
-            _healthBar.gameObject.SetActive(false);
+            // РћР±РЅРѕРІР»СЏРµРј СЃРїСЂР°Р№С‚, РµСЃР»Рё С‚РµРєСѓС‰РёР№ РѕС‚Р»РёС‡Р°РµС‚СЃСЏ
+            if (portraitImage.sprite != portraitSprite)
+            {
+                portraitImage.sprite = portraitSprite;
+            }
         }
-    }
-
-    /// <summary>
-    /// Активирует полоску здоровья и обновляет портрет.
-    /// </summary>
-    public void AddHealthBar()
-    {
-        if (_healthBar == null)
-        {
-            //Debug.LogWarning("Полоска здоровья не назначена в AddHealthBar!", this);
-            return;
-        }
-
-        _healthBar.gameObject.SetActive(true);
-        UpdatePortrait();
     }
 }
