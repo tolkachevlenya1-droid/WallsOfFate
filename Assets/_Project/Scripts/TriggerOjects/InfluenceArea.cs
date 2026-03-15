@@ -25,13 +25,15 @@ namespace Game
         public GameObject PlayerObj;
         public GameObject TriggerObj;
         public bool IsEnteracted;
+        public string Parameters;
 
-        public TriggerEvent(InfluenceType areaType, GameObject playerObj, GameObject triggerObj, bool isEnteracted)
+        public TriggerEvent(InfluenceType areaType, GameObject playerObj, GameObject triggerObj, bool isEnteracted, string parameters)
         {
             AreaType = areaType;
             PlayerObj = playerObj;
             IsEnteracted = isEnteracted;
             TriggerObj = triggerObj;
+            Parameters = parameters;
         }
     }
 
@@ -40,21 +42,13 @@ namespace Game
     {
         public InfluenceType AreaType;
         public InfluenceInteractionType InteractionType;
-        public string triggerObjectName;
-        //GameObject triggerObject;
-        NPCPrefabFactory npcFactory;
-        //[SerializeReference]
-        //public GameObject Handler;
+        public GameObject triggerObject;
         public event Action<TriggerEvent> OnEventTriggered;
+        [TextArea]
+        public string Parameters;
+        [SerializeField] private cakeslice.Outline outline;
 
         private BoxCollider boxCollider;
-
-        [Inject]
-        private void Construct(NPCPrefabFactory npcFActory)
-        {
-            //this.triggerObject = npcFActory.GetInstance(triggerObjectName);
-            this.npcFactory = npcFActory;
-        }
 
         private void Reset()
         {
@@ -66,39 +60,67 @@ namespace Game
 
         private void OnTriggerEnter(Collider other)
         {
-            if (InteractionType == InfluenceInteractionType.Enter)
+            if (other.CompareTag("Player"))
             {
-                InvokeEvent(other);
+                UpdateOutlineState(true);
+
+                if (InteractionType == InfluenceInteractionType.Enter)
+                {
+                    InvokeEvent(other);
+                }
             }
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (InteractionType == InfluenceInteractionType.Stay)
+            if (other.CompareTag("Player"))
             {
-                InvokeEvent(other);
+                if (InteractionType == InfluenceInteractionType.Stay)
+                {
+                    InvokeEvent(other);
+                }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (InteractionType == InfluenceInteractionType.Exit)
+            if (other.CompareTag("Player"))
             {
-                InvokeEvent(other);
+                UpdateOutlineState(false);
+
+                if (InteractionType == InfluenceInteractionType.Exit)
+                {
+                    InvokeEvent(other);
+                }
             }
+        }
+
+        private void UpdateOutlineState(bool playerInZone)
+        {
+            if (outline == null) return;
+
+            bool canHighlight = true;
+
+            if (triggerObject != null)
+            {
+                var interactable = triggerObject.GetComponent<InteractableItem>();
+                if (interactable != null)
+                    canHighlight = !interactable.HasBeenUsed;
+            }
+
+            SetOutlineEnabled(canHighlight && playerInZone);
+        }
+
+        private void SetOutlineEnabled(bool enabled)
+        {
+            outline.enabled = enabled;
         }
 
         private void InvokeEvent(Collider obj)
         {
             bool interacted = InputManager.GetInstance().GetInteractPressed();
-            GameObject triggerObject = npcFactory.GetInstance(triggerObjectName);
-            TriggerEvent iventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted);
+            TriggerEvent iventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted, Parameters);
             OnEventTriggered?.Invoke(iventData);
-            //if (Handler != null)
-            //{
-
-            //    //Handler.transform.GetComponent<ITriggerHandler>().Handle(iventData);
-            //}
         }
     }
 }

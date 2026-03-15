@@ -9,7 +9,7 @@ namespace Game
     {
         private readonly List<GameObject> prefabs;
         private readonly DiContainer container; 
-        private readonly Dictionary<string, GameObject> instances = new();
+        public readonly Dictionary<string, GameObject> instances = new();
 
         public NPCPrefabFactory(List<GameObject> prefabs, DiContainer container)
         {
