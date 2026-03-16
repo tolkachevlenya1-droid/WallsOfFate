@@ -58,9 +58,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02c9581baba6ec846bd068669a2bdb6d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3753393761678469571}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02c9581baba6ec846bd068669a2bdb6d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: -5232005307724009835}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 02c9581baba6ec846bd068669a2bdb6d, type: 3}
       insertIndex: -1
@@ -80,21 +77,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 02c9581baba6ec846bd068669a2bdb6d, type: 3}
   m_PrefabInstance: {fileID: 8670474639079480215}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3753393761678469571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8400021922369283782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0996432d9ec83764eab23e8d27b623a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _defaultDialogue: BOSS/BOSSEND/
-  _npcName: Atash
-  PowerCheckPrefab: {fileID: 4711255430935399355, guid: 8a9c424c12438ea408ad49622e4b3269, type: 3}
 --- !u!54 &-5232005307724009835
 Rigidbody:
   m_ObjectHideFlags: 0
