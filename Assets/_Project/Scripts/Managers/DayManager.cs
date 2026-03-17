@@ -1,5 +1,4 @@
-﻿using Game.Quest;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -36,13 +35,13 @@ namespace Game
         public void CheckNewDayConditions()
         {
             // Ищем главный Prime-квест, у которого ВСЕ задачи отмечены IsDone == true
-            var completedPrimeQuest = QuestCollection.GetAllQuestGroups()
+            /*var completedPrimeQuest = QuestCollection.GetAllQuestGroups()
                 .FirstOrDefault(q =>
                     q.Prime
                     && q.IsEneded()
-                );
+                );*/
 
-            newDayButton.gameObject.SetActive(completedPrimeQuest != null);
+            //newDayButton.gameObject.SetActive(completedPrimeQuest != null);
         }
 
         private void ShowEndOfDay()

@@ -1,5 +1,4 @@
-﻿using Game.Quest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,17 +29,17 @@ namespace Game
             }
         }
 
-        public void Handle(TriggerEvent iventData)
+        public void Handle(TriggerEvent eventData)
         {
 
-            var availableGroups = QuestCollection.GetAllDays()
+            /*var availableQuests = QuestCollection.GetAllDays()
                 .SelectMany(d => d.Quests)
-                .Where(q => q.CheckOpen(iventData.Parameters))
+                .Where(q => q.CheckOpen(eventData.Parameters))
                 .ToList();
 
-            if (availableGroups.Count > 0)
+            if (availableQuests.Count > 0)
             {
-                var group = availableGroups.First();
+                var group = availableQuests.First();
                 group.StartQuest();
                 IsDone = true;
                 return;
@@ -57,7 +56,7 @@ namespace Game
             foreach (var group in activeGroups)
             {
                 taskToComplete = group.Tasks
-                    .Where(t => !t.IsDone && t.ForNPS == iventData.Parameters && t.CanComplete())
+                    .Where(t => !t.IsDone && t.ForNPS == eventData.Parameters && t.CanComplete())
                     .OrderBy(t => t.Id)
                     .FirstOrDefault();
 
@@ -83,7 +82,7 @@ namespace Game
                 groupToUpdate.CurrentTaskId = next != null ? next.Id : -1;
                 IsDone = true;
 
-            }
+            }*/
         }
     }
 }

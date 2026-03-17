@@ -1,0 +1,30 @@
+[
+	{
+		"Id": 1,
+		"Name": "TestQuest",
+		"Description": "TestQuest description",
+		"Main": true,
+		"ResourcesReward": {
+			"Gold": 10
+		},
+		"Tasks": [
+			{
+				"Id": 1,
+				"Name": "Task 1",
+				"Description": "Task 1 description",
+				"ResourcesReward": {
+					"Food": 5
+				}
+			},
+			{
+				"Id": 2,
+				"Name": "Task 2",
+				"Description": "Task 2 description",
+				"Dependencies": [1],
+				"ResourcesReward": {
+					"Gold": 2
+				}
+			}
+		]
+	}
+]

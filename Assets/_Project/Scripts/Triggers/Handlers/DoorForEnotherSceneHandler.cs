@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -33,11 +34,13 @@ namespace Game
 
         [SerializeField] private List<InfluenceArea> influenceArias;
         private LoadingManager loadingManager;
+        private GameflowManager gameflowManager;
 
         [Inject]
-        public void Construct(LoadingManager loadingManager)
+        public void Construct(LoadingManager loadingManager, GameflowManager gameflowManager)
         {
             this.loadingManager = loadingManager;
+            this.gameflowManager = gameflowManager;
         }
 
         private void OnEnable()
@@ -105,7 +108,7 @@ namespace Game
         private bool ShouldTrigger(int targetDayNumber)
         {
             if (targetDayNumber == -1) return true;
-            return targetDayNumber == Quest.QuestCollection.CurrentDayNumber;
+            return targetDayNumber == this.gameflowManager.CurrentDay.Id;
         }
     }
 }
