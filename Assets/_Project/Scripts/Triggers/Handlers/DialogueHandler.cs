@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Zenject;
 
 namespace Game
 {
@@ -9,17 +10,33 @@ namespace Game
     {
         [Header("Dialogue Settings")]
         //[SerializeField] private string defaultDialogue;
-        [SerializeField] private InfluenceArea influenceAria;
+        [SerializeField] private List<InfluenceArea> influenceArias;
+        private NPCPrefabFactory npcFactory;
+
+        [Inject]
+        private void Construct(NPCPrefabFactory npcFActory)
+        {
+            this.npcFactory = npcFActory;
+            foreach (var npc in npcFactory.instances) {
+                influenceArias.Add(npc.Value.GetComponentInChildren<InfluenceArea>());
+            }
+        }
 
         private void OnEnable()
         {
-            influenceAria.OnEventTriggered += Handle;   
+            foreach (var area in influenceArias)
+            {
+                area.OnEventTriggered += Handle;   
+            }
         }
 
 
         private void OnDisable()
         {
-            influenceAria.OnEventTriggered -= Handle;
+            foreach (var area in influenceArias)
+            {
+                area.OnEventTriggered -= Handle;
+            }
         }
 
         public void Handle(TriggerEvent eventData)

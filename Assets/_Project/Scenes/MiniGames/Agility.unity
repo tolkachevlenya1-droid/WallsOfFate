@@ -1611,6 +1611,7 @@ MonoBehaviour:
   PlayerInstance: {fileID: 0}
   EnemyInstance: {fileID: 0}
   sliderTimerManager: {fileID: 123850325}
+  playerHPManager: {fileID: 0}
 --- !u!1 &1083461845
 GameObject:
   m_ObjectHideFlags: 0

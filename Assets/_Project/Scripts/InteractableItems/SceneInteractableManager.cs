@@ -19,7 +19,7 @@ namespace Game
 
         /* ─────────────────────────────────────── */
 
-        private int itemsToEnableThisRun;   // выбранное число для текущего старта
+        public int itemsToEnableThisRun;   // выбранное число для текущего старта
 
         private void OnValidate()
         {

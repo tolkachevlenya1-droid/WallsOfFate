@@ -282,7 +282,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1448,7 +1449,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -1567,12 +1569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 753ee7801ae497d4dac6a82b2222b6cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.LoadingScreenController
-  loadingScreen: {fileID: 1069939237}
-  panelEndOfDay: {fileID: 0}
-  panelStartOfDay: {fileID: 0}
-  startDayDuration: 2
   inputDelay: 0.05
-  finalSprite: {fileID: 0}
 --- !u!1 &1069939237
 GameObject:
   m_ObjectHideFlags: 0

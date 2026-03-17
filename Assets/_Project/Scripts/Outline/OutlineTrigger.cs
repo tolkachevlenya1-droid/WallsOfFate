@@ -12,7 +12,7 @@ namespace Game
         [Tooltip("Слой(и) для проверки наведения")]
         [SerializeField] private LayerMask hoverLayerMask = ~0;
 
-        private Outline[] outlines;
+        private URPOutline[] outlines;
         private Collider[] colliders;
         private InteractableItem interactable;
 
@@ -22,13 +22,13 @@ namespace Game
         private void Start()
         {
             // Получаем все Outline-ы и Collider-ы на объекте и его дочерних объектах
-            outlines = GetComponentsInChildren<Outline>(true);
+            outlines = GetComponentsInChildren<URPOutline>(true);
             colliders = GetComponentsInChildren<Collider>(true);
             interactable = GetComponent<InteractableItem>();
 
             // Отключаем подсветку по умолчанию
             foreach (var o in outlines)
-                o.enabled = false;
+                o.SetHighlighted(false);
         }
 
         private void Update()
