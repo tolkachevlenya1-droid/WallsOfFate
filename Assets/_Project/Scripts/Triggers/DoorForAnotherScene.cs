@@ -38,7 +38,7 @@ namespace Game
         public bool ShouldTrigger() {
             
             if (dayNumber == -1) return true;
-            else if (dayNumber != -1 && dayNumber == Quest.QuestCollection.CurrentDayNumber) return true;
+            else if (dayNumber != -1) return true;
             else return false;
         }
     }

@@ -1,3 +1,4 @@
+using Game.Data;
 using UnityEngine;
 using Zenject;
 
@@ -21,16 +22,18 @@ namespace Game.UI
         public static event System.Action NewGameStarted;
 
         private LoadingManager loadingManager;
+        private SaveLoadManager saveLoadManager;
 
         [Inject]
-        public void Construct(LoadingManager loadingManager)
+        public void Construct(LoadingManager loadingManager, SaveLoadManager saveLoadManager)
         {
             this.loadingManager = loadingManager;
+            this.saveLoadManager = saveLoadManager;
         }
 
         private void Awake()
         {
-            if (Data.SaveLoadManager.CanLoad())
+            if (saveLoadManager.CanLoad())
             {
                 continueGameButton.SetActive(true);
             }
@@ -42,7 +45,7 @@ namespace Game.UI
 
         public void OnStartGameButtonClick()
         {
-            if (Data.SaveLoadManager.CanLoad())
+            if (saveLoadManager.CanLoad())
             {
                 newGameConfirmationPanel.SetActive(true);
             }
@@ -54,7 +57,9 @@ namespace Game.UI
 
         public void OnContinueGameButtonClick()
         {
-            Data.SaveLoadManager.LoadGame();
+            saveLoadManager.LoadGame();
+
+            loadingManager.LoadScene(firstScene);
         }
 
         public void OnSettingsButtonClick()
@@ -69,7 +74,7 @@ namespace Game.UI
 
         public void StartGame()
         {
-            Data.SaveLoadManager.Clear();
+            saveLoadManager.Clear();
 
             NewGameStarted?.Invoke();
 

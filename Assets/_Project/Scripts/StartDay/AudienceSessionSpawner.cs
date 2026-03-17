@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Game.Quest;
 using Game;
 using Zenject;
 
@@ -44,10 +43,10 @@ public class AudienceSessionSpawner : MonoBehaviour
                 _sessionQueue.Enqueue(def);
 
         // 2) босс-проситель сегодняшнего дня
-        int day = QuestCollection.CurrentDayNumber;          // 0,1,2 …
+        /*int day = QuestCollection.CurrentDayNumber;          // 0,1,2 …
         if (day < _mainQuestGivers.Length)
             _sessionQueue.Enqueue(_mainQuestGivers[day]);
-
+        */
         if (_sessionQueue.Count == 0)
         {
             EndSession();        // никого нет → сразу выходим

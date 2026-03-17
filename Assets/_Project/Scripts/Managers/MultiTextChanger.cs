@@ -25,7 +25,7 @@ namespace Game
         {
             try
             {
-                var allGroups = Quest.QuestCollection.GetAllQuestGroups();
+                /*var allGroups = Quest.QuestCollection.GetAllQuestGroups();
 
                 int idx = 0;
                 foreach (var group in allGroups
@@ -55,7 +55,7 @@ namespace Game
                 {
                     ShowSingleMessage(_defaultTextAllQuests);
                     return;
-                }
+                }*/
             }
             catch (Exception e)
             {
@@ -65,18 +65,18 @@ namespace Game
 
         private void ShowSingleMessage(string msg)
         {
-            var allGroups = Quest.QuestCollection.GetAllQuestGroups();
+            /*var allGroups = Quest.QuestCollection.GetAllQuestGroups();
 
             var avalibleQuests = allGroups.Where(q => q.InProgress && !q.Complite).OrderByDescending(q => q.Prime);
             var avalibleQuestsList = avalibleQuests.ToArray();
             for (int i = 0; i < _textMeshProLinks.Count; i++)
-                _textMeshProLinks[i].text = (i == 0 ? msg : avalibleQuestsList[i].GetCurrentTask().TaskInfo);
+                _textMeshProLinks[i].text = (i == 0 ? msg : avalibleQuestsList[i].GetCurrentTask().TaskInfo);*/
         }
 
         private void SyncIcons()
         {
             // Сколько сейчас активных квестов?
-            int activeQuests = Quest.QuestCollection.GetActiveQuestGroups().Count;
+            /*int activeQuests = Quest.QuestCollection.GetActiveQuestGroups().Count;
             // Проверяем, отображается ли общее сообщение (_defaultTextStillQuests или _defaultTextAllQuests)
             bool isShowingMessage = activeQuests == 0;
 
@@ -93,7 +93,7 @@ namespace Game
                                      (isShowingMessage ? i == 0 : i < activeQuests);
                 }
                 _iconsLinks[i].SetActive(shouldShowIcon);
-            }
+            }*/
         }
     }
 
