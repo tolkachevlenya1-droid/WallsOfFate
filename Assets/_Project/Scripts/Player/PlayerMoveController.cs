@@ -135,7 +135,7 @@ namespace Game
                 float held = Time.time - mouseDownTime;
                 dynamicTarget = null;                     // сброс преследования
 
-                if (held < holdThreshold) ProcessClick();
+                //if (held < holdThreshold) ProcessClick();
                 isHoldMove = false;
             }
         }
