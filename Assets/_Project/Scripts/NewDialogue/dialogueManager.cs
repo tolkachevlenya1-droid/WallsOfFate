@@ -409,7 +409,7 @@ namespace Game
             //CurrentID = 0;
             //OnFinished?.Invoke();
             //OnMiniGameStartRequested?.Invoke(miniGameData);
-            StartCoroutine(CloseDialogueWithDelay(2f));
+            StartCoroutine(CloseDialogueWithDelay(1f));
         }
 
         private IEnumerator CloseDialogueWithDelay(float delay)
@@ -419,7 +419,7 @@ namespace Game
 
             if (resourcesUI != null)
             {
-                resourcesUI.gameObject.SetActive(false);
+                resourcesUI.gameObject.SetActive(true);
             }
 
             if (DialogueUI != null)

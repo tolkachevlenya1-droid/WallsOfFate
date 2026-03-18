@@ -113,7 +113,7 @@ namespace Game
 
         private void SetOutlineEnabled(bool enabled)
         {
-            outline.enabled = enabled;
+            if(outline != null) outline.enabled = enabled;
         }
 
         private void InvokeEvent(Collider obj)

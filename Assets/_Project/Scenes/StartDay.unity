@@ -2691,7 +2691,7 @@ GameObject:
   m_Component:
   - component: {fileID: 476124446}
   - component: {fileID: 476124448}
-  - component: {fileID: 476124447}
+  - component: {fileID: 476124449}
   m_Layer: 0
   m_Name: DialogTriggerZone
   m_TagString: Untagged
@@ -2714,23 +2714,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1323262236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &476124447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 476124445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 132812897c9b4934c99bfc712833e60f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.InfluenceArea
-  AreaType: 1
-  InteractionType: 1
-  triggerObject: {fileID: 0}
-  Parameters: 
-  outline: {fileID: 0}
 --- !u!65 &476124448
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2750,8 +2733,24 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 1.6540949, z: 1.0685656}
-  m_Center: {x: 2.1316282e-14, y: -0.20109046, z: -1.3373045}
+  m_Size: {x: 5, y: 1.7222512, z: 1.2084352}
+  m_Center: {x: 2.1316282e-14, y: -0.5448226, z: -1.2020239}
+--- !u!114 &476124449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476124445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce1a9a148d68e074eb4ceb0ab6f56f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets._Project.Scripts.Triggers.InfluenceArea
+  AreaType: 1
+  InteractionType: 1
+  triggerObject: {fileID: 0}
+  Parameters: 
 --- !u!1 &535660733
 GameObject:
   m_ObjectHideFlags: 0
@@ -6074,7 +6073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4b3b8b34efe134583159dad6d34a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.StartDayDialogHandler
-  influenceAria: {fileID: 476124447}
+  influenceAria: {fileID: 476124449}
 --- !u!4 &1247579766
 Transform:
   m_ObjectHideFlags: 0
@@ -11046,7 +11045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7254902}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

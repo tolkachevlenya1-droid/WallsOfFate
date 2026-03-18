@@ -1,4 +1,5 @@
-﻿using NUnit.Framework.Interfaces;
+﻿using Assets._Project.Scripts.Triggers;
+using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Game
 {
     internal class StartDayDialogueHandler : MonoBehaviour, ITriggerHandler
     {
-        [SerializeField] private InfluenceArea influenceAria;
+        [SerializeField] private StartDayDialogueTriggerZone influenceAria;
 
         private void OnEnable()
         {
@@ -25,7 +26,7 @@ namespace Game
             DialogueGraph dialogueGraph;
             DialogueManager _dialogueManager = DialogueManager.Instance;
 
-            GameObject npc = iventData.PlayerObj.transform.gameObject;
+            GameObject npc = iventData.TriggerObj.transform.gameObject;
             dialogueGraph = GetDialogueGraph(npc);
             _dialogueManager.StartDialogue(dialogueGraph);
         }

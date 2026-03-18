@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Zenject;
+using static DialogueDatabase;
 
 namespace Game
 {
@@ -44,6 +45,10 @@ namespace Game
             DialogueManager _dialogueManager = DialogueManager.Instance;
             if (eventData.IsEnteracted && !_dialogueManager.IsInDialogue)
             {
+
+                DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
+                _dialogueManager.StartDialogue(dialogueGraph);
+
                 /*var activeGroups = QuestCollection.GetActiveQuestGroups();
                 QuestGroup groupToUpdate = null;
                 QuestTask taskToComplete = null;

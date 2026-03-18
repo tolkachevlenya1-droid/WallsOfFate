@@ -103,7 +103,7 @@ public class InputManager : MonoBehaviour
 
     public bool GetInteractPressed()
     {
-        ////Debug.Log("interact pressed" + interactPressed);
+        Debug.Log("interact pressed" + interactPressed);
         bool result = interactPressed;
         interactPressed = false;
         return result;
