@@ -100,19 +100,14 @@ namespace Game
 
         private void InteractWithItem(TriggerEvent eventData, ItemParameters parameters, InteractableItemState state)
         {
-            // Отмечаем как использованное
             state.HasBeenUsed = true;
 
-            // Добавляем ресурс игроку
             _playerManager.PlayerData.AddResource(parameters.ResourceType, parameters.Amount);
 
-            // Показываем всплывающий текст
             ShowFloatingText(eventData.PlayerObj, parameters);
 
-            // Обрабатываем послеиспользовательное поведение
             HandlePostUseBehavior(eventData.TriggerObj, parameters);
 
-            // Сохраняем состояние (опционально, если нужно сохранять между сценами)
             SaveItemState(eventData.TriggerObj, state.HasBeenUsed);
 
             Debug.Log($"Interacted with {eventData.TriggerObj.name}, received {parameters.Amount} {parameters.ResourceType}");
@@ -143,14 +138,13 @@ namespace Game
             {
                 mover.MoveToAndCallback(
                     itemObj.transform,
-                    true,  // run
+                    true,  
                     onArrived,
                     approachDistance
                 );
             }
             else
             {
-                // Если нет компонента движения, сразу вызываем колбэк
                 onArrived?.Invoke();
             }
         }
@@ -180,7 +174,6 @@ namespace Game
                 if (collider != null) collider.enabled = false;
             }
 
-            // Отключаем Outline если есть
             //foreach (var outline in itemObj.GetComponentsInChildren<cakeslice.Outline>())
             //{
             //    outline.enabled = false;
@@ -193,7 +186,6 @@ namespace Game
             InteractableItemCollection.SetItemState(sceneName, itemObj.name, hasBeenUsed);
         }
 
-        // Внутренний класс для хранения состояния предмета
         private class InteractableItemState
         {
             public bool HasBeenUsed = false;
