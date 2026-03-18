@@ -1,93 +1,188 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public GridManager grid;
-
     public Vector2Int gridPosition;
-
     public float moveTime = 0.2f;
 
-    private Vector2 startPosition;
+    [Header("Route Settings")]
+    [SerializeField] private RouteDirection startingDirection = RouteDirection.Up;
+    [SerializeField] private Transform visualRoot;
+    [SerializeField] private float turnTime = 0.15f;
+    [SerializeField] private float heightOffset = 0.35f;
+    [SerializeField] private Vector3 visualRotationOffset;
 
-    void Start()
+    private Vector2Int _startGridPosition;
+    private RouteDirection _startDirection;
+    private bool _startCaptured;
+
+    public RouteDirection FacingDirection { get; private set; }
+    public Vector2Int StartGridPosition => _startGridPosition;
+    public RouteDirection StartDirection => _startDirection;
+
+    public void Initialize(GridManager targetGrid)
     {
-        startPosition = transform.position;
+        grid = targetGrid != null ? targetGrid : grid;
+
+        if (grid == null)
+        {
+            grid = FindObjectOfType<GridManager>();
+        }
+
+        if (visualRoot == null)
+        {
+            visualRoot = transform;
+        }
+
+        if (!_startCaptured)
+        {
+            _startGridPosition = gridPosition;
+            _startDirection = startingDirection;
+            _startCaptured = true;
+        }
+
+        FacingDirection = startingDirection;
+        SnapToGrid();
     }
 
-    public IEnumerator Move(Vector2Int direction)
+    public void SetStartingDirection(RouteDirection direction, bool snapImmediately)
     {
-        Vector2Int targetPos = gridPosition + direction;
+        startingDirection = direction;
+        _startDirection = direction;
 
-        GridCell targetCell = grid.GetCell(targetPos);
-
-        if (targetCell == null)
+        if (snapImmediately)
         {
-            Fail();
+            FacingDirection = direction;
+            SnapToGrid();
+        }
+    }
+
+    public void ResetToStart()
+    {
+        StopAllCoroutines();
+        gridPosition = _startGridPosition;
+        FacingDirection = _startDirection;
+        SnapToGrid();
+    }
+
+    public IEnumerator AnimateTurn(RouteDirection newDirection)
+    {
+        FacingDirection = newDirection;
+
+        if (visualRoot == null)
+        {
+            visualRoot = transform;
+        }
+
+        Quaternion startRotation = visualRoot.rotation;
+        Quaternion targetRotation = GetFacingRotation();
+
+        if (turnTime <= 0.01f)
+        {
+            visualRoot.rotation = targetRotation;
             yield break;
         }
 
-        if (targetCell.CellType == CellType.Wall)
+        float elapsed = 0f;
+        while (elapsed < turnTime)
         {
-            Fail();
-            yield break;
-        }
-
-        Vector3 start = transform.position;
-        Vector3 end = targetCell.transform.position;
-
-        float t = 0;
-
-        while (t < moveTime)
-        {
-            t += Time.deltaTime;
-            transform.position = Vector3.Lerp(start, end, t / moveTime);
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / turnTime);
+            visualRoot.rotation = Quaternion.Slerp(startRotation, targetRotation, progress);
             yield return null;
         }
 
-        transform.position = end;
+        visualRoot.rotation = targetRotation;
+    }
 
-        gridPosition = targetPos;
-
-        if (targetCell.CellType == CellType.Argument)
+    public IEnumerator AnimateMoveTo(Vector2Int targetPosition)
+    {
+        if (grid == null)
         {
-            CollectArgument(targetCell);
+            yield break;
         }
 
-        if (targetCell.CellType == CellType.Exit)
+        Vector3 startPosition = transform.position;
+        gridPosition = targetPosition;
+        Vector3 targetWorldPosition = GetCurrentWorldPosition();
+
+        if (moveTime <= 0.01f)
         {
-            Win();
+            transform.position = targetWorldPosition;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < moveTime)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / moveTime);
+            transform.position = Vector3.Lerp(startPosition, targetWorldPosition, progress);
+            yield return null;
+        }
+
+        transform.position = targetWorldPosition;
+    }
+
+    public Vector2Int PeekPosition(RouteDirection direction)
+    {
+        return gridPosition + RouteDirectionUtility.ToVector2Int(direction);
+    }
+
+    public Vector2Int PeekForwardPosition()
+    {
+        return PeekPosition(FacingDirection);
+    }
+
+    private void Awake()
+    {
+        Initialize(grid);
+    }
+
+    private void OnValidate()
+    {
+        if (visualRoot == null)
+        {
+            visualRoot = transform;
         }
     }
 
-    public IEnumerator Pause()
+    private void SnapToGrid()
     {
-        yield return new WaitForSeconds(0.3f);
+        if (grid == null)
+        {
+            return;
+        }
+
+        transform.position = GetCurrentWorldPosition();
+
+        if (visualRoot != null)
+        {
+            visualRoot.rotation = GetFacingRotation();
+        }
     }
 
-    void CollectArgument(GridCell cell)
+    private Vector3 GetCurrentWorldPosition()
     {
-        Debug.Log("Argument collected");
-
-        cell.CellType = CellType.Empty;
-
-        cell.gameObject.SetActive(false);
+        return grid.GetWorldPosition(gridPosition) + grid.GetSurfaceNormal() * heightOffset;
     }
 
-    void Win()
+    private Quaternion GetFacingRotation()
     {
-        Debug.Log("Victory");
-    }
+        if (grid == null)
+        {
+            return transform.rotation;
+        }
 
-    void Fail()
-    {
-        Debug.Log("Fail");
-    }
+        Vector3 worldDirection = grid.GetWorldDirection(FacingDirection);
+        if (worldDirection.sqrMagnitude < 0.001f)
+        {
+            return transform.rotation;
+        }
 
-    public void ResetPosition()
-    {
-        transform.position = startPosition;
-        gridPosition = Vector2Int.zero;
+        Quaternion baseRotation = Quaternion.LookRotation(worldDirection, grid.GetSurfaceNormal());
+        return baseRotation * Quaternion.Euler(visualRotationOffset);
     }
 }

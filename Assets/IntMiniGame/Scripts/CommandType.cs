@@ -1,3 +1,4 @@
+[System.Obsolete("Use RouteCommandType instead.")]
 public enum CommandType
 {
     MoveUp,
