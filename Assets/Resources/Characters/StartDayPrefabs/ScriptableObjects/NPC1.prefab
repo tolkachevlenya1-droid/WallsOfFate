@@ -143,7 +143,7 @@ Animator:
   m_GameObject: {fileID: 8400021922369283782}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: da7802ca2bcb61b429f2a0c29cf91b74, type: 2}
+  m_Controller: {fileID: 9100000, guid: 71b48a5eb9d85c24c97dc9b650dc082e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -402,4 +402,4 @@ MonoBehaviour:
     Food: 1
     PeopleSatisfaction: 1
     CastleStrength: 1
-  Portrait: 
+  Portrait: Characters/Portraits/Man

@@ -5356,7 +5356,7 @@ MonoBehaviour:
     Food: 1
     PeopleSatisfaction: 1
     CastleStrength: 1
-  Portrait: 
+  Portrait: Characters/Portraits/Messenger
 --- !u!1 &7363507171811652826
 GameObject:
   m_ObjectHideFlags: 0
