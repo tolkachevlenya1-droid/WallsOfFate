@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Day3Quest
   m_EditorClassIdentifier: 
   npcName: Messager
-  prefab: {fileID: 7280076937197616263, guid: 0e1f18ec0a4e556499a458c665b51f92, type: 3}
+  prefab: {fileID: 7280076937197616263, guid: 16770cdaee6ba58439515d8295ef25bc, type: 3}
