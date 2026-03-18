@@ -241,7 +241,7 @@ public class RouteMiniGameHUD : MonoBehaviour
         _buttonImages[action] = image;
 
         CreateText(buttonRoot, $"{action}_Text",
-            $"{RouteMiniGameIcons.Action(action)}  {RouteMiniGameIcons.ActionLabel(action)}\n{RouteMiniGameIcons.ActionKey(action)}",
+            $"{RouteMiniGameIcons.Action(action)}  {RouteMiniGameIcons.ActionLabel(action)}\n{GetActionKeyLabel(action)}",
             16,
             FontStyle.Bold,
             TextAnchor.MiddleCenter);
@@ -370,5 +370,12 @@ public class RouteMiniGameHUD : MonoBehaviour
         }
 
         new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+    }
+
+    private string GetActionKeyLabel(RouteControlAction action)
+    {
+        return _inputHandler != null
+            ? _inputHandler.GetActionKeyLabel(action)
+            : RouteMiniGameIcons.ActionKey(action);
     }
 }

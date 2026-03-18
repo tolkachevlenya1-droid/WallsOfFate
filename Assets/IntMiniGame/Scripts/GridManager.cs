@@ -11,6 +11,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform origin;
     [SerializeField] private RouteBoardPlane boardPlane = RouteBoardPlane.XZ;
     [SerializeField] private Vector2 cellSpacing = Vector2.one;
+    [SerializeField] private Transform rightCellReference;
+    [SerializeField] private Transform forwardCellReference;
     [SerializeField] private float surfaceOffset;
     [SerializeField] private bool autoCollectCellsFromChildren = true;
     [SerializeField] private bool autoCollectOccupantsFromScene = true;
@@ -213,11 +215,59 @@ public class GridManager : MonoBehaviour
         }
 
         Transform targetOrigin = origin != null ? origin : transform;
+        Vector2 resolvedSpacing = GetResolvedCellSpacing();
         Vector3 localOffset = boardPlane == RouteBoardPlane.XY
-            ? new Vector3(position.x * cellSpacing.x, position.y * cellSpacing.y, 0f)
-            : new Vector3(position.x * cellSpacing.x, 0f, position.y * cellSpacing.y);
+            ? new Vector3(position.x * resolvedSpacing.x, position.y * resolvedSpacing.y, 0f)
+            : new Vector3(position.x * resolvedSpacing.x, 0f, position.y * resolvedSpacing.y);
 
         return targetOrigin.TransformPoint(localOffset) + GetSurfaceNormal() * surfaceOffset;
+    }
+
+    public bool TryGetGridPositionFromWorld(Vector3 worldPosition, out Vector2Int position)
+    {
+        if (_cellLookup.Count > 0)
+        {
+            bool hasCandidate = false;
+            float bestDistance = float.MaxValue;
+            Vector2Int bestPosition = Vector2Int.zero;
+
+            foreach (KeyValuePair<Vector2Int, GridCell> pair in _cellLookup)
+            {
+                GridCell cell = pair.Value;
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                float distance = (cell.transform.position - worldPosition).sqrMagnitude;
+                if (!hasCandidate || distance < bestDistance)
+                {
+                    hasCandidate = true;
+                    bestDistance = distance;
+                    bestPosition = pair.Key;
+                }
+            }
+
+            position = bestPosition;
+            return hasCandidate;
+        }
+
+        Vector2 resolvedSpacing = GetResolvedCellSpacing();
+        if (Mathf.Abs(resolvedSpacing.x) < 0.000001f || Mathf.Abs(resolvedSpacing.y) < 0.000001f)
+        {
+            position = Vector2Int.zero;
+            return false;
+        }
+
+        Transform targetOrigin = origin != null ? origin : transform;
+        Vector3 localPosition = targetOrigin.InverseTransformPoint(worldPosition);
+        float rawX = localPosition.x / resolvedSpacing.x;
+        float rawY = boardPlane == RouteBoardPlane.XY
+            ? localPosition.y / resolvedSpacing.y
+            : localPosition.z / resolvedSpacing.y;
+
+        position = new Vector2Int(Mathf.RoundToInt(rawX), Mathf.RoundToInt(rawY));
+        return IsInside(position);
     }
 
     public Vector3 GetSurfaceNormal()
@@ -285,6 +335,8 @@ public class GridManager : MonoBehaviour
                 continue;
             }
 
+            occupant.SyncGridPosition(this);
+
             if (!_occupantLookup.TryGetValue(occupant.GridPosition, out List<RouteGridOccupant> list))
             {
                 list = new List<RouteGridOccupant>();
@@ -293,5 +345,25 @@ public class GridManager : MonoBehaviour
 
             list.Add(occupant);
         }
+    }
+
+    private Vector2 GetResolvedCellSpacing()
+    {
+        Vector2 resolvedSpacing = cellSpacing;
+        Transform targetOrigin = origin != null ? origin : transform;
+
+        if (rightCellReference != null)
+        {
+            Vector3 localRight = targetOrigin.InverseTransformPoint(rightCellReference.position);
+            resolvedSpacing.x = Mathf.Abs(localRight.x);
+        }
+
+        if (forwardCellReference != null)
+        {
+            Vector3 localForward = targetOrigin.InverseTransformPoint(forwardCellReference.position);
+            resolvedSpacing.y = Mathf.Abs(boardPlane == RouteBoardPlane.XY ? localForward.y : localForward.z);
+        }
+
+        return resolvedSpacing;
     }
 }
