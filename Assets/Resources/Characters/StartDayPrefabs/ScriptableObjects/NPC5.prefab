@@ -402,4 +402,4 @@ MonoBehaviour:
     Food: 1
     PeopleSatisfaction: 1
     CastleStrength: 1
-  Portrait: 
+  Portrait: Characters/Portraits/Man
