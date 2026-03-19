@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using Zenject;
 
 namespace Game.MiniGame.Agility
 {
@@ -30,8 +29,7 @@ namespace Game.MiniGame.Agility
         [SerializeField] private SliderTimerManager sliderTimerManager;
         [SerializeField] private PlayerHPManager playerHPManager;
 
-        [Inject]
-        private void Construct(AgentsFactory npcFActory, MiniGameData gameData)
+        public void Configure(AgentsFactory npcFActory, MiniGameData gameData)
         {
             this.agentsFactory = npcFActory;
             this.gameData = gameData;
@@ -39,6 +37,13 @@ namespace Game.MiniGame.Agility
 
         public void Initialize()
         {
+            if (agentsFactory == null)
+            {
+                Debug.LogWarning("GameProcess: AgentsFactory не назначен. Legacy-процесс пропущен.");
+                enabled = false;
+                return;
+            }
+
             PlayerInstance = agentsFactory.Player;
             EnemyInstance = agentsFactory.Enemy;
 

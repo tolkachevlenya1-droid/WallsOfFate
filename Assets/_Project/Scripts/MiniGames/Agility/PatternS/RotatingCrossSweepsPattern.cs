@@ -1,158 +1,163 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class RotatingCrossSweepsPattern : PatternBehaviour
 {
     [Header("Prefabs")]
-    public GameObject tokenPrefab; // PF_SweeperToken (body hazard)
+    public GameObject tokenPrefab;
 
-    [Header("Entrances (two different gates)")]
-    public Entrance gateA = Entrance.NorthEast; // "сверху справа"
-    public Entrance gateB = Entrance.SouthEast; // "снизу справа"
+    [Header("Entrances")]
+    public Entrance gateA = Entrance.NorthEast;
+    public Entrance gateB = Entrance.SouthEast;
 
     [Header("Timing")]
-    public float stepTelegraph = 0.25f;     // пауза перед шагом
-    public float passSeconds = 1.4f;        // длительность проезда через арену
-    public float betweenPassPause = 0.15f;  // пауза между A и B
-    public float rotateSeconds = 0.35f;     // "плавно перемещались" на следующий угол
-    public int steps = 4;                  // 3-4 шага = ~10-15 секунд
-    public float stepAngleDeg = 45f;       // поворот траекторий на 45°
+    public float stepTelegraph = 0.18f;
+    public int steps = 4;
+    public float stepAngleDeg = 45f;
 
     [Header("Geometry")]
-    public float passDistance = 6.0f;      // радиус до точки "края" траектории (должно перекрывать арену)
+    public float passDistance = 6f;
+    public Color telegraphColor = new Color(1f, 0.78f, 0.22f);
 
     [Header("Return")]
     public float returnSpacing = 0.1f;
 
+    private GameObject _telegraphA;
+    private GameObject _telegraphB;
+
+    public override void BeginTelegraph()
+    {
+        CleanupTelegraphs();
+
+        Vector3 center = AgilitySceneUtility.ResolveArenaCenter(Ctx.arenaCenter);
+        center.y = ResolveY();
+        float radius = Mathf.Max(passDistance, AgilitySceneUtility.ResolveArenaRadius(Ctx.arenaCenter) + 0.9f);
+
+        _telegraphA = CreateDiagonalTelegraph(center, 45f, radius, "CrossTelegraphA");
+        _telegraphB = CreateDiagonalTelegraph(center, -45f, radius, "CrossTelegraphB");
+    }
+
     public override IEnumerator Run()
     {
-        if (tokenPrefab == null) yield break;
+        Transform gatePointA = Ctx.entrances != null ? Ctx.entrances.Get(gateA) : null;
+        Transform gatePointB = Ctx.entrances != null ? Ctx.entrances.Get(gateB) : null;
+        if (gatePointA == null || gatePointB == null)
+            yield break;
 
-        Transform gatePointA = Ctx.entrances.Get(gateA);
-        Transform gatePointB = Ctx.entrances.Get(gateB);
-        if (gatePointA == null || gatePointB == null) yield break;
-
-        // Берём XZ от центра, но Y фиксируем по воротам (чтобы не было скачков по высоте)
-        Vector3 center = (Ctx.arenaCenter != null) ? Ctx.arenaCenter.position : Vector3.zero;
+        Vector3 center = AgilitySceneUtility.ResolveArenaCenter(Ctx.arenaCenter);
         center.y = gatePointA.position.y;
+        float radius = Mathf.Max(passDistance, AgilitySceneUtility.ResolveArenaRadius(Ctx.arenaCenter) + 0.9f);
 
-        // Gate controllers (если есть)
-        GateController gateCtrlA = gatePointA.GetComponentInChildren<GateController>();
-        GateController gateCtrlB = gatePointB.GetComponentInChildren<GateController>();
-        if (gateCtrlA != null) yield return gateCtrlA.Open();
-        if (gateCtrlB != null) yield return gateCtrlB.Open();
+        OpenGate(gatePointA.GetComponentInChildren<GateController>());
+        OpenGate(gatePointB.GetComponentInChildren<GateController>());
 
-        // Spawn tokens у двух разных ворот
         TokenAgent tokenA = SpawnToken(gatePointA.position + new Vector3(-returnSpacing, 0f, 0f));
         TokenAgent tokenB = SpawnToken(gatePointB.position + new Vector3(+returnSpacing, 0f, 0f));
+        if (tokenA == null || tokenB == null)
+            yield break;
 
-        // Стартовый угол: диагонали (X-образный "крест-накрест")
-        // A: NE↔SW (45°), B: SE↔NW (-45°)
+        CleanupTelegraphs();
+
+        int actualSteps = Mathf.Max(1, steps);
+        float stepBudget = Mathf.Max(0.45f, Definition.duration / actualSteps);
+        float sweepSeconds = stepBudget * 0.42f;
+        float gapSeconds = stepBudget * 0.08f;
+        float rotateSeconds = stepBudget * 0.27f;
+
         float angleA = 45f * Mathf.Deg2Rad;
+        tokenA.transform.position = StartPoint(center, angleA, +1f, radius);
+        tokenB.transform.position = StartPoint(center, angleA - Mathf.PI * 0.5f, +1f, radius);
 
-        // Стартовые позиции: подтянуть токены на соответствующие "края" своих линий
-        // На шаге 0 обе стартуют со стороны "плюс" (правая сторона), дальше будут чередовать
-        yield return MoveTo(tokenA, StartPoint(center, angleA, +1f));
-        yield return MoveTo(tokenB, StartPoint(center, angleA - Mathf.PI * 0.5f, +1f));
-
-        for (int s = 0; s < steps; s++)
+        for (int s = 0; s < actualSteps; s++)
         {
-            // знак стартовой стороны:  +1, -1, +1, -1 ... (чтобы каждый шаг пересекали центр и "перебегали" на другой край)
             float startSign = (s % 2 == 0) ? +1f : -1f;
-
             float aA = angleA;
-            float aB = angleA - Mathf.PI * 0.5f; // перпендикуляр
+            float aB = angleA - Mathf.PI * 0.5f;
 
-            Vector3 A0 = StartPoint(center, aA, startSign);
-            Vector3 A1 = EndPoint(center, aA, startSign);
-
-            Vector3 B0 = StartPoint(center, aB, startSign);
-            Vector3 B1 = EndPoint(center, aB, startSign);
+            Vector3 aStart = StartPoint(center, aA, startSign, radius);
+            Vector3 aEnd = EndPoint(center, aA, startSign, radius);
+            Vector3 bStart = StartPoint(center, aB, startSign, radius);
+            Vector3 bEnd = EndPoint(center, aB, startSign, radius);
 
             if (stepTelegraph > 0f)
                 yield return new WaitForSeconds(stepTelegraph);
 
-            // По очереди пересекают центр
-            yield return MoveLinear(tokenA, A0, A1, passSeconds);
-            if (betweenPassPause > 0f) yield return new WaitForSeconds(betweenPassPause);
+            yield return MoveLinear(tokenA, aStart, aEnd, sweepSeconds);
+            if (gapSeconds > 0f)
+                yield return new WaitForSeconds(gapSeconds);
+            yield return MoveLinear(tokenB, bStart, bEnd, sweepSeconds);
 
-            yield return MoveLinear(tokenB, B0, B1, passSeconds);
-            if (betweenPassPause > 0f) yield return new WaitForSeconds(betweenPassPause);
-
-            // Плавный "поворот" на следующий угол: переезжаем на новые стартовые точки
             float nextAngleA = angleA + stepAngleDeg * Mathf.Deg2Rad;
-
-            // на следующем шаге знак стартовой стороны меняется
             float nextSign = ((s + 1) % 2 == 0) ? +1f : -1f;
 
-            Vector3 nextAStart = StartPoint(center, nextAngleA, nextSign);
-            Vector3 nextBStart = StartPoint(center, nextAngleA - Mathf.PI * 0.5f, nextSign);
-
-            if (rotateSeconds > 0f)
+            if (s < actualSteps - 1)
             {
+                Vector3 nextAStart = StartPoint(center, nextAngleA, nextSign, radius);
+                Vector3 nextBStart = StartPoint(center, nextAngleA - Mathf.PI * 0.5f, nextSign, radius);
+
                 yield return MoveLinear(tokenA, tokenA.transform.position, nextAStart, rotateSeconds);
                 yield return MoveLinear(tokenB, tokenB.transform.position, nextBStart, rotateSeconds);
-            }
-            else
-            {
-                tokenA.transform.position = nextAStart;
-                tokenB.transform.position = nextBStart;
             }
 
             angleA = nextAngleA;
         }
 
-        // Вернуться к своим воротам
-        Vector3 retA = gatePointA.position + new Vector3(-returnSpacing, 0f, 0f);
-        Vector3 retB = gatePointB.position + new Vector3(+returnSpacing, 0f, 0f);
-        yield return MoveTo(tokenA, retA);
-        yield return MoveTo(tokenB, retB);
+        tokenA.transform.position = gatePointA.position + new Vector3(-returnSpacing, 0f, 0f);
+        tokenB.transform.position = gatePointB.position + new Vector3(+returnSpacing, 0f, 0f);
 
-        // Уехать за ворота
-        if (tokenA != null) Destroy(tokenA.gameObject);
-        if (tokenB != null) Destroy(tokenB.gameObject);
+        if (tokenA != null)
+            Destroy(tokenA.gameObject);
+        if (tokenB != null)
+            Destroy(tokenB.gameObject);
 
-        // Закрыть ворота
-        if (gateCtrlA != null) yield return gateCtrlA.Close();
-        if (gateCtrlB != null) yield return gateCtrlB.Close();
+        CloseGate(gatePointA.GetComponentInChildren<GateController>());
+        CloseGate(gatePointB.GetComponentInChildren<GateController>());
+    }
+
+    public override void Cleanup()
+    {
+        CleanupTelegraphs();
     }
 
     private TokenAgent SpawnToken(Vector3 pos)
     {
-        var go = Instantiate(tokenPrefab, pos, Quaternion.identity);
+        GameObject go;
+        if (tokenPrefab != null)
+        {
+            go = Instantiate(tokenPrefab, pos, Quaternion.identity, transform);
+        }
+        else
+        {
+            go = AgilityHazardFactory.CreateBodyHazard(transform, "CrossSweeper", pos, Vector3.one * 0.9f, new Color(0.76f, 0.18f, 0.08f));
+        }
+
         var agent = go.GetComponent<TokenAgent>();
-        if (agent == null) agent = go.AddComponent<TokenAgent>();
+        if (agent == null)
+            agent = go.AddComponent<TokenAgent>();
         return agent;
     }
 
-    private IEnumerator MoveTo(TokenAgent agent, Vector3 target)
+    private Vector3 StartPoint(Vector3 center, float angleRad, float startSign, float radius)
     {
-        if (agent == null) yield break;
-        // TokenAgent.MoveTo уже плавный и читабельный
-        yield return agent.MoveTo(target);
+        Vector3 direction = new Vector3(Mathf.Cos(angleRad), 0f, Mathf.Sin(angleRad));
+        Vector3 point = center + direction * (radius * startSign);
+        point.y = center.y;
+        return point;
     }
 
-    private Vector3 StartPoint(Vector3 center, float angleRad, float startSign)
+    private Vector3 EndPoint(Vector3 center, float angleRad, float startSign, float radius)
     {
-        Vector3 d = new Vector3(Mathf.Cos(angleRad), 0f, Mathf.Sin(angleRad));
-        Vector3 p = center + d * (passDistance * startSign);
-        p.y = center.y;
-        return p;
-    }
-
-    private Vector3 EndPoint(Vector3 center, float angleRad, float startSign)
-    {
-        Vector3 d = new Vector3(Mathf.Cos(angleRad), 0f, Mathf.Sin(angleRad));
-        Vector3 p = center - d * (passDistance * startSign);
-        p.y = center.y;
-        return p;
+        Vector3 direction = new Vector3(Mathf.Cos(angleRad), 0f, Mathf.Sin(angleRad));
+        Vector3 point = center - direction * (radius * startSign);
+        point.y = center.y;
+        return point;
     }
 
     private IEnumerator MoveLinear(TokenAgent agent, Vector3 from, Vector3 to, float seconds)
     {
-        if (agent == null) yield break;
+        if (agent == null)
+            yield break;
 
-        // Если from задаётся как "текущая позиция" — не дёргаем лишний раз.
         agent.transform.position = from;
 
         if (seconds <= 0f)
@@ -161,16 +166,57 @@ public class RotatingCrossSweepsPattern : PatternBehaviour
             yield break;
         }
 
-        float t = 0f;
-        while (t < seconds)
+        float elapsed = 0f;
+        while (elapsed < seconds)
         {
-            if (agent == null) yield break;
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / seconds);
-            agent.transform.position = Vector3.Lerp(from, to, k);
+            if (agent == null)
+                yield break;
+
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / seconds);
+            agent.transform.position = Vector3.Lerp(from, to, t);
             yield return null;
         }
 
         agent.transform.position = to;
+    }
+
+    private GameObject CreateDiagonalTelegraph(Vector3 center, float angleDeg, float radius, string name)
+    {
+        Vector3 position = center;
+        Vector3 scale = new Vector3(radius * 2f, 0.1f, 0.5f);
+        var telegraph = AgilityHazardFactory.CreateLaneTelegraph(transform, name, position, scale, telegraphColor);
+        telegraph.transform.rotation = Quaternion.Euler(0f, -angleDeg, 0f);
+        return telegraph;
+    }
+
+    private void CleanupTelegraphs()
+    {
+        if (_telegraphA != null)
+            Destroy(_telegraphA);
+        if (_telegraphB != null)
+            Destroy(_telegraphB);
+        _telegraphA = null;
+        _telegraphB = null;
+    }
+
+    private float ResolveY()
+    {
+        if (Ctx.playerHealth != null)
+            return Ctx.playerHealth.transform.position.y;
+
+        return AgilitySceneUtility.ResolveArenaCenter(Ctx.arenaCenter).y + 0.5f;
+    }
+
+    private void OpenGate(GateController gate)
+    {
+        if (gate?.animator != null)
+            gate.animator.SetTrigger(gate.openTrigger);
+    }
+
+    private void CloseGate(GateController gate)
+    {
+        if (gate?.animator != null)
+            gate.animator.SetTrigger(gate.closeTrigger);
     }
 }
