@@ -12,6 +12,13 @@ public abstract class PatternBehaviour : MonoBehaviour
         Ctx = ctx;
     }
 
-    // ¬озвращает корутину, которую будет исполн€ть Sequencer
+    public virtual void BeginTelegraph()
+    {
+    }
+
+    public virtual void Cleanup()
+    {
+    }
+
     public abstract IEnumerator Run();
 }

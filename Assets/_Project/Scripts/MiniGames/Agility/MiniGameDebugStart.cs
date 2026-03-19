@@ -1,38 +1,82 @@
-﻿using UnityEngine;
+using System.Collections;
+using UnityEngine;
 
 namespace Game.MiniGame.PowerCheck
 {
-    public class MiniGameDebugStart : MonoBehaviour, IMiniGameInstaller
+    public class MiniGameDebugStart : MonoBehaviour
     {
         public DexMiniGameController controller;
+        public bool autoStartWhenStandalone = true;
+        public float standaloneDelay = 0.15f;
 
-        public void InitializeWithData(MiniGameData gameData)
+        private bool _runRequested;
+        private Coroutine _autoStartRoutine;
+
+        private void OnEnable()
         {
-            if (controller != null)
-                controller.OnEndGame += OnMiniGameEnded;
-            controller.StartMiniGame();
+            if (!Application.isPlaying || !autoStartWhenStandalone)
+                return;
+
+            _autoStartRoutine = StartCoroutine(TryStandaloneStart());
         }
 
-        public void OnMiniGameEnded(bool playerWin)
+        private void OnDisable()
         {
-            if (MinigameManager.Instance != null) MinigameManager.Instance.EndMinigame(playerWin);
-        }
-
-        void OnDestroy()
-        {
-            if (controller != null)
+            if (_autoStartRoutine != null)
             {
-                controller.OnEndGame -= OnMiniGameEnded;
+                StopCoroutine(_autoStartRoutine);
+                _autoStartRoutine = null;
             }
+        }
+
+        private IEnumerator TryStandaloneStart()
+        {
+            yield return new WaitForSeconds(standaloneDelay);
+
+            if (ShouldSkipStandaloneStart())
+                yield break;
+
+            StartStandaloneRun();
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) && controller != null)
+            if (!Application.isPlaying || ShouldSkipStandaloneControls())
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                StartStandaloneRun();
+        }
+
+        private void StartStandaloneRun()
+        {
+            if (_runRequested)
+                return;
+
+            var installer = AgilitySceneUtility.FindInLoadedScene<Game.MiniGame.Agility.AgilityInstaller>();
+            if (installer == null)
             {
-                controller.StartMiniGame();
+                Debug.LogError("MiniGameDebugStart: AgilityInstaller не найден.");
+                return;
             }
+
+            _runRequested = true;
+            installer.InitializeWithData(null);
+        }
+
+        private bool ShouldSkipStandaloneStart()
+        {
+            if (_runRequested)
+                return true;
+
+            return Game.MiniGame.MinigameManager.Instance != null &&
+                   Game.MiniGame.MinigameManager.Instance.CurrentGameData != null;
+        }
+
+        private bool ShouldSkipStandaloneControls()
+        {
+            return Game.MiniGame.MinigameManager.Instance != null &&
+                   Game.MiniGame.MinigameManager.Instance.CurrentGameData != null;
         }
     }
 }
-

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -19,6 +19,12 @@ public class PlayerHealth : MonoBehaviour
 
     public void ResetTo(int hp, float iFramesSeconds)
     {
+        if (_invulnRoutine != null)
+        {
+            StopCoroutine(_invulnRoutine);
+            _invulnRoutine = null;
+        }
+
         MaxHp = hp;
         Hp = hp;
         _iFrames = iFramesSeconds;
@@ -53,5 +59,6 @@ public class PlayerHealth : MonoBehaviour
             yield return null;
         }
         _invulnerable = false;
+        _invulnRoutine = null;
     }
 }

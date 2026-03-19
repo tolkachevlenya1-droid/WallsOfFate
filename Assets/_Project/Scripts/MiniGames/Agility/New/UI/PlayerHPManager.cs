@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,44 +19,41 @@ namespace Game.MiniGame.Agility
 
         public void InitializeHP(int startHP)
         {
-            currentHP = startHP;
-
-            for (int i = 0; i < HPIcons.Count; i++)
-            {
-                if (i < startHP)
-                {
-                    HPIcons[i].gameObject.SetActive(true);
-                    if (HPIcons[i].sprite == DeadHPSprite)
-                    {
-                        if (i == 0) HPIcons[i].sprite = FirstHPSprite;
-                        else HPIcons[i].sprite = NormalHPSprite; 
-                    }
-                }
-                else
-                {
-                    HPIcons[i].gameObject.SetActive(false);
-                }
-            }
+            RenderHP(startHP, startHP);
         }
 
         public void UpdateHP(int newHP)
         {
-            if (newHP >= currentHP)
-            {
-                currentHP = newHP;
-                return;
-            }
+            RenderHP(newHP, Mathf.Max(currentHP, newHP));
+        }
 
-            for (int i = currentHP - 1; i >= 0; i--)
-            {
-                if (i < HPIcons.Count && HPIcons[i].sprite != DeadHPSprite)
-                {
-                    HPIcons[i].sprite = DeadHPSprite;
-                    break;
-                }
-            }
+        public void UpdateHP(int newHP, int maxHP)
+        {
+            RenderHP(newHP, maxHP);
+        }
 
-            currentHP = newHP;
+        private void RenderHP(int hp, int maxHP)
+        {
+            currentHP = Mathf.Clamp(hp, 0, maxHP);
+
+            for (int i = 0; i < HPIcons.Count; i++)
+            {
+                Image icon = HPIcons[i];
+                if (icon == null)
+                    continue;
+
+                bool active = i < maxHP;
+                icon.gameObject.SetActive(active);
+                if (!active)
+                    continue;
+
+                if (i >= currentHP)
+                    icon.sprite = DeadHPSprite;
+                else if (i == 0 && FirstHPSprite != null)
+                    icon.sprite = FirstHPSprite;
+                else
+                    icon.sprite = NormalHPSprite;
+            }
         }
     }
 }
