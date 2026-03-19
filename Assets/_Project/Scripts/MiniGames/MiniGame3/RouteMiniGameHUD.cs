@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class RouteMiniGameHUD : MonoBehaviour
     private readonly Color _buttonActiveColor = new(0.85f, 0.67f, 0.2f, 1f);
     private readonly Color _slotIdleColor = new(0.14f, 0.15f, 0.19f, 0.9f);
     private readonly Color _slotFilledColor = new(0.23f, 0.29f, 0.38f, 0.95f);
+    private readonly Color _slotFailedColor = new(0.72f, 0.23f, 0.23f, 0.95f);
 
     public void Initialize(MiniGameInputHandler inputHandler, CommandQueue queue, ExecutionManager executor)
     {
@@ -280,7 +282,9 @@ public class RouteMiniGameHUD : MonoBehaviour
             {
                 RouteCommand command = _queue.Commands[index];
                 slotText.text = $"{index + 1}. {RouteMiniGameIcons.Command(command.Type)}  {RouteDirectionUtility.CommandReadable(command.Type)}";
-                slotImage.color = _slotFilledColor;
+                slotImage.color = _executor.LastFailedCommandIndex >= 0 && index >= _executor.LastFailedCommandIndex
+                    ? _slotFailedColor
+                    : _slotFilledColor;
             }
             else
             {
@@ -343,7 +347,7 @@ public class RouteMiniGameHUD : MonoBehaviour
         textObject.transform.SetParent(parent, false);
 
         Text text = textObject.GetComponent<Text>();
-        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        text.font = LoadRuntimeFont();
         text.text = textValue;
         text.fontSize = fontSize;
         text.fontStyle = fontStyle;
@@ -360,6 +364,30 @@ public class RouteMiniGameHUD : MonoBehaviour
         rect.localScale = Vector3.one;
 
         return text;
+    }
+
+    private static Font LoadRuntimeFont()
+    {
+        try
+        {
+            Font legacyFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (legacyFont != null)
+            {
+                return legacyFont;
+            }
+        }
+        catch (Exception)
+        {
+        }
+
+        try
+        {
+            return Resources.GetBuiltinResource<Font>("Arial.ttf");
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     private static void EnsureEventSystem()

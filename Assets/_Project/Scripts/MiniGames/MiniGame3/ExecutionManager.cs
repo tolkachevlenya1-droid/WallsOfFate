@@ -29,9 +29,11 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
     public int MaxAttempts => maxAttempts;
     public string StatusMessage { get; private set; }
     public GridManager Grid => grid;
+    public int LastFailedCommandIndex => _lastFailedCommandIndex;
 
     private MiniGameData _gameData;
     private bool _initialized;
+    private int _lastFailedCommandIndex = -1;
 
     public void InitializeWithData(MiniGameData gameData)
     {
@@ -112,6 +114,35 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
         }
     }
 
+    public void ClearFailureMarkers(bool notify = true)
+    {
+        if (_lastFailedCommandIndex < 0)
+        {
+            return;
+        }
+
+        _lastFailedCommandIndex = -1;
+        if (notify)
+        {
+            StateChanged?.Invoke();
+        }
+    }
+
+    public void TrimFailureMarkersToCommandCount(int commandCount, bool notify = true)
+    {
+        if (_lastFailedCommandIndex < 0)
+        {
+            return;
+        }
+
+        if (commandCount > _lastFailedCommandIndex)
+        {
+            return;
+        }
+
+        ClearFailureMarkers(notify);
+    }
+
     private void Awake()
     {
         EnsureReferences();
@@ -125,6 +156,7 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
     private IEnumerator RunRoutine()
     {
         IsRunning = true;
+        ClearFailureMarkers(false);
         SetStatus("Прогон запущен. Магнат выполняет маршрут...", false);
 
         grid.ResetBoardState();
@@ -153,13 +185,13 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
 
                     if (!grid.IsInside(nextPosition))
                     {
-                        yield return StartCoroutine(HandleFailure("Магнат вышел за границы поля."));
+                        yield return StartCoroutine(HandleFailure("Магнат вышел за границы поля.", commandIndex));
                         yield break;
                     }
 
                     if (grid.IsBlocked(nextPosition))
                     {
-                        yield return StartCoroutine(HandleFailure("Столкновение со стеной или блокирующим объектом."));
+                        yield return StartCoroutine(HandleFailure("Столкновение со стеной или блокирующим объектом.", commandIndex));
                         yield break;
                     }
 
@@ -175,11 +207,17 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
 
                     if (grid.IsForbidden(nextPosition))
                     {
-                        yield return StartCoroutine(HandleFailure("Вход в запрещённую клетку."));
+                        yield return StartCoroutine(HandleFailure("Вход в запрещённую клетку.", commandIndex));
                         yield break;
                     }
 
                     yield return new WaitForSeconds(betweenCommandsDelay);
+
+                    if (!TryAdvanceTurnState(true, out string dynamicFailureMessage))
+                    {
+                        yield return StartCoroutine(HandleFailure(dynamicFailureMessage, commandIndex));
+                        yield break;
+                    }
                 }
 
                 continue;
@@ -188,7 +226,16 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
             if (command.Type == RouteCommandType.Wait)
             {
                 SetStatus("Пауза.", false);
-                yield return new WaitForSeconds(Mathf.Max(betweenCommandsDelay, 0.18f) * command.Value);
+                for (int waitStep = 0; waitStep < command.Value; waitStep++)
+                {
+                    yield return new WaitForSeconds(Mathf.Max(betweenCommandsDelay, 0.18f));
+
+                    if (!TryAdvanceTurnState(false, out string dynamicFailureMessage))
+                    {
+                        yield return StartCoroutine(HandleFailure(dynamicFailureMessage, commandIndex));
+                        yield break;
+                    }
+                }
             }
         }
 
@@ -208,8 +255,9 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
         HandleVictory();
     }
 
-    private IEnumerator HandleFailure(string message)
+    private IEnumerator HandleFailure(string message, int failedCommandIndex = -1)
     {
+        _lastFailedCommandIndex = failedCommandIndex;
         AttemptsRemaining = Mathf.Max(0, AttemptsRemaining - 1);
         IsRunning = false;
 
@@ -237,6 +285,7 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
     {
         IsRunning = false;
         IsResolved = true;
+        ClearFailureMarkers(false);
         SetStatus("Все доводы собраны. Прогон успешен.", false);
 
         if (MinigameManager.Instance != null)
@@ -272,6 +321,7 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
         grid.ResetBoardState();
         player.ResetToStart();
         IsRunning = false;
+        ClearFailureMarkers(false);
 
         if (!IsResolved || AttemptsRemaining > 0)
         {
@@ -323,6 +373,32 @@ public class ExecutionManager : MonoBehaviour, IMiniGameInstaller
         }
 
         reason = string.Empty;
+        return true;
+    }
+
+    private bool TryAdvanceTurnState(bool allowCurrentCellToBecomeBlocked, out string failureMessage)
+    {
+        failureMessage = string.Empty;
+        grid.AdvanceTurnState();
+
+        if (!grid.IsInside(player.gridPosition))
+        {
+            failureMessage = "\u041F\u043E\u0441\u043B\u0435 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u044F \u041C\u0430\u0433\u043D\u0430\u0442 \u043E\u043A\u0430\u0437\u0430\u043B\u0441\u044F \u0432\u043D\u0435 \u0433\u0440\u0430\u043D\u0438\u0446.";
+            return false;
+        }
+
+        if (!allowCurrentCellToBecomeBlocked && grid.IsBlocked(player.gridPosition))
+        {
+            failureMessage = "\u041F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0430\u0435\u043C\u0430\u044F \u043F\u0440\u0435\u0433\u0440\u0430\u0434\u0430 \u0437\u0430\u043A\u0440\u044B\u043B\u0430\u0441\u044C \u043F\u043E\u0434 \u041C\u0430\u0433\u043D\u0430\u0442\u043E\u043C.";
+            return false;
+        }
+
+        if (grid.IsForbidden(player.gridPosition))
+        {
+            failureMessage = "\u041F\u043E\u0441\u043B\u0435 \u043F\u0435\u0440\u0435\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u044F \u041C\u0430\u0433\u043D\u0430\u0442 \u043E\u043A\u0430\u0437\u0430\u043B\u0441\u044F \u0432 \u0437\u0430\u043F\u0440\u0435\u0449\u0451\u043D\u043D\u043E\u0439 \u043A\u043B\u0435\u0442\u043A\u0435.";
+            return false;
+        }
+
         return true;
     }
 

@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float turnTime = 0.15f;
     [SerializeField] private float heightOffset = 0.35f;
     [SerializeField] private Vector3 visualRotationOffset;
+    [SerializeField] private bool deriveGridPositionFromTransform = true;
 
     private Vector2Int _startGridPosition;
     private RouteDirection _startDirection;
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour
         {
             visualRoot = transform;
         }
+
+        SyncGridPositionFromTransform();
 
         if (!_startCaptured)
         {
@@ -147,6 +150,11 @@ public class PlayerController : MonoBehaviour
         {
             visualRoot = transform;
         }
+
+        if (!Application.isPlaying)
+        {
+            SyncGridPositionFromTransform();
+        }
     }
 
     private void SnapToGrid()
@@ -167,6 +175,24 @@ public class PlayerController : MonoBehaviour
     private Vector3 GetCurrentWorldPosition()
     {
         return grid.GetWorldPosition(gridPosition) + grid.GetSurfaceNormal() * heightOffset;
+    }
+
+    private void SyncGridPositionFromTransform()
+    {
+        if (!deriveGridPositionFromTransform)
+        {
+            return;
+        }
+
+        if (grid == null)
+        {
+            grid = FindObjectOfType<GridManager>();
+        }
+
+        if (grid != null && grid.TryGetGridPositionFromWorld(transform.position, out Vector2Int resolvedPosition))
+        {
+            gridPosition = resolvedPosition;
+        }
     }
 
     private Quaternion GetFacingRotation()
