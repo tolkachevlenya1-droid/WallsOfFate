@@ -12,12 +12,11 @@ GameObject:
   - component: {fileID: 2512390305617551096}
   - component: {fileID: 7244445540405692522}
   - component: {fileID: 6518801604505712109}
-  - component: {fileID: 4823345589018898285}
-  - component: {fileID: 8034811387479147042}
   - component: {fileID: 8479242543674551022}
   - component: {fileID: 995906516631179433}
   - component: {fileID: 6802245928008003865}
   - component: {fileID: 1683462465103907927}
+  - component: {fileID: 7499144153072344026}
   m_Layer: 0
   m_Name: kulon
   m_TagString: PickupBody
@@ -68,6 +67,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -89,6 +90,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -114,49 +116,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 0.02, z: 0.4}
   m_Center: {x: -0.012457119, y: 0.0032036554, z: -0.008452836}
---- !u!114 &4823345589018898285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5535076611407859519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a239629afb942b041b809bea706ee557, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Name>k__BackingField: Medallion
-  <Type>k__BackingField: ---
-  <Description>k__BackingField: "\u041E\u043D \u043F\u043E\u0445\u043E\u0436 \u043D\u0430
-    \u043C\u043E\u0439..."
-  <HideDescription>k__BackingField: 
-  <Picture>k__BackingField: UI/Inventory/ItemsPrefabs/3d/kulon3D
-  <Rendered>k__BackingField: 0
-  <RenderedOnScreen>k__BackingField: 0
-  simpleDict:
-    keys: []
-    values: []
-  nestedDict:
-    keys: []
-    values: 
-  nestedList:
-  - keys: []
-    values: []
---- !u!114 &8034811387479147042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5535076611407859519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9405ba53dd237fe4fb151ba5cb7af122, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _textInd: {fileID: 0}
-  _spritePath: 
 --- !u!114 &8479242543674551022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,10 +142,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246c04dfc0ad72d4d947b4c8da3b71df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMethod: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineWidth: 2
   hoverCheckDistance: 100
   hoverLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  targetObject: {fileID: 0}
+  highlightOnHover: 1
+  highlightOnTrigger: 1
 --- !u!114 &6802245928008003865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +159,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5535076611407859519}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65393348ff72ffd4381fa218907a33d4, type: 3}
   m_Name: 
@@ -203,6 +168,8 @@ MonoBehaviour:
   resourceType: 0
   amount: 0
   message: "\u041A\u0443\u043B\u043E\u043D \u043C\u043E\u0435\u0433\u043E \u0440\u043E\u0434\u0430!!!"
+  Key: key
+  localizationFileName: intaractive-items
   floatingTextPrefab: {fileID: 4848396624485697127, guid: b674c6ddfaf88fa4c8200c48bc74b5fa, type: 3}
   spawnOffset: {x: 0, y: 2.5, z: 0}
   destroyAfterUse: 1
@@ -214,9 +181,38 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5535076611407859519}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adccd2b93e2f15e44a65da412c269bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _selfName: Evidence
+--- !u!114 &7499144153072344026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5535076611407859519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614f85540a8c8fc48b6de0cde5c43566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.InteractibleItemInfluenceArea
+  AreaType: 0
+  InteractionType: 0
+  triggerObject: {fileID: 0}
+  Parameters: 
+  itemParameters:
+    ResourceType: 0
+    Amount: 0
+    Message: "\u041E\u043D \u043F\u043E\u0445\u043E\u0436 \u043D\u0430 \u043C\u043E\u0439..."
+    Key: key
+    LocalizationFileName: interactive-items
+    SpawnOffset: {x: 0, y: 2.5, z: 0}
+    DestroyAfterUse: 1
+    ApproachDistance: 1.2
+    DependFromQuests: 0
+    RequiredQuestIds: 
+    ItemName: 
+  hasBeenUsed: 0

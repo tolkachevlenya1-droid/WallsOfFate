@@ -22,12 +22,12 @@ public class PlayChestAnimation : MonoBehaviour
     public void Triggered(TriggerEvent eventData) {
         if (!eventData.IsEnteracted) return;
         
-        CompositeTrigger compositeTrigger = this.gameObject.GetComponent<CompositeTrigger>();
+        //dwCompositeTrigger compositeTrigger = this.gameObject.GetComponent<CompositeTrigger>();
         if (_opened) return;
         else {
-            if (_dependFromQuests) {
-                if (!compositeTrigger.IsDone) return;
-            }
+            //if (_dependFromQuests) {
+            //    if (!compositeTrigger.IsDone) return;
+            //}
         }
         _opened = true;
         if (_anim) _anim.Play(animationName);

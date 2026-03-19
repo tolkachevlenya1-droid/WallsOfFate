@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Game.Core;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 using Zenject;
 
 namespace Game
@@ -11,28 +13,29 @@ namespace Game
         [SerializeField] private InteractableItemParameters itemParameters;
 
         [Header("Item State")]
-        [SerializeField] private bool _hasBeenUsed = false;
+        [SerializeField] private bool hasBeenUsed = false;
 
-        public event Action<TriggerEvent, InteractableItemParameters> OnItemInteracted;
-
-        public bool HasBeenUsed => _hasBeenUsed;
+        public AsyncEvent<(TriggerEvent, InteractableItemParameters)> OnItemInteracted { get; } = new();
+        public bool HasBeenUsed => hasBeenUsed;
 
         private void Start()
         {
             LoadItemState();
+            if (triggerObject != null) triggerObject = this.gameObject;
+
         }
 
         public void MarkAsUsed()
         {
-            if (_hasBeenUsed) return;
+            if (hasBeenUsed) return;
 
-            _hasBeenUsed = true;
+            hasBeenUsed = true;
             SaveItemState();
         }
 
         public void ResetForRespawn()
         {
-            _hasBeenUsed = false;
+            hasBeenUsed = false;
 
             if (TryGetComponent<Collider>(out var col))
                 col.enabled = true;
@@ -47,25 +50,25 @@ namespace Game
         private void LoadItemState()
         {
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-            InteractableItemCollection.TryGetItemState(sceneName, gameObject.name, out _hasBeenUsed);
+            InteractableItemCollection.TryGetItemState(sceneName, gameObject.name, out hasBeenUsed);
         }
 
         private void SaveItemState()
         {
             string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-            InteractableItemCollection.SetItemState(sceneName, gameObject.name, _hasBeenUsed);
+            InteractableItemCollection.SetItemState(sceneName, gameObject.name, hasBeenUsed);
         }
 
-        public override void InvokeEvent(Collider obj)
+        public override async Task InvokeEventAsync(Collider obj)
         {
-            if (!_hasBeenUsed)
+            if (!hasBeenUsed)
             {
 
                 bool interacted = InputManager.GetInstance().GetInteractPressed();
                 TriggerEvent eventData = new TriggerEvent(
                     AreaType,
                     obj.gameObject,
-                    triggerObject ?? gameObject,
+                    triggerObject,
                     interacted,
                     string.Empty 
                 );
@@ -76,7 +79,7 @@ namespace Game
                     MarkAsUsed();
                 }
 
-                OnItemInteracted?.Invoke(eventData, itemParameters);
+                await OnItemInteracted.InvokeAsync((eventData, itemParameters));
             }
         }
     }

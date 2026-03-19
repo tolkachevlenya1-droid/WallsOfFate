@@ -8,8 +8,8 @@ namespace Game
     public class BoxMover : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float maxSpeed = 5f;
-        [SerializeField] private float maxForse = 5;
+        [SerializeField] private float followSharpness = 30f; 
+        [SerializeField] private float maxSpeed = 10f;
 
 
         private Rigidbody rb;
@@ -17,6 +17,8 @@ namespace Game
         private bool isBeingHeld;
         private Vector3 moveAxis;
         private Vector3 grabOffset;
+        private Collider boxCollider;
+        private Collider playerCollider;
 
         private enum GrabAxis { ForwardBack, LeftRight }
 
@@ -29,26 +31,35 @@ namespace Game
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            rb.useGravity = true;
+            rb.useGravity = false;
+            boxCollider = GetComponent<Collider>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!isBeingHeld || playerTransform == null) return;
 
             Vector3 playerPosXZ = new Vector3(playerTransform.position.x, 0, playerTransform.position.z);
             Vector3 targetPosXZ = playerPosXZ + grabOffset;
             Vector3 targetPos = new Vector3(targetPosXZ.x, transform.position.y, targetPosXZ.z);
-           
-            Vector3 moveDirection = (targetPos - transform.position).normalized;
-            float distance = Vector3.Distance(transform.position, targetPos);
-            Vector3 force = moveDirection * (distance * maxForse);
-            rb.AddForce(force, ForceMode.Force);
 
-            if (rb.linearVelocity.magnitude > maxSpeed)
-            {
-                rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
-            }
+            Vector3 distanceDelta = targetPos - rb.position;
+            Vector3 targetVelocity = distanceDelta * followSharpness;
+            targetVelocity = Vector3.ClampMagnitude(targetVelocity, maxSpeed);
+            Vector3 velocityError = targetVelocity - rb.linearVelocity;
+            velocityError.y = 0;
+
+            rb.AddForce(velocityError, ForceMode.VelocityChange);
+
+            //Vector3 moveDirection = (targetPos - transform.position).normalized;
+            //float distance = Vector3.Distance(transform.position, targetPos);
+            //Vector3 force = moveDirection * (distance * maxForse);
+            //rb.AddForce(force, ForceMode.Force);
+
+            //if (rb.linearVelocity.magnitude > maxSpeed)
+            //{
+            //    rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+            //}
             // Целевая позиция с сохранением исходной высоты коробки
             //rb.MovePosition(targetPos);
 
@@ -68,6 +79,14 @@ namespace Game
 
         public void StartHolding()
         {
+            isBeingHeld = true;
+            playerCollider = playerTransform.GetComponent<Collider>();
+
+            if (playerCollider != null && boxCollider != null)
+            {
+                Physics.IgnoreCollision(boxCollider, playerCollider, true);
+            }
+
             isBeingHeld = true;
 
             Vector3 playerPos = playerTransform.position;
@@ -129,6 +148,12 @@ namespace Game
 
         public void StopHolding()
         {
+            isBeingHeld = false;
+            if (playerCollider != null && boxCollider != null)
+            {
+                Physics.IgnoreCollision(boxCollider, playerCollider, false);
+            }
+
             isBeingHeld = false;
             rb.freezeRotation = false;
             playerTransform.GetComponent<PlayerMoveController>()?.StopBoxGrabMode();

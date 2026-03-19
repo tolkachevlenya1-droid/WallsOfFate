@@ -1,43 +1,32 @@
-﻿using Game.Data;
+﻿using Game.Core; // Добавьте этот using для AsyncEvent
+using Game.Data;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using System.Threading.Tasks;
 
 namespace Game
 {
-    internal class BoxGrabberHandler : MonoBehaviour, ITriggerHandler
+    internal class BoxGrabberHandler : MonoBehaviour
     {
         [SerializeField] private List<InfluenceArea> influenceArias;
-        private Dictionary<GameObject, InfluenceArea> areaByObject;
 
         private BoxMover currentBoxMover;
         private GameObject currentBox;
 
         private void OnEnable()
         {
-            //foreach (var area in influenceArias)
-            //    area.OnEventTriggered += Handle;
-
-            areaByObject = new Dictionary<GameObject, InfluenceArea>();
-
             foreach (var area in influenceArias)
-            {
-                //area.Handler = this;
-                //if (!areaByObject.ContainsKey(area.gameObject))
-                //{
-                //    areaByObject.Add(area.gameObject, area);
-                //    area.OnEventTriggered.AddListener(Handle);
-                //}
-            }
+                area.OnEventTriggered.Subscribe(HandleAsync); 
         }
 
         private void OnDisable()
         {
             foreach (var area in influenceArias)
-                area.OnEventTriggered.RemoveListener(Handle);
+                area.OnEventTriggered.Unsubscribe(HandleAsync); 
         }
 
-        public void Handle(TriggerEvent eventData)
+        public async Task HandleAsync(TriggerEvent eventData)
         {
             if (eventData.AreaType != InfluenceType.Object || !eventData.IsEnteracted)
                 return;
@@ -48,27 +37,25 @@ namespace Game
                 return;
 
             ToggleGrab(eventData);
-            //if (areaByObject.ContainsKey(eventData.TriggerObj))
-            //{
 
-            //}
-
+            await Task.CompletedTask; 
         }
 
         private void ToggleGrab(TriggerEvent eventData)
         {
             GameObject box = eventData.TriggerObj;
+            PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
             if (currentBox == box)
             {
                 DetachBox();
+                playerAnimator?.InteractWith(eventData, false);
             }
             else
             {
                 if (currentBox != null)
                     DetachBox();
 
-                PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
-                playerAnimator?.InteractWith(eventData);
+                playerAnimator?.InteractWith(eventData, true);
                 AttachBox(box);
             }
         }

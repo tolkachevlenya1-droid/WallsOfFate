@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using Game.Core;
 using System;
+using UnityEngine;
+using System.Threading.Tasks;
 
 namespace Game
 {
@@ -8,9 +10,9 @@ namespace Game
         [Header("Door Settings")]
         [SerializeField] private DoorParameters doorParameters;
 
-        public event Action<TriggerEvent, DoorParameters> OnDoorInteracted;
-      
-        public override void InvokeEvent(Collider obj)
+        public AsyncEvent<(TriggerEvent, DoorParameters)> OnDoorInteracted { get; } = new();
+
+        public override async Task InvokeEventAsync(Collider obj)
         {
             bool interacted = InputManager.GetInstance().GetInteractPressed();
 
@@ -20,11 +22,13 @@ namespace Game
                 AreaType,
                 obj.gameObject,
                 triggerObject ?? gameObject,
-                interacted, 
+                interacted,
                 json
             );
 
-            OnDoorInteracted?.Invoke(eventData, doorParameters);
+            await base.InvokeEventAsync(obj);
+
+            await OnDoorInteracted.InvokeAsync((eventData, doorParameters));
         }
     }
 }

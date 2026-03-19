@@ -37,6 +37,7 @@ public class PlayerAnimator : MonoBehaviour
     private float currentSpeedParam; // smoothed animator parameter [0‑1]
     private float speedRef;          // velocity reference for SmoothDamp
     private float footstepTimer;
+    private bool isPushing = false;
 
     // ──────────────────────────────────────────────────────────────────────────────
     #region Unity
@@ -54,6 +55,16 @@ public class PlayerAnimator : MonoBehaviour
     }
     #endregion
 
+    public void StartPushing()
+    {
+        isPushing = true;
+    }
+
+    public void StopPushing()
+    {
+        isPushing = false;
+    }
+
     // ──────────────────────────────────────────────────────────────────────────────
     #region Locomotion
     private void UpdateLocomotion()
@@ -64,8 +75,8 @@ public class PlayerAnimator : MonoBehaviour
         currentSpeedParam = Mathf.SmoothDamp(currentSpeedParam, targetNorm, ref speedRef, speedSmoothTime);
 
         // 2) определяем состояние толкания
-        bool isPushing = transform.parent != null
-                         && transform.parent.CompareTag(boxTag);
+        //bool isPushing = transform.parent != null
+        //                 && transform.parent.CompareTag(boxTag);
 
         // 3) вычисляем параметр PushSpeed (0 или 1)
         float pushSpeedParam = isPushing

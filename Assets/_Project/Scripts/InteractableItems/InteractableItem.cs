@@ -33,24 +33,21 @@ namespace Game
         [Tooltip("На каком расстоянии от предмета игрок останавливается")]
         [SerializeField] private float approachDistance = 1.2f;
 
-        private Transform _player;
+        private Transform playerTransform;
         private bool _hasBeenUsed = false;
         public bool HasBeenUsed => _hasBeenUsed;
 
         private PlayerManager playerManager;
 
         [Inject]
-        private void Construct(PlayerManager playerManager)
+        private void Construct(PlayerManager playerManager, PlayerMoveController playerController)
         {
             this.playerManager = playerManager;
+            this.playerTransform = playerController.transform;
         }
 
         void Awake()
         {
-            var go = GameObject.FindGameObjectWithTag("Player");
-            if (go) _player = go.transform;
-            else Debug.LogError("Player not found — please tag the player object as 'Player'.");
-
             CheckUsability();
         }
 
@@ -130,9 +127,9 @@ namespace Game
 
             playerManager.PlayerData.AddResource(resourceType, amount);
 
-            if (floatingTextPrefab != null && _player != null)
+            if (floatingTextPrefab != null && playerTransform != null)
             {
-                Vector3 worldPos = _player.position + spawnOffset;
+                Vector3 worldPos = playerTransform.position + spawnOffset;
                 var ftGO = Instantiate(floatingTextPrefab, worldPos, Quaternion.identity);
                 if (ftGO.TryGetComponent<FloatingText>(out var ft))
                     ft.SetText(message);

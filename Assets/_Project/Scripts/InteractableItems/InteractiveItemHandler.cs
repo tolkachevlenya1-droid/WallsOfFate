@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 using Zenject;
@@ -16,9 +17,6 @@ namespace Game
         [SerializeField] private GameObject _floatingTextPrefab;
         [SerializeField] private List<InteractibleItemInfluenceArea> influenceArias;
 
-
-        private Dictionary<GameObject, InteractibleItemInfluenceArea> areaByObject;
-
         private PlayerManager _playerManager;
 
         [Inject]
@@ -29,20 +27,9 @@ namespace Game
 
         private void Start()
         {
-            //foreach (var area in influenceArias)
-            //{
-            //    area.OnItemInteracted += HandleInteraction;
-            //}
-
-            areaByObject = new Dictionary<GameObject, InteractibleItemInfluenceArea>();
-
             foreach (var area in influenceArias)
             {
-                if (!areaByObject.ContainsKey(area.gameObject))
-                {
-                    areaByObject.Add(area.gameObject, area);
-                    area.OnItemInteracted += HandleInteraction;
-                }
+                area.OnItemInteracted.Subscribe(HandleAsync);
             }
         }
 
@@ -51,27 +38,27 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnItemInteracted -= HandleInteraction;
+                area.OnItemInteracted.Unsubscribe(HandleAsync);
             }
         }
 
-        public void HandleInteraction(TriggerEvent eventData, InteractableItemParameters itemParameters)
+        public async Task HandleAsync((TriggerEvent eventData, InteractableItemParameters itemParameters) data)
         {
 
-            if (areaByObject.ContainsKey(eventData.TriggerObj))
-            {
-                if (!eventData.IsEnteracted) return;
+            var (eventData, itemParameters) = data;
 
-                PlayChestAnimation chestAnimaton = eventData.TriggerObj.GetComponent<PlayChestAnimation>();
-                chestAnimaton?.Triggered(eventData);
+            if (!eventData.IsEnteracted) return;
 
-                PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
-                playerAnimator?.InteractWith(eventData);
+            PlayChestAnimation chestAnimaton = eventData.TriggerObj.GetComponent<PlayChestAnimation>();
+            chestAnimaton?.Triggered(eventData);
 
-                ShowFloatingText(eventData.PlayerObj, itemParameters);
-                HandlePostUseBehavior(eventData.TriggerObj, itemParameters);
-                UpdateResources(eventData.PlayerObj, itemParameters);
-            }
+            PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
+            playerAnimator?.InteractWith(eventData, false);
+
+            ShowFloatingText(eventData.PlayerObj, itemParameters);
+            HandlePostUseBehavior(eventData.TriggerObj, itemParameters);
+            UpdateResources(eventData.PlayerObj, itemParameters);
+
         }
 
         private void UpdateResources(GameObject player, InteractableItemParameters parameters)

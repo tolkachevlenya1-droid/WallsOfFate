@@ -13,21 +13,21 @@ namespace Game
         public bool IsDone { get; private set; }
         [SerializeField] private List<InfluenceArea> influenceArias;
 
-        private void OnEnable()
-        {
-            foreach (var area in influenceArias)
-            {
-                area.OnEventTriggered.AddListener(Handle);
-            }
-        }
+        //private void OnEnable()
+        //{
+        //    foreach (var area in influenceArias)
+        //    {
+        //        area.OnEventTriggered.AddListener(Handle);
+        //    }
+        //}
 
-        private void OnDisable()
-        {
-            foreach (var area in influenceArias)
-            {
-                area.OnEventTriggered.RemoveListener(Handle);
-            }
-        }
+        //private void OnDisable()
+        //{
+        //    foreach (var area in influenceArias)
+        //    {
+        //        area.OnEventTriggered.RemoveListener(Handle);
+        //    }
+        //}
 
         public void Handle(TriggerEvent eventData)
         {

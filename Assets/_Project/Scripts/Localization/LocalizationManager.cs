@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Game
 {
     // Use only via Zenject DI
+    //[Serializable]
     public class LocalizationManager
     {
         private class LocalizationItem

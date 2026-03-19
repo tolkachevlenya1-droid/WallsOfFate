@@ -177,8 +177,8 @@ GameObject:
   - component: {fileID: 5097238701846089707}
   - component: {fileID: 919777869561364580}
   - component: {fileID: 7804411933513268449}
-  - component: {fileID: 2936802819809769152}
   - component: {fileID: 4523177219493664546}
+  - component: {fileID: 2936802819809769152}
   m_Layer: 12
   m_Name: StorageBox
   m_TagString: Box
@@ -277,8 +277,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8920458, y: 0.8908594, z: 0.9376253}
-  m_Center: {x: 0.00000008940697, y: 0.4428297, z: -0.000000014901163}
+  m_Size: {x: 1.1, y: 0.88981944, z: 1.1}
+  m_Center: {x: 0.000000085149495, y: 0.43908718, z: 0}
 --- !u!54 &302872706512265089
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -288,7 +288,7 @@ Rigidbody:
   m_GameObject: {fileID: 8878740237828295250}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -301,8 +301,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
@@ -394,10 +394,21 @@ MonoBehaviour:
   AreaType: 2
   InteractionType: 0
   triggerObject: {fileID: 8878740237828295250}
-  OnEventTriggered:
-    m_PersistentCalls:
-      m_Calls: []
   Parameters: 
+--- !u!114 &4523177219493664546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8878740237828295250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffebd590001e40141a2ea7b01371303e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.BoxMover
+  followSharpness: 30
+  maxSpeed: 5
 --- !u!114 &2936802819809769152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,17 +426,3 @@ MonoBehaviour:
   - {fileID: 5960056565320810850}
   - {fileID: 3772024824523359916}
   - {fileID: 2316079227203694983}
---- !u!114 &4523177219493664546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8878740237828295250}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffebd590001e40141a2ea7b01371303e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.BoxMover
-  maxSpeed: 5
-  maxForse: 50

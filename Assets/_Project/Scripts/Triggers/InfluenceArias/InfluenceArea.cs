@@ -1,4 +1,5 @@
-﻿using Ink.Parsed;
+﻿using Game.Core;
+using Ink.Parsed;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -20,7 +21,7 @@ namespace Game
         Exit = 2,
     }
 
-    public struct TriggerEvent
+    public class TriggerEvent
     {
         public InfluenceType AreaType;
         public GameObject PlayerObj;
@@ -44,13 +45,14 @@ namespace Game
         public InfluenceType AreaType;
         public InfluenceInteractionType InteractionType;
         public GameObject triggerObject;
-        public UnityEvent<TriggerEvent> OnEventTriggered;
+        public AsyncEvent<TriggerEvent> OnEventTriggered { get; } = new AsyncEvent<TriggerEvent>();
         [TextArea(3, 40)]
         public string Parameters;
         public ITriggerHandler Handler;
         //[SerializeField] private OutlineTrigger outlineTrigger;
 
         private BoxCollider boxCollider;
+        //private bool interactPressedThisFrame;
 
         //private void Reset()
         //{
@@ -60,9 +62,21 @@ namespace Game
         //    boxCollider.center = Vector3.zero;
         //}
 
+        //private void Start()
+        //{
+        //    Handler = FindObjectOfType<BoxGrabberHandler>();
+        //}
+
         private void Start()
         {
-            Handler = FindObjectOfType<BoxGrabberHandler>();
+            if (triggerObject == null) triggerObject = gameObject;
+
+            //interactPressedThisFrame = InputManager.GetInstance().GetInteractPressed();
+
+            //if (interactPressedThisFrame)
+            //{
+            //    interactPressedBuffered = true;
+            //}
         }
 
         private void OnTriggerEnter(Collider other)
@@ -72,7 +86,7 @@ namespace Game
 
                 if (InteractionType == InfluenceInteractionType.Enter)
                 {
-                    InvokeEvent(other);
+                    _ = InvokeEventAsync(other);
                 }
             }
         }
@@ -83,7 +97,7 @@ namespace Game
             {
                 if (InteractionType == InfluenceInteractionType.Stay)
                 {
-                    InvokeEvent(other);
+                    _ = InvokeEventAsync(other);
                 }
             }
         }
@@ -94,21 +108,23 @@ namespace Game
             {
                 if (InteractionType == InfluenceInteractionType.Exit)
                 {
-                    InvokeEvent(other);
+                    _ = InvokeEventAsync(other);
                 }
             }
         }
 
-        public virtual void InvokeEvent(Collider obj)
+        public virtual async System.Threading.Tasks.Task InvokeEventAsync(Collider obj)
         {
             bool interacted = InputManager.GetInstance().GetInteractPressed();
-            TriggerEvent eventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject ?? this.gameObject, interacted, Parameters);
-            //OnEventTriggered?.Invoke(eventData);
+            TriggerEvent eventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted, Parameters);
+
+
             if (interacted)
             {
                 Debug.Log("player interacted");
             }
-            Handler.Handle(eventData);
+
+            await OnEventTriggered.InvokeAsync(eventData);
         }
     }
 }

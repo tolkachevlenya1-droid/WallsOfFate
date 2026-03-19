@@ -1,21 +1,18 @@
 ﻿using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
-using static DialogueDatabase;
 
 namespace Game
 {
-    internal class DialogueHandler : MonoBehaviour, ITriggerHandler
+    internal class DialogueHandler : MonoBehaviour
     {
         [Header("Dialogue Settings")]
         //[SerializeField] private string defaultDialogue;
         [SerializeField] private List<InfluenceArea> influenceArias;
         private NPCPrefabFactory npcFactory;
-
-
-        private Dictionary<GameObject, InfluenceArea> areaByObject;
 
         [Inject]
         private void Construct(NPCPrefabFactory npcFActory)
@@ -25,49 +22,45 @@ namespace Game
             {
                 influenceArias.Add(npc.Value.GetComponentInChildren<InfluenceArea>());
             }
-        }
-
-        private void OnEnable()
-        {
-            //foreach (var area in influenceArias)
-            //{
-            //    area.OnEventTriggered += Handle;   
-            //}
-
-            areaByObject = new Dictionary<GameObject, InfluenceArea>();
 
             foreach (var area in influenceArias)
             {
-                if (!areaByObject.ContainsKey(area.gameObject))
-                {
-                    areaByObject.Add(area.gameObject, area);
-                    area.OnEventTriggered.AddListener(Handle);
-                }
+                area.OnEventTriggered.Subscribe(HandleAsync);
             }
         }
+
+        //private void OnEnable()
+        //{
+        //    //foreach (var area in influenceArias)
+        //    //{
+        //    //    area.OnEventTriggered += Handle;   
+        //    //}
+
+        //}
 
 
         private void OnDisable()
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered.RemoveListener(Handle);
+                area.OnEventTriggered.Unsubscribe(HandleAsync);
             }
         }
 
-        public void Handle(TriggerEvent eventData)
+        public async Task HandleAsync(TriggerEvent eventData)
         {
-            if (areaByObject.ContainsKey(eventData.TriggerObj))
-            {
-                if (!eventData.IsEnteracted) return;
-                DialogueManager _dialogueManager = DialogueManager.Instance;
-                if (!_dialogueManager.IsInDialogue)
-                {
+            //bool interacted = InputManager.GetInstance().GetInteractPressed();
 
-                    DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-                    _dialogueManager.StartDialogue(dialogueGraph);
-                }
+
+            if (!eventData.IsEnteracted) return;
+            DialogueManager _dialogueManager = DialogueManager.Instance;
+            if (!_dialogueManager.IsInDialogue)
+            {
+
+                DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
+                _dialogueManager.StartDialogue(dialogueGraph);
             }
+
 
             //    DialogueManager _dialogueManager = DialogueManager.Instance;
             //if (!_dialogueManager.IsInDialogue)

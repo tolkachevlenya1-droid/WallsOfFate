@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using Zenject;
+using System.Threading.Tasks;
 
 namespace Game
 {
@@ -33,7 +34,7 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnDoorInteracted += Handle;
+                area.OnDoorInteracted.Subscribe(HandleAsync);
             }
         }
 
@@ -41,12 +42,14 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnDoorInteracted -= Handle;
+                area.OnDoorInteracted.Unsubscribe(HandleAsync);
             }
         }
 
-        public void Handle(TriggerEvent eventData, DoorParameters doorParameters)
+        public async Task HandleAsync((TriggerEvent triggerEvent, DoorParameters doorParams) data)
         {
+            var (eventData, doorParameters) = data;
+
             if (!eventData.IsEnteracted) return;
             if (ShouldTrigger(doorParameters.DayNumber))
             {

@@ -40,7 +40,7 @@ namespace Game
         //    //if (!_interactBuffered && InputManager.GetInstance().GetInteractPressed())
         //    //    _interactBuffered = true;
         //}
-        public void InteractWith(TriggerEvent eventData)
+        public void InteractWith(TriggerEvent eventData, bool on_ofPushing)
         {
             if (eventData.TriggerObj == null) return;                     // на всякий случай
 
@@ -52,7 +52,8 @@ namespace Game
             if (go.CompareTag("PickupFloor")) playerAnimator.PlayPickupFloor();
             else if (go.CompareTag("PickupBody")) playerAnimator.PlayPickupBody();
             else if (go.CompareTag("Chest")) playerAnimator.PlayOpenChest();
-            //else if (go.CompareTag("Box")) playerAnimator.PlayGrabBox();
+            else if (go.CompareTag("Box") && on_ofPushing) playerAnimator.StartPushing();
+            else if (go.CompareTag("Box") && !on_ofPushing) playerAnimator.StopPushing();
             //{
             //    var grabber = GetComponent<PlayerBoxGrabber>();
             //    if (grabber != null)
