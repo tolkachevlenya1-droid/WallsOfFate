@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Game
@@ -16,8 +17,6 @@ namespace Game
 
         public bool HasBeenUsed => _hasBeenUsed;
 
-        public InteractableItemParameters Parameters => itemParameters;
-
         private void Start()
         {
             LoadItemState();
@@ -29,6 +28,20 @@ namespace Game
 
             _hasBeenUsed = true;
             SaveItemState();
+        }
+
+        public void ResetForRespawn()
+        {
+            _hasBeenUsed = false;
+
+            if (TryGetComponent<Collider>(out var col))
+                col.enabled = true;
+
+            foreach (var o in GetComponentsInChildren<cakeslice.Outline>())
+                o.enabled = true;
+
+            string scene = SceneManager.GetActiveScene().name;
+            InteractableItemCollection.SetItemState(scene, gameObject.name, false);
         }
 
         private void LoadItemState()
@@ -56,9 +69,10 @@ namespace Game
                     interacted,
                     string.Empty 
                 );
-                if (interacted) { 
-                    Debug.Log("interact pressed" + interacted);
-                    Debug.Log("eventData" + eventData.IsEnteracted);
+                if (interacted)
+                {
+                    //Debug.Log("interact pressed" + interacted);
+                    //Debug.Log("eventData" + eventData.IsEnteracted);
                     MarkAsUsed();
                 }
 

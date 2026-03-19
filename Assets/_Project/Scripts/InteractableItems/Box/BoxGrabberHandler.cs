@@ -8,20 +8,33 @@ namespace Game
     internal class BoxGrabberHandler : MonoBehaviour, ITriggerHandler
     {
         [SerializeField] private List<InfluenceArea> influenceArias;
+        private Dictionary<GameObject, InfluenceArea> areaByObject;
 
         private BoxMover currentBoxMover;
         private GameObject currentBox;
 
         private void OnEnable()
         {
+            //foreach (var area in influenceArias)
+            //    area.OnEventTriggered += Handle;
+
+            areaByObject = new Dictionary<GameObject, InfluenceArea>();
+
             foreach (var area in influenceArias)
-                area.OnEventTriggered += Handle;
+            {
+                //area.Handler = this;
+                //if (!areaByObject.ContainsKey(area.gameObject))
+                //{
+                //    areaByObject.Add(area.gameObject, area);
+                //    area.OnEventTriggered.AddListener(Handle);
+                //}
+            }
         }
 
         private void OnDisable()
         {
             foreach (var area in influenceArias)
-                area.OnEventTriggered -= Handle;
+                area.OnEventTriggered.RemoveListener(Handle);
         }
 
         public void Handle(TriggerEvent eventData)
@@ -34,11 +47,17 @@ namespace Game
             if (!box.CompareTag("Box"))
                 return;
 
-            ToggleGrab(box);
+            ToggleGrab(eventData);
+            //if (areaByObject.ContainsKey(eventData.TriggerObj))
+            //{
+
+            //}
+
         }
 
-        private void ToggleGrab(GameObject box)
+        private void ToggleGrab(TriggerEvent eventData)
         {
+            GameObject box = eventData.TriggerObj;
             if (currentBox == box)
             {
                 DetachBox();
@@ -48,6 +67,8 @@ namespace Game
                 if (currentBox != null)
                     DetachBox();
 
+                PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
+                playerAnimator?.InteractWith(eventData);
                 AttachBox(box);
             }
         }

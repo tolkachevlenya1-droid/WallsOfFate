@@ -14,20 +14,35 @@ namespace Game
         [SerializeField] private List<InfluenceArea> influenceArias;
         private NPCPrefabFactory npcFactory;
 
+
+        private Dictionary<GameObject, InfluenceArea> areaByObject;
+
         [Inject]
         private void Construct(NPCPrefabFactory npcFActory)
         {
             this.npcFactory = npcFActory;
-            foreach (var npc in npcFactory.instances) {
+            foreach (var npc in npcFactory.instances)
+            {
                 influenceArias.Add(npc.Value.GetComponentInChildren<InfluenceArea>());
             }
         }
 
         private void OnEnable()
         {
+            //foreach (var area in influenceArias)
+            //{
+            //    area.OnEventTriggered += Handle;   
+            //}
+
+            areaByObject = new Dictionary<GameObject, InfluenceArea>();
+
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered += Handle;   
+                if (!areaByObject.ContainsKey(area.gameObject))
+                {
+                    areaByObject.Add(area.gameObject, area);
+                    area.OnEventTriggered.AddListener(Handle);
+                }
             }
         }
 
@@ -36,70 +51,82 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered -= Handle;
+                area.OnEventTriggered.RemoveListener(Handle);
             }
         }
 
         public void Handle(TriggerEvent eventData)
         {
-            DialogueManager _dialogueManager = DialogueManager.Instance;
-            if (eventData.IsEnteracted && !_dialogueManager.IsInDialogue)
+            if (areaByObject.ContainsKey(eventData.TriggerObj))
             {
-
-                DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-                _dialogueManager.StartDialogue(dialogueGraph);
-
-                /*var activeGroups = QuestCollection.GetActiveQuestGroups();
-                QuestGroup groupToUpdate = null;
-                QuestTask taskToComplete = null;
-                DialogueGraph dialogueGraph;
-
-                foreach (var group in activeGroups)
+                if (!eventData.IsEnteracted) return;
+                DialogueManager _dialogueManager = DialogueManager.Instance;
+                if (!_dialogueManager.IsInDialogue)
                 {
-                    taskToComplete = group.Tasks
-                        .Where(t => !t.IsDone && t.ForNPS == eventData.TriggerObj.name && t.CanComplete())
-                        .OrderBy(t => t.Id)
-                        .FirstOrDefault();
 
-                    if (taskToComplete != null)
-                    {
-                        groupToUpdate = group;
-                        break;
-                    }
-                }
-
-                if (groupToUpdate != null)
-                {
-                    groupToUpdate.GetCurrentTask().CompleteTask();
-                    groupToUpdate = UpdateGroupState(groupToUpdate);
-                    var originalGroup = QuestCollection.GetAllQuestGroups()
-                        .FirstOrDefault(g => g.Id == groupToUpdate.Id);
-                    originalGroup?.CopyFrom(groupToUpdate);
-
-                    dialogueGraph = GetDialogueGraph(taskToComplete.RequeredDialog);
+                    DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
                     _dialogueManager.StartDialogue(dialogueGraph);
-                    return;
                 }
-
-                // Проверка на старт новых квестов
-                var currentDay = QuestCollection.GetCurrentDayData();
-                var availableGroups = currentDay != null
-                    ? currentDay.Quests.Where(q => q.CheckOpen(eventData.TriggerObj.name)).ToList()
-                    : new List<QuestGroup>();
-
-                if (availableGroups.Count > 0)
-                {
-                    var group = availableGroups.First();
-                    group.StartQuest();
-
-                    dialogueGraph = GetDialogueGraph(group.OpenDialog);
-                    _dialogueManager.StartDialogue(dialogueGraph);
-                    return;
-                }
-
-                dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-                _dialogueManager.StartDialogue(dialogueGraph);*/
             }
+
+            //    DialogueManager _dialogueManager = DialogueManager.Instance;
+            //if (!_dialogueManager.IsInDialogue)
+            //{
+
+            //    DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
+            //    _dialogueManager.StartDialogue(dialogueGraph);
+
+            //    /*var activeGroups = QuestCollection.GetActiveQuestGroups();
+            //    QuestGroup groupToUpdate = null;
+            //    QuestTask taskToComplete = null;
+            //    DialogueGraph dialogueGraph;
+
+            //    foreach (var group in activeGroups)
+            //    {
+            //        taskToComplete = group.Tasks
+            //            .Where(t => !t.IsDone && t.ForNPS == eventData.TriggerObj.name && t.CanComplete())
+            //            .OrderBy(t => t.Id)
+            //            .FirstOrDefault();
+
+            //        if (taskToComplete != null)
+            //        {
+            //            groupToUpdate = group;
+            //            break;
+            //        }
+            //    }
+
+            //    if (groupToUpdate != null)
+            //    {
+            //        groupToUpdate.GetCurrentTask().CompleteTask();
+            //        groupToUpdate = UpdateGroupState(groupToUpdate);
+            //        var originalGroup = QuestCollection.GetAllQuestGroups()
+            //            .FirstOrDefault(g => g.Id == groupToUpdate.Id);
+            //        originalGroup?.CopyFrom(groupToUpdate);
+
+            //        dialogueGraph = GetDialogueGraph(taskToComplete.RequeredDialog);
+            //        _dialogueManager.StartDialogue(dialogueGraph);
+            //        return;
+            //    }
+
+            //    // Проверка на старт новых квестов
+            //    var currentDay = QuestCollection.GetCurrentDayData();
+            //    var availableGroups = currentDay != null
+            //        ? currentDay.Quests.Where(q => q.CheckOpen(eventData.TriggerObj.name)).ToList()
+            //        : new List<QuestGroup>();
+
+            //    if (availableGroups.Count > 0)
+            //    {
+            //        var group = availableGroups.First();
+            //        group.StartQuest();
+
+            //        dialogueGraph = GetDialogueGraph(group.OpenDialog);
+            //        _dialogueManager.StartDialogue(dialogueGraph);
+            //        return;
+            //    }
+
+            //    dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
+            //    _dialogueManager.StartDialogue(dialogueGraph);*/
+            //}
         }
 
         private DialogueGraph GetDialogueGraph(string name)

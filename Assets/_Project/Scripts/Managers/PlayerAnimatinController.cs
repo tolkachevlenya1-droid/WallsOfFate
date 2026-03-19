@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,44 +23,41 @@ namespace Game
             }
 
         }
-        private void OnTriggerStay(Collider collider)
-        {
-            // Обновляем currentTriggerable каждый FixedUpdate,
-            // если по какой-то причине он вдруг стал null
-            //if (currentTriggerable == null)
-            //{
-            //    OnTriggerEnter(collider);   // переиспользуем уже готовую логику
-            //    _nextTimeCanInteract = Time.time;   // не блокируем первое нажатие
-            //}
-            ITriggerable trigerObj = collider.gameObject.GetComponent<ITriggerable>();
-            InteractWith(trigerObj);
+        //private void OnTriggerStay(Collider collider)
+        //{
+        //    // Обновляем currentTriggerable каждый FixedUpdate,
+        //    // если по какой-то причине он вдруг стал null
+        //    //if (currentTriggerable == null)
+        //    //{
+        //    //    OnTriggerEnter(collider);   // переиспользуем уже готовую логику
+        //    //    _nextTimeCanInteract = Time.time;   // не блокируем первое нажатие
+        //    //}
+        //    Collider triggerObj = collider.gameObject.GetComponents<Collider>().FirstOrDefault(c => c.isTrigger);
+        //    //ITriggerable trigerObj = collider.gameObject.GetComponent<ITriggerable>();
+        //    if(triggerObj != null && InputManager.GetInstance().GetInteractPressed()) InteractWith(triggerObj);
 
-            // --- необязательно, но удобно: маленький буфер нажатия ---
-            //if (!_interactBuffered && InputManager.GetInstance().GetInteractPressed())
-            //    _interactBuffered = true;
-        }
-        public void InteractWith(ITriggerable trigger)
+        //    // --- необязательно, но удобно: маленький буфер нажатия ---
+        //    //if (!_interactBuffered && InputManager.GetInstance().GetInteractPressed())
+        //    //    _interactBuffered = true;
+        //}
+        public void InteractWith(TriggerEvent eventData)
         {
-            if (trigger == null) return;
-
-            // получаем MonoBehaviour, на котором висят все ITriggerable-компоненты
-            var mb = trigger as MonoBehaviour;
-            if (!mb) return;                       // на всякий случай
+            if (eventData.TriggerObj == null) return;                     // на всякий случай
 
             //foreach (var t in mb.GetComponents<ITriggerable>())
             //    TryTrigger(t);                     // включает Interact() или Triggered()
 
             // анимация игрока по тегу — как было
-            GameObject go = mb.gameObject;
+            GameObject go = eventData.TriggerObj.gameObject;
             if (go.CompareTag("PickupFloor")) playerAnimator.PlayPickupFloor();
             else if (go.CompareTag("PickupBody")) playerAnimator.PlayPickupBody();
             else if (go.CompareTag("Chest")) playerAnimator.PlayOpenChest();
-            else if (go.CompareTag("Box"))
-            {
-                var grabber = GetComponent<PlayerBoxGrabber>();
-                if (grabber != null)
-                    grabber.ToggleGrab(go.transform);   // единая логика
-            }
+            //else if (go.CompareTag("Box")) playerAnimator.PlayGrabBox();
+            //{
+            //    var grabber = GetComponent<PlayerBoxGrabber>();
+            //    if (grabber != null)
+            //        grabber.ToggleGrab(go.transform);   // единая логика
+            //}
 
             //hasInteracted = true;
             //if (interactionIndicator) interactionIndicator.SetActive(false);

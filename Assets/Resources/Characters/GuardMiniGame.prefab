@@ -67,13 +67,13 @@ PrefabInstance:
       addedObject: {fileID: 4782770681835484279}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1199643950821620757}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 819538050057397726}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6353130773694357806}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7387684993558009314}
     - targetCorrespondingSourceObject: {fileID: -5747600558902889310, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7588937329026994804}
@@ -346,10 +346,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246c04dfc0ad72d4d947b4c8da3b71df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMethod: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineWidth: 2
   hoverCheckDistance: 100
   hoverLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  targetObject: {fileID: 0}
+  highlightOnHover: 1
+  highlightOnTrigger: 1
 --- !u!65 &2113098590793066225
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -392,21 +398,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1, z: 1.5}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1199643950821620757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5777037259462661269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0996432d9ec83764eab23e8d27b623a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _defaultDialogue: Default
-  _npcName: GuardMiniGame
-  PowerCheckPrefab: {fileID: 405817722266581316, guid: 68b817aa0bc5c144ea6ae66364f8ee97, type: 3}
 --- !u!95 &819538050057397726
 Animator:
   serializedVersion: 7
@@ -449,9 +440,9 @@ MonoBehaviour:
     Text: "\u041F\u043E\u0433\u0430\u043D\u044F\u0435\u043C"
     NextNodeID: 1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: 
     Gold: 0
     Food: 0
@@ -463,9 +454,9 @@ MonoBehaviour:
     Text: "\u0434\u0430"
     NextNodeID: 3
     isOption: 1
-    isAnswer: 1
     StartMinigame: 1
-    MinigameType: 1
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: "{\n\t\"Name\": \"Guard\",\n\t\"Prefab\": \"Assets/_Project/Prefabs/MiniGames/Enemies/GuardEnemy
       1.prefab\"\n}"
     Gold: 0
@@ -478,9 +469,9 @@ MonoBehaviour:
     Text: "\u043D\u0435\u0442"
     NextNodeID: -1
     isOption: 1
-    isAnswer: 1
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: 
     Gold: 0
     Food: 0
@@ -493,15 +484,31 @@ MonoBehaviour:
       \u043C\u0430\u0441\u043B\u043E\u043C!!"
     NextNodeID: -1
     isOption: 0
-    isAnswer: 0
     StartMinigame: 0
-    MinigameType: 0
+    MiniGameType: 0
+    MiniGameSceneName: 
     _parametersJson: 
     Gold: 0
     Food: 0
     PeopleSatisfaction: 0
     CastleStrength: 0
   Portrait: Characters/Portraits/guardnorm
+--- !u!114 &7387684993558009314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5777037259462661269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132812897c9b4934c99bfc712833e60f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.InfluenceArea
+  AreaType: 1
+  InteractionType: 0
+  triggerObject: {fileID: 5777037259462661269}
+  Parameters: 
 --- !u!1 &7298632446334417603 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5069730896729484537, guid: 8a8028aa48d127148969184e546a9ae8, type: 3}

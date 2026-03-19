@@ -134,5 +134,6 @@ public class PlayerAnimator : MonoBehaviour
     public void PlayPickupFloor() => animator.SetTrigger("PickupFloor");
     public void PlayPickupBody() => animator.SetTrigger("PickupBody");
     public void PlayOpenChest() => animator.SetTrigger("OpenChest");
+    public void PlayGrabBox() => animator.SetTrigger("GrabBox");
     #endregion
 }

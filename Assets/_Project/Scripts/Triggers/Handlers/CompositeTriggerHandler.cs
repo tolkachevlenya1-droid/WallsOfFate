@@ -17,7 +17,7 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered += Handle;
+                area.OnEventTriggered.AddListener(Handle);
             }
         }
 
@@ -25,7 +25,7 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered -= Handle;
+                area.OnEventTriggered.RemoveListener(Handle);
             }
         }
 

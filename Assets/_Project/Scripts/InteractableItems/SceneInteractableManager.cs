@@ -11,11 +11,11 @@ namespace Game
         /* ─────────────  НАСТРОЙКИ  ───────────── */
 
         [Header("Сколько предметов спавнить (минимум / максимум, включительно)")]
-        [SerializeField] private int minItemsToEnable = 3;
-        [SerializeField] private int maxItemsToEnable = 6;
+        public int minItemsToEnable = 3;
+        public int maxItemsToEnable = 6;
 
         [Header("Перетащите сюда ВСЕ InteractableItem, которые могут появляться")]
-        [SerializeField] private List<InteractableItem> items = new();   // только вручную
+        public List<InteractibleItemInfluenceArea> items = new();   // только вручную
 
         /* ─────────────────────────────────────── */
 
@@ -43,11 +43,14 @@ namespace Game
         {
             if (items.Count == 0)
             {
-                //Debug.LogError($"{name}: список предметов пуст — заполните его в инспекторе!");
-                return;
+                items = GetComponentsInChildren<InteractibleItemInfluenceArea>(true).ToList();
+                //Debug.LogWarning($"{name}: список предметов пуст — заполните его в инспекторе!");
+                //return;
             }
 
             // выбираем случайное число предметов (включительно)
+            minItemsToEnable = 3;
+            maxItemsToEnable = items.Count;
             itemsToEnableThisRun = Random.Range(minItemsToEnable, maxItemsToEnable + 1);
 
             // ждём один кадр, чтобы все InteractableItem успели выполнить Start
@@ -78,11 +81,11 @@ namespace Game
                 var used = items.Where(i => i.HasBeenUsed).ToList();
                 Shuffle(used);
 
-                for (int i = 0; i < Mathf.Min(shortage, used.Count); i++)
-                {
-                    used[i].ResetForRespawn();
-                    candidates.Add(used[i]);
-                }
+                //for (int i = 0; i < Mathf.Min(shortage, used.Count); i++)
+                //{
+                //    used[i].ResetForRespawn();
+                //    candidates.Add(used[i]);
+                //}
             }
 
             // 4. Перемешиваем

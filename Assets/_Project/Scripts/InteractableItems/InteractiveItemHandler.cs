@@ -1,6 +1,7 @@
 ﻿using Game.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace Game
         [SerializeField] private List<InteractibleItemInfluenceArea> influenceArias;
 
 
+        private Dictionary<GameObject, InteractibleItemInfluenceArea> areaByObject;
+
         private PlayerManager _playerManager;
 
         [Inject]
@@ -26,9 +29,20 @@ namespace Game
 
         private void Start()
         {
+            //foreach (var area in influenceArias)
+            //{
+            //    area.OnItemInteracted += HandleInteraction;
+            //}
+
+            areaByObject = new Dictionary<GameObject, InteractibleItemInfluenceArea>();
+
             foreach (var area in influenceArias)
             {
-                area.OnItemInteracted += HandleInteraction;
+                if (!areaByObject.ContainsKey(area.gameObject))
+                {
+                    areaByObject.Add(area.gameObject, area);
+                    area.OnItemInteracted += HandleInteraction;
+                }
             }
         }
 
@@ -38,46 +52,26 @@ namespace Game
             foreach (var area in influenceArias)
             {
                 area.OnItemInteracted -= HandleInteraction;
-            }            
+            }
         }
 
         public void HandleInteraction(TriggerEvent eventData, InteractableItemParameters itemParameters)
         {
-            var area = influenceArias.Find(a => a.Parameters == itemParameters);
-            if (area != null)
+
+            if (areaByObject.ContainsKey(eventData.TriggerObj))
             {
-                var fieldInfo = typeof(InteractibleItemInfluenceArea)
-                    .GetField("OnItemInteracted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                if (!eventData.IsEnteracted) return;
 
-                if (fieldInfo != null)
-                {
-                    var delegateValue = fieldInfo.GetValue(area) as System.Delegate;
-                    if (delegateValue != null)
-                    {
-                        var subscribers = delegateValue.GetInvocationList();
-                        Debug.Log($"Найдено подписчиков: {subscribers.Length}");
-                        foreach (var sub in subscribers)
-                        {
-                            Debug.Log($"Подписчик: {sub.Target?.GetType().Name} -> {sub.Method.Name}");
-                        }
-                    }
-                }
+                PlayChestAnimation chestAnimaton = eventData.TriggerObj.GetComponent<PlayChestAnimation>();
+                chestAnimaton?.Triggered(eventData);
+
+                PlayerAnimatinController playerAnimator = eventData.PlayerObj.GetComponent<PlayerAnimatinController>();
+                playerAnimator?.InteractWith(eventData);
+
+                ShowFloatingText(eventData.PlayerObj, itemParameters);
+                HandlePostUseBehavior(eventData.TriggerObj, itemParameters);
+                UpdateResources(eventData.PlayerObj, itemParameters);
             }
-
-            if (eventData.IsEnteracted)
-            {
-                Debug.Log("eventData.IsEnteracted" + eventData.IsEnteracted);
-            }
-            if (!eventData.IsEnteracted) return;
-
-            UpdateResources(eventData.PlayerObj, itemParameters);
-
-            ShowFloatingText(eventData.PlayerObj, itemParameters);
-
-            HandlePostUseBehavior(eventData.TriggerObj, itemParameters);
-
-            Debug.Log($"Interacted with {eventData.TriggerObj.name}, received {itemParameters.Amount} {itemParameters.ResourceType}");
-
         }
 
         private void UpdateResources(GameObject player, InteractableItemParameters parameters)

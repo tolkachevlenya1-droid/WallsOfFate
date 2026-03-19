@@ -8,7 +8,7 @@ using Zenject;
 namespace Game
 {
 
-    internal class DoorForEnotherSceneHandler : MonoBehaviour, ITriggerHandler
+    internal class DoorForEnotherSceneHandler : MonoBehaviour
     {
         /*{
             "sceneName": "Level2",
@@ -18,21 +18,7 @@ namespace Game
             }
          */
 
-        [Serializable]
-        public class DoorParameters
-        {
-            public string SceneName;
-            public Vector3 SpawnPosition;
-            public Vector3 SpawnEulerAngles;
-            public int DayNumber;
-        }
-
-        [SerializeField] private string defaultSceneName = "";
-        [SerializeField] private Vector3 defaultSpawnPosition = Vector3.zero;
-        [SerializeField] private Vector3 defaultSpawnEulerAngles = Vector3.zero;
-        [SerializeField] private int defaultDayNumber = -1;
-
-        [SerializeField] private List<InfluenceArea> influenceArias;
+        [SerializeField] private List<DoorInfluenceArea> influenceArias;
         private LoadingManager loadingManager;
         private GameflowManager gameflowManager;
 
@@ -47,7 +33,7 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered += Handle;
+                area.OnDoorInteracted += Handle;
             }
         }
 
@@ -55,55 +41,23 @@ namespace Game
         {
             foreach (var area in influenceArias)
             {
-                area.OnEventTriggered -= Handle;
+                area.OnDoorInteracted -= Handle;
             }
         }
 
-        public void Handle(TriggerEvent eventData)
+        public void Handle(TriggerEvent eventData, DoorParameters doorParameters)
         {
-            DoorParameters parameters = ParseParameters(eventData.Parameters);
-
-            if (ShouldTrigger(parameters.DayNumber))
+            if (!eventData.IsEnteracted) return;
+            if (ShouldTrigger(doorParameters.DayNumber))
             {
-                PlayerSpawnData.SpawnPosition = parameters.SpawnPosition;
-                PlayerSpawnData.SpawnRotation = Quaternion.Euler(parameters.SpawnEulerAngles);
+                PlayerSpawnData.SpawnPosition = doorParameters.SpawnPosition;
+                PlayerSpawnData.SpawnRotation = Quaternion.Euler(doorParameters.SpawnEulerAngles);
 
-                loadingManager.LoadScene(parameters.SceneName);
+                loadingManager.LoadScene(doorParameters.SceneName);
 
-                Debug.Log($"Переход на сцену: {parameters.SceneName}");
+                //Debug.Log($"Переход на сцену: {doorParameters.SceneName}");
             }
-        }
-
-        private DoorParameters ParseParameters(string jsonParameters)
-        {
-            if (string.IsNullOrEmpty(jsonParameters))
-            {
-                return new DoorParameters
-                {
-                    SceneName = defaultSceneName,
-                    SpawnPosition = defaultSpawnPosition,
-                    SpawnEulerAngles = defaultSpawnEulerAngles,
-                    DayNumber = defaultDayNumber
-                };
-            }
-
-            try
-            {
-                return JsonUtility.FromJson<DoorParameters>(jsonParameters);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Ошибка парсинга JSON для двери: {e.Message}\nJSON: {jsonParameters}");
-
-                return new DoorParameters
-                {
-                    SceneName = defaultSceneName,
-                    SpawnPosition = defaultSpawnPosition,
-                    SpawnEulerAngles = defaultSpawnEulerAngles,
-                    DayNumber = defaultDayNumber
-                };
-            }
-        }
+        }       
 
         private bool ShouldTrigger(int targetDayNumber)
         {

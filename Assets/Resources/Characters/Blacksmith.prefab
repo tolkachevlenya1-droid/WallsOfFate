@@ -3986,6 +3986,7 @@ GameObject:
   - component: {fileID: 2119124874553033334}
   - component: {fileID: 7937982792098785137}
   - component: {fileID: 6108826760716343077}
+  - component: {fileID: -5815068566688414377}
   m_Layer: 0
   m_Name: Blacksmith
   m_TagString: Untagged
@@ -4096,10 +4097,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246c04dfc0ad72d4d947b4c8da3b71df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMethod: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineWidth: 2
   hoverCheckDistance: 100
   hoverLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  targetObject: {fileID: 0}
+  highlightOnHover: 1
+  highlightOnTrigger: 1
 --- !u!114 &6108826760716343077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4129,6 +4136,22 @@ MonoBehaviour:
     PeopleSatisfaction: 0
     CastleStrength: 0
   Portrait: 
+--- !u!114 &-5815068566688414377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7948130630642926901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132812897c9b4934c99bfc712833e60f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.InfluenceArea
+  AreaType: 1
+  InteractionType: 0
+  triggerObject: {fileID: 7948130630642926901}
+  Parameters: 
 --- !u!1 &7949829164951037400
 GameObject:
   m_ObjectHideFlags: 0

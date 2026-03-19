@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 652253879405533530}
   - component: {fileID: 5555121427692275948}
   - component: {fileID: 2796852052688552705}
-  - component: {fileID: 7697125624677019377}
   - component: {fileID: -7458470644312341175}
   m_Layer: 0
   m_Name: Axe_02
@@ -66,6 +65,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -87,6 +88,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -117,10 +119,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246c04dfc0ad72d4d947b4c8da3b71df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMethod: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineWidth: 2
   hoverCheckDistance: 100
   hoverLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  targetObject: {fileID: 0}
+  highlightOnHover: 1
+  highlightOnTrigger: 1
 --- !u!65 &2796852052688552705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -142,25 +150,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: -0.086184695, y: 0.413392, z: 0.00016921572}
---- !u!114 &7697125624677019377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7538521133082309620}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65393348ff72ffd4381fa218907a33d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resourceType: 3
-  amount: 4
-  message: +1 resource
-  floatingTextPrefab: {fileID: 4848396624485697127, guid: b674c6ddfaf88fa4c8200c48bc74b5fa, type: 3}
-  spawnOffset: {x: 0, y: 2.3, z: 0}
-  destroyAfterUse: 1
-  approachDistance: 1.5
 --- !u!65 &-7458470644312341175
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1381,6 +1381,7 @@ GameObject:
   - component: {fileID: 3252273949660926837}
   - component: {fileID: 5399646947637529614}
   - component: {fileID: 3655878372765503175}
+  - component: {fileID: 7300644632647705195}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -1451,10 +1452,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246c04dfc0ad72d4d947b4c8da3b71df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  outlineMethod: 0
+  outlineColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  outlineWidth: 2
   hoverCheckDistance: 100
   hoverLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  targetObject: {fileID: 0}
+  highlightOnHover: 1
+  highlightOnTrigger: 1
+--- !u!114 &7300644632647705195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3187980457254400360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132812897c9b4934c99bfc712833e60f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.InfluenceArea
+  AreaType: 0
+  InteractionType: 0
+  triggerObject: {fileID: 2731423153538596674}
+  Parameters: 
 --- !u!1 &3233203318747099615
 GameObject:
   m_ObjectHideFlags: 0

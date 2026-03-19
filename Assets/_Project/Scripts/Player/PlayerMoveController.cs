@@ -32,6 +32,9 @@ namespace Game
         [SerializeField] private float runningPitch = 1.5f;
         [SerializeField] private DialogueManager _dialogueManager;
 
+        private Vector3 grabDirection;
+        private bool isBoxGrabMode = false;
+
         private bool isHoldMove;
         private bool isClickRun;
         private float lastClickTime = -1f;
@@ -103,9 +106,20 @@ namespace Game
             UpdateFootstepSounds(SceneManager.GetActiveScene().name);
         }
 
+        public void InBoxGrabMode(Vector3 axis)
+        {
+            isBoxGrabMode = true;
+            grabDirection = axis.normalized;
+        }
+
+        public void StopBoxGrabMode()
+        {
+            isBoxGrabMode = false;
+        }
+
         private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
-        private void Update()
+        private void FixedUpdate()
         {
             HandleMouseInput();
             HandleMovement();
@@ -239,12 +253,41 @@ namespace Game
             {
                 Vector3 f = cameraTransform.forward; f.y = 0; f.Normalize();
                 Vector3 r = cameraTransform.right; r.y = 0; r.Normalize();
-                desired = (f * v + r * h).normalized;
+                if (isBoxGrabMode)
+                {
+                    Vector3 moveInput = (f * v + r * h).normalized;
+                    if (moveInput.sqrMagnitude < 0.01f)
+                    {
+                        desired = Vector3.zero;
+                    }
+                    else
+                    {
+                        // Проверяем, насколько ввод близок к оси grabAxis или противоположной
+                        float angle = Vector3.Angle(moveInput, grabDirection);
+                        float oppositeAngle = Vector3.Angle(moveInput, -grabDirection);
+                        float minAngle = Mathf.Min(angle, oppositeAngle);
+
+                        if (minAngle < 10f) // порог 10 градусов
+                        {
+                            // Определяем направление (вперёд или назад)
+                            float sign = (angle < oppositeAngle) ? 1f : -1f;
+                            desired = grabDirection * sign * moveInput.magnitude;
+                        }
+                        else
+                        {
+                            desired = Vector3.zero;
+                        }
+                    }
+                }
+                else
+                {
+                    desired = (f * v + r * h).normalized;
+                }
             }
 
             // Поворот
             if (desired != Vector3.zero)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desired), rotationSpeed * Time.deltaTime);
+                if (!isBoxGrabMode) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desired), rotationSpeed * Time.deltaTime);
 
             // Скорость + гравитация
             bool running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || isClickRun;

@@ -5,21 +5,21 @@ public class PlayChestAnimation : MonoBehaviour
 {
     [SerializeField] private bool _dependFromQuests = false;
     [SerializeField] private string animationName = "Armature_Chest|Chest_Open";
-    private InteractibleItemInfluenceArea influenceAria;
+    //private InteractibleItemInfluenceArea influenceAria;
     private Animator _anim;
     private bool _opened;
 
     private void Awake() => _anim = GetComponentInChildren<Animator>();
 
-    private void Start()
-    {
-        influenceAria = this.GetComponent<InteractibleItemInfluenceArea>();
+    //private void Start()
+    //{
+    //    influenceAria = this.GetComponent<InteractibleItemInfluenceArea>();
 
-        influenceAria.OnItemInteracted += Triggered;
-    }
+    //    influenceAria.OnItemInteracted += Triggered;
+    //}
 
     // вызывается InteractManager-ом через TryTrigger(...)
-    public void Triggered(TriggerEvent eventData, InteractableItemParameters parametersData) {
+    public void Triggered(TriggerEvent eventData) {
         if (!eventData.IsEnteracted) return;
         
         CompositeTrigger compositeTrigger = this.gameObject.GetComponent<CompositeTrigger>();
