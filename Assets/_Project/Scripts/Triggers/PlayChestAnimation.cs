@@ -15,7 +15,7 @@ public class PlayChestAnimation : MonoBehaviour
     {
         influenceAria = this.GetComponent<InteractibleItemInfluenceArea>();
 
-        //influenceAria.OnItemInteracted += Triggered;
+        influenceAria.OnItemInteracted += Triggered;
     }
 
     // вызывается InteractManager-ом через TryTrigger(...)

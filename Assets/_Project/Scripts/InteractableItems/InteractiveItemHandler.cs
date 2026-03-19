@@ -24,7 +24,7 @@ namespace Game
             _playerManager = playerManager;
         }
 
-        private void OnEnable()
+        private void Start()
         {
             foreach (var area in influenceArias)
             {
@@ -33,16 +33,41 @@ namespace Game
         }
 
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             foreach (var area in influenceArias)
             {
                 area.OnItemInteracted -= HandleInteraction;
-            }
+            }            
         }
 
         public void HandleInteraction(TriggerEvent eventData, InteractableItemParameters itemParameters)
         {
+            var area = influenceArias.Find(a => a.Parameters == itemParameters);
+            if (area != null)
+            {
+                var fieldInfo = typeof(InteractibleItemInfluenceArea)
+                    .GetField("OnItemInteracted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                if (fieldInfo != null)
+                {
+                    var delegateValue = fieldInfo.GetValue(area) as System.Delegate;
+                    if (delegateValue != null)
+                    {
+                        var subscribers = delegateValue.GetInvocationList();
+                        Debug.Log($"Найдено подписчиков: {subscribers.Length}");
+                        foreach (var sub in subscribers)
+                        {
+                            Debug.Log($"Подписчик: {sub.Target?.GetType().Name} -> {sub.Method.Name}");
+                        }
+                    }
+                }
+            }
+
+            if (eventData.IsEnteracted)
+            {
+                Debug.Log("eventData.IsEnteracted" + eventData.IsEnteracted);
+            }
             if (!eventData.IsEnteracted) return;
 
             UpdateResources(eventData.PlayerObj, itemParameters);

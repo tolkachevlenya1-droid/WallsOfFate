@@ -47,14 +47,20 @@ namespace Game
         {
             if (!_hasBeenUsed)
             {
+
                 bool interacted = InputManager.GetInstance().GetInteractPressed();
                 TriggerEvent eventData = new TriggerEvent(
                     AreaType,
                     obj.gameObject,
                     triggerObject ?? gameObject,
-                    interacted && !_hasBeenUsed,
+                    interacted,
                     string.Empty 
                 );
+                if (interacted) { 
+                    Debug.Log("interact pressed" + interacted);
+                    Debug.Log("eventData" + eventData.IsEnteracted);
+                    MarkAsUsed();
+                }
 
                 OnItemInteracted?.Invoke(eventData, itemParameters);
             }

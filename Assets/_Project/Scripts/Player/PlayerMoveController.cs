@@ -58,7 +58,7 @@ namespace Game
         private Vector3 lastPosition;
         private bool isLeftFoot = true;
 
-        private InteractManager interactManager;   // ссылка на менеджер взаимодействия
+        private PlayerAnimatinController interactManager;   // ссылка на менеджер взаимодействия
 
         // --------------------------------------------------
         [Inject] private void Construct(Transform camTransform) => cameraTransform = camTransform;
@@ -66,7 +66,7 @@ namespace Game
         private void Awake()
         {
             _dialogueManager = DialogueManager.Instance;
-            interactManager = GetComponent<InteractManager>();
+            interactManager = GetComponent<PlayerAnimatinController>();
             //if (!interactManager) Debug.LogError("PlayerMoveController: InteractManager missing!");
         }
 
@@ -140,37 +140,37 @@ namespace Game
             }
         }
 
-        private void ProcessClick()
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            var hits = Physics.RaycastAll(ray, 100f);
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        //private void ProcessClick()
+        //{
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    var hits = Physics.RaycastAll(ray, 100f);
+        //    Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
-            foreach (var hit in hits)
-            {
-                // 1) Любой объект, реализующий ITriggerable
-                if (hit.collider.TryGetComponent<ITriggerable>(out var trigger) && interactManager)
-                {
-                    // если уже активирован и не повторяется — пропускаем
-                    if (interactManager.HasTriggerBeenActivated(trigger) && trigger is not Box)
-                        continue;
+        //    foreach (var hit in hits)
+        //    {
+        //        // 1) Любой объект, реализующий ITriggerable
+        //        if (hit.collider.TryGetComponent<ITriggerable>(out var trigger) && interactManager)
+        //        {
+        //            // если уже активирован и не повторяется — пропускаем
+        //            if (interactManager.HasTriggerBeenActivated(trigger) && trigger is not Box)
+        //                continue;
 
-                    float stopDist = 1.2f;
-                    if (hit.collider.TryGetComponent<NavMeshAgent>(out _))
-                        MoveToAndCallback(hit.collider.transform, isClickRun, () => interactManager.InteractWith(trigger), stopDist);
-                    else
-                        MoveToAndCallback(hit.point, isClickRun, () => interactManager.InteractWith(trigger), stopDist);
-                    return;
-                }
-                // 2) Плоскость земли
-                if (((1 << hit.collider.gameObject.layer) & groundMask) != 0)
-                {
-                    if (agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
-                        MoveToAndCallback(hit.point, isClickRun, null);
-                    return;
-                }
-            }
-        }
+        //            float stopDist = 1.2f;
+        //            if (hit.collider.TryGetComponent<NavMeshAgent>(out _))
+        //                MoveToAndCallback(hit.collider.transform, isClickRun, () => interactManager.InteractWith(trigger), stopDist);
+        //            else
+        //                MoveToAndCallback(hit.point, isClickRun, () => interactManager.InteractWith(trigger), stopDist);
+        //            return;
+        //        }
+        //        // 2) Плоскость земли
+        //        if (((1 << hit.collider.gameObject.layer) & groundMask) != 0)
+        //        {
+        //            if (agent.CalculatePath(hit.point, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+        //                MoveToAndCallback(hit.point, isClickRun, null);
+        //            return;
+        //        }
+        //    }
+        //}
         #endregion
 
         // ==================================================
