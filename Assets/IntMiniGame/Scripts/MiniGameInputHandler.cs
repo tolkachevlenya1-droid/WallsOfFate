@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MiniGameInputHandler : MonoBehaviour
 {
     public CommandQueue queue;
     public ExecutionManager executor;
+
+    [Header("Input Mapping")]
+    [SerializeField] private bool swapHorizontalControls;
+    [SerializeField] private bool swapVerticalControls;
 
     private RouteMiniGameHUD _hud;
 
@@ -22,18 +27,7 @@ public class MiniGameInputHandler : MonoBehaviour
 
     private void Start()
     {
-        if (_hud == null)
-        {
-            _hud = FindObjectOfType<RouteMiniGameHUD>();
-        }
-
-        if (_hud == null)
-        {
-            GameObject hudObject = new("RouteMiniGameHUD");
-            _hud = hudObject.AddComponent<RouteMiniGameHUD>();
-        }
-
-        _hud.Initialize(this, queue, executor);
+        EnsureHud();
     }
 
     private void Update()
@@ -45,19 +39,19 @@ public class MiniGameInputHandler : MonoBehaviour
 
         if (WasPressed(KeyCode.W, KeyCode.UpArrow))
         {
-            HandleAction(RouteControlAction.MoveUp);
+            HandleAction(swapVerticalControls ? RouteControlAction.MoveDown : RouteControlAction.MoveUp);
         }
         else if (WasPressed(KeyCode.D, KeyCode.RightArrow))
         {
-            HandleAction(RouteControlAction.MoveRight);
+            HandleAction(swapHorizontalControls ? RouteControlAction.MoveLeft : RouteControlAction.MoveRight);
         }
         else if (WasPressed(KeyCode.S, KeyCode.DownArrow))
         {
-            HandleAction(RouteControlAction.MoveDown);
+            HandleAction(swapVerticalControls ? RouteControlAction.MoveUp : RouteControlAction.MoveDown);
         }
         else if (WasPressed(KeyCode.A, KeyCode.LeftArrow))
         {
-            HandleAction(RouteControlAction.MoveLeft);
+            HandleAction(swapHorizontalControls ? RouteControlAction.MoveRight : RouteControlAction.MoveLeft);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -70,6 +64,44 @@ public class MiniGameInputHandler : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             HandleAction(RouteControlAction.Run);
+        }
+    }
+
+    public string GetActionKeyLabel(RouteControlAction action)
+    {
+        return action switch
+        {
+            RouteControlAction.MoveUp => swapVerticalControls ? "S / ↓" : "W / ↑",
+            RouteControlAction.MoveRight => swapHorizontalControls ? "A / →" : "D / →",
+            RouteControlAction.MoveDown => swapVerticalControls ? "W / ↑" : "S / ↓",
+            RouteControlAction.MoveLeft => swapHorizontalControls ? "D / ←" : "A / ←",
+            _ => RouteMiniGameIcons.ActionKey(action)
+        };
+    }
+
+    private void EnsureHud()
+    {
+        if (_hud == null)
+        {
+            _hud = FindObjectOfType<RouteMiniGameHUD>();
+        }
+
+        if (_hud == null)
+        {
+            GameObject hudObject = new(
+                "RouteMiniGameHUD",
+                typeof(RectTransform),
+                typeof(Canvas),
+                typeof(CanvasScaler),
+                typeof(GraphicRaycaster),
+                typeof(RouteMiniGameHUD));
+
+            _hud = hudObject.GetComponent<RouteMiniGameHUD>();
+        }
+
+        if (_hud != null)
+        {
+            _hud.Initialize(this, queue, executor);
         }
     }
 

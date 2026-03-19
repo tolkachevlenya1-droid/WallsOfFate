@@ -5,6 +5,10 @@ public class RouteGridOccupant : MonoBehaviour
     public Vector2Int GridPosition;
     public RouteCellType CellType = RouteCellType.Argument;
 
+    [Header("Grid Position")]
+    [SerializeField] private bool derivePositionFromTransform = true;
+    [SerializeField] private GridManager grid;
+
     [Header("Optional Visuals")]
     [SerializeField] private GameObject visualRoot;
     [SerializeField] private Renderer[] tintedRenderers;
@@ -22,6 +26,25 @@ public class RouteGridOccupant : MonoBehaviour
     public bool IsForbidden => CellType == RouteCellType.Forbidden;
     public bool IsExit => CellType == RouteCellType.Exit;
     public bool HasAvailableArgument => CellType == RouteCellType.Argument && !_consumed;
+
+    public void SyncGridPosition(GridManager fallbackGrid = null)
+    {
+        if (!derivePositionFromTransform)
+        {
+            return;
+        }
+
+        GridManager targetGrid = grid != null ? grid : fallbackGrid;
+        if (targetGrid == null)
+        {
+            targetGrid = FindObjectOfType<GridManager>(true);
+        }
+
+        if (targetGrid != null && targetGrid.TryGetGridPositionFromWorld(transform.position, out Vector2Int resolvedPosition))
+        {
+            GridPosition = resolvedPosition;
+        }
+    }
 
     public void ResetState()
     {
@@ -108,6 +131,8 @@ public class RouteGridOccupant : MonoBehaviour
 
     private void Awake()
     {
+        SyncGridPosition();
+
         if (visualRoot == null)
         {
             visualRoot = gameObject;
@@ -118,6 +143,7 @@ public class RouteGridOccupant : MonoBehaviour
 
     private void OnValidate()
     {
+        SyncGridPosition();
         RefreshVisual();
     }
 }
