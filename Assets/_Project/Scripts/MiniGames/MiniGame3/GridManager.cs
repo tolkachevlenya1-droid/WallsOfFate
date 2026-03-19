@@ -207,6 +207,35 @@ public class GridManager : MonoBehaviour
         return collected;
     }
 
+    public void AdvanceTurnState()
+    {
+        foreach (KeyValuePair<Vector2Int, GridCell> pair in _cellLookup)
+        {
+            GridCell cell = pair.Value;
+            if (cell == null)
+            {
+                continue;
+            }
+
+            cell.AdvanceTurn();
+        }
+
+        foreach (KeyValuePair<Vector2Int, List<RouteGridOccupant>> pair in _occupantLookup)
+        {
+            List<RouteGridOccupant> occupants = pair.Value;
+            for (int index = 0; index < occupants.Count; index++)
+            {
+                RouteGridOccupant occupant = occupants[index];
+                if (occupant == null)
+                {
+                    continue;
+                }
+
+                occupant.AdvanceTurn(this);
+            }
+        }
+    }
+
     public Vector3 GetWorldPosition(Vector2Int position)
     {
         if (_cellLookup.TryGetValue(position, out GridCell cell) && cell != null)
@@ -297,12 +326,16 @@ public class GridManager : MonoBehaviour
         }
 
         Transform targetOrigin = origin != null ? origin : transform;
+        Vector2 resolvedSpacing = GetResolvedCellSpacing();
+        float horizontalSign = resolvedSpacing.x < 0f ? -1f : 1f;
+        float verticalSign = resolvedSpacing.y < 0f ? -1f : 1f;
+
         return direction switch
         {
-            RouteDirection.Up => boardPlane == RouteBoardPlane.XY ? targetOrigin.up : targetOrigin.forward,
-            RouteDirection.Right => targetOrigin.right,
-            RouteDirection.Down => boardPlane == RouteBoardPlane.XY ? -targetOrigin.up : -targetOrigin.forward,
-            RouteDirection.Left => -targetOrigin.right,
+            RouteDirection.Up => verticalSign * (boardPlane == RouteBoardPlane.XY ? targetOrigin.up : targetOrigin.forward),
+            RouteDirection.Right => horizontalSign * targetOrigin.right,
+            RouteDirection.Down => -verticalSign * (boardPlane == RouteBoardPlane.XY ? targetOrigin.up : targetOrigin.forward),
+            RouteDirection.Left => -horizontalSign * targetOrigin.right,
             _ => targetOrigin.forward
         };
     }
@@ -355,13 +388,20 @@ public class GridManager : MonoBehaviour
         if (rightCellReference != null)
         {
             Vector3 localRight = targetOrigin.InverseTransformPoint(rightCellReference.position);
-            resolvedSpacing.x = Mathf.Abs(localRight.x);
+            if (Mathf.Abs(localRight.x) > 0.000001f)
+            {
+                resolvedSpacing.x = localRight.x;
+            }
         }
 
         if (forwardCellReference != null)
         {
             Vector3 localForward = targetOrigin.InverseTransformPoint(forwardCellReference.position);
-            resolvedSpacing.y = Mathf.Abs(boardPlane == RouteBoardPlane.XY ? localForward.y : localForward.z);
+            float forwardComponent = boardPlane == RouteBoardPlane.XY ? localForward.y : localForward.z;
+            if (Mathf.Abs(forwardComponent) > 0.000001f)
+            {
+                resolvedSpacing.y = forwardComponent;
+            }
         }
 
         return resolvedSpacing;

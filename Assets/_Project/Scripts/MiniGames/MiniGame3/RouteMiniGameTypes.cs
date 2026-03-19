@@ -25,7 +25,8 @@ public enum RouteCellType
     Wall = 1,
     Argument = 2,
     Exit = 3,
-    Forbidden = 4
+    Forbidden = 4,
+    TimedBarrier = 5
 }
 
 public enum RouteBoardPlane

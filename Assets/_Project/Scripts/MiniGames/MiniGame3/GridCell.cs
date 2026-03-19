@@ -15,15 +15,22 @@ public class GridCell : MonoBehaviour
     [SerializeField] private Color argumentColor = new(1f, 0.8f, 0.15f, 1f);
     [SerializeField] private Color exitColor = new(0.25f, 0.8f, 0.35f, 1f);
     [SerializeField] private Color forbiddenColor = new(0.8f, 0.2f, 0.2f, 1f);
+    [SerializeField] private Color timedBarrierBlockedColor = new(0.82f, 0.22f, 0.22f, 1f);
+    [SerializeField] private Color timedBarrierPassableColor = new(0.48f, 0.12f, 0.12f, 1f);
     [SerializeField] private Color collectedArgumentColor = new(0.7f, 0.7f, 0.7f, 1f);
 
+    [Header("Timed Barrier")]
+    [SerializeField] private bool timedBarrierStartsPassable;
+
     private bool _argumentCollected;
+    private bool _timedBarrierIsPassable;
 
     public bool HasAvailableArgument => CellType == RouteCellType.Argument && !_argumentCollected;
 
     public void ResetState()
     {
         _argumentCollected = false;
+        _timedBarrierIsPassable = CellType == RouteCellType.TimedBarrier && timedBarrierStartsPassable;
 
         if (collectibleVisual != null)
         {
@@ -53,7 +60,8 @@ public class GridCell : MonoBehaviour
 
     public bool IsBlocked()
     {
-        return CellType == RouteCellType.Wall;
+        return CellType == RouteCellType.Wall ||
+               (CellType == RouteCellType.TimedBarrier && !_timedBarrierIsPassable);
     }
 
     public bool IsForbidden()
@@ -64,6 +72,17 @@ public class GridCell : MonoBehaviour
     public bool IsExit()
     {
         return CellType == RouteCellType.Exit;
+    }
+
+    public void AdvanceTurn()
+    {
+        if (CellType != RouteCellType.TimedBarrier)
+        {
+            return;
+        }
+
+        _timedBarrierIsPassable = !_timedBarrierIsPassable;
+        RefreshVisual();
     }
 
     public void RefreshVisual()
@@ -79,6 +98,7 @@ public class GridCell : MonoBehaviour
             RouteCellType.Argument => _argumentCollected ? collectedArgumentColor : argumentColor,
             RouteCellType.Exit => exitColor,
             RouteCellType.Forbidden => forbiddenColor,
+            RouteCellType.TimedBarrier => _timedBarrierIsPassable ? timedBarrierPassableColor : timedBarrierBlockedColor,
             _ => normalColor
         };
 
@@ -105,7 +125,10 @@ public class GridCell : MonoBehaviour
                 continue;
             }
 
-            targetRenderer.material.color = targetColor;
+            MaterialPropertyBlock propertyBlock = new();
+            targetRenderer.GetPropertyBlock(propertyBlock);
+            propertyBlock.SetColor("_Color", targetColor);
+            targetRenderer.SetPropertyBlock(propertyBlock);
         }
     }
 
@@ -116,6 +139,7 @@ public class GridCell : MonoBehaviour
 
     private void OnValidate()
     {
+        _timedBarrierIsPassable = CellType == RouteCellType.TimedBarrier && timedBarrierStartsPassable;
         RefreshVisual();
     }
 }
