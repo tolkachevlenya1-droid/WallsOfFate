@@ -1,6 +1,4 @@
-﻿using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -10,128 +8,140 @@ namespace Game
     internal class DialogueHandler : MonoBehaviour
     {
         [Header("Dialogue Settings")]
-        //[SerializeField] private string defaultDialogue;
-        [SerializeField] private List<InfluenceArea> influenceArias;
+        [SerializeField] private List<InfluenceArea> influenceArias = new();
+
+        private readonly HashSet<InfluenceArea> subscribedAreas = new();
         private NPCPrefabFactory npcFactory;
 
         [Inject]
-        private void Construct(NPCPrefabFactory npcFActory)
+        private void Construct(NPCPrefabFactory npcFactory)
         {
-            this.npcFactory = npcFActory;
-            foreach (var npc in npcFactory.instances)
-            {
-                influenceArias.Add(npc.Value.GetComponentInChildren<InfluenceArea>());
-            }
-
-            foreach (var area in influenceArias)
-            {
-                area.OnEventTriggered.Subscribe(HandleAsync);
-            }
+            this.npcFactory = npcFactory;
         }
 
-        //private void OnEnable()
-        //{
-        //    //foreach (var area in influenceArias)
-        //    //{
-        //    //    area.OnEventTriggered += Handle;   
-        //    //}
+        private void Start()
+        {
+            SubscribeToDialogueAreas();
+        }
 
-        //}
-
+        private void OnEnable()
+        {
+            SubscribeToDialogueAreas();
+        }
 
         private void OnDisable()
         {
-            foreach (var area in influenceArias)
+            foreach (var area in subscribedAreas)
             {
-                area.OnEventTriggered.Unsubscribe(HandleAsync);
+                if (area != null)
+                {
+                    area.OnEventTriggered.Unsubscribe(HandleAsync);
+                }
             }
+
+            subscribedAreas.Clear();
         }
 
         public async Task HandleAsync(TriggerEvent eventData)
         {
-            //bool interacted = InputManager.GetInstance().GetInteractPressed();
-
-
-            if (!eventData.IsEnteracted) return;
-            DialogueManager _dialogueManager = DialogueManager.Instance;
-            if (!_dialogueManager.IsInDialogue)
+            if (eventData.AreaType != InfluenceType.Dialog || !eventData.IsEnteracted)
             {
-
-                DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-                _dialogueManager.StartDialogue(dialogueGraph);
+                return;
             }
 
+            DialogueManager dialogueManager = DialogueManager.Instance;
+            if (dialogueManager == null || dialogueManager.IsInDialogue)
+            {
+                return;
+            }
 
-            //    DialogueManager _dialogueManager = DialogueManager.Instance;
-            //if (!_dialogueManager.IsInDialogue)
-            //{
+            DialogueGraph dialogueGraph = ResolveDialogueGraph(eventData.TriggerObj);
+            if (dialogueGraph == null)
+            {
+                Debug.LogWarning(
+                    $"DialogueHandler: no DialogueGraph found for trigger '{eventData.TriggerObj?.name}'. " +
+                    "Check the scene or prefab setup and the triggerObject reference.",
+                    eventData.TriggerObj);
+                return;
+            }
 
-            //    DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-            //    _dialogueManager.StartDialogue(dialogueGraph);
-
-            //    /*var activeGroups = QuestCollection.GetActiveQuestGroups();
-            //    QuestGroup groupToUpdate = null;
-            //    QuestTask taskToComplete = null;
-            //    DialogueGraph dialogueGraph;
-
-            //    foreach (var group in activeGroups)
-            //    {
-            //        taskToComplete = group.Tasks
-            //            .Where(t => !t.IsDone && t.ForNPS == eventData.TriggerObj.name && t.CanComplete())
-            //            .OrderBy(t => t.Id)
-            //            .FirstOrDefault();
-
-            //        if (taskToComplete != null)
-            //        {
-            //            groupToUpdate = group;
-            //            break;
-            //        }
-            //    }
-
-            //    if (groupToUpdate != null)
-            //    {
-            //        groupToUpdate.GetCurrentTask().CompleteTask();
-            //        groupToUpdate = UpdateGroupState(groupToUpdate);
-            //        var originalGroup = QuestCollection.GetAllQuestGroups()
-            //            .FirstOrDefault(g => g.Id == groupToUpdate.Id);
-            //        originalGroup?.CopyFrom(groupToUpdate);
-
-            //        dialogueGraph = GetDialogueGraph(taskToComplete.RequeredDialog);
-            //        _dialogueManager.StartDialogue(dialogueGraph);
-            //        return;
-            //    }
-
-            //    // Проверка на старт новых квестов
-            //    var currentDay = QuestCollection.GetCurrentDayData();
-            //    var availableGroups = currentDay != null
-            //        ? currentDay.Quests.Where(q => q.CheckOpen(eventData.TriggerObj.name)).ToList()
-            //        : new List<QuestGroup>();
-
-            //    if (availableGroups.Count > 0)
-            //    {
-            //        var group = availableGroups.First();
-            //        group.StartQuest();
-
-            //        dialogueGraph = GetDialogueGraph(group.OpenDialog);
-            //        _dialogueManager.StartDialogue(dialogueGraph);
-            //        return;
-            //    }
-
-            //    dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
-            //    _dialogueManager.StartDialogue(dialogueGraph);*/
-            //}
+            dialogueManager.StartDialogue(dialogueGraph);
+            await Task.CompletedTask;
         }
 
-        private DialogueGraph GetDialogueGraph(string name)
+        private void SubscribeToDialogueAreas()
         {
-            return this.GetComponents<DialogueGraph>().Where(t => t.GetName() == name).FirstOrDefault();
+            foreach (var area in CollectDialogueAreas())
+            {
+                if (area == null || !subscribedAreas.Add(area))
+                {
+                    continue;
+                }
+
+                area.OnEventTriggered.Subscribe(HandleAsync);
+            }
+
+            if (subscribedAreas.Count == 0)
+            {
+                Debug.LogWarning("DialogueHandler: no dialogue influence areas found.", this);
+            }
         }
 
-        private DialogueGraph GetDialogueGraph(GameObject obj)
+        private IEnumerable<InfluenceArea> CollectDialogueAreas()
         {
-            return obj.GetComponent<DialogueGraph>(); //.Where(t => t.GetName() == obj).FirstOrDefault();
+            foreach (var area in influenceArias)
+            {
+                if (IsDialogueArea(area))
+                {
+                    yield return area;
+                }
+            }
+
+            if (npcFactory != null)
+            {
+                foreach (var npc in npcFactory.instances.Values)
+                {
+                    if (npc == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var area in npc.GetComponentsInChildren<InfluenceArea>(true))
+                    {
+                        if (IsDialogueArea(area))
+                        {
+                            yield return area;
+                        }
+                    }
+                }
+            }
+
+            foreach (var area in FindObjectsOfType<InfluenceArea>(true))
+            {
+                if (IsDialogueArea(area))
+                {
+                    yield return area;
+                }
+            }
         }
 
+        private static bool IsDialogueArea(InfluenceArea area)
+        {
+            return area != null
+                   && area.AreaType == InfluenceType.Dialog
+                   && area.GetType() == typeof(InfluenceArea);
+        }
+
+        private DialogueGraph ResolveDialogueGraph(GameObject obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+
+            return obj.GetComponent<DialogueGraph>()
+                   ?? obj.GetComponentInParent<DialogueGraph>()
+                   ?? obj.GetComponentInChildren<DialogueGraph>(true);
+        }
     }
 }
-

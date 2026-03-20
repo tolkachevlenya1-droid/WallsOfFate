@@ -1,4 +1,4 @@
-﻿using Game.Core;
+using Game.Core;
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace Game
 
         public override async Task InvokeEventAsync(Collider obj)
         {
-            bool interacted = InputManager.GetInstance().GetInteractPressed();
+            bool interacted = ConsumeInteractPress();
 
             string json = JsonUtility.ToJson(doorParameters);
 

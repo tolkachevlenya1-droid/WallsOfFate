@@ -6,18 +6,24 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class InputManager : MonoBehaviour
 {
+    private const float InteractBufferSeconds = 0.2f;
+
     private Vector2 moveDirection = Vector2.zero;
     private bool interactPressed = false;
     private bool submitPressed = false;
+    private int interactPressId = 0;
+    private float lastInteractPressedTime = float.NegativeInfinity;
 
     private static InputManager instance;
     private Controls inputs;
 
     private void OnEnable()
     {
-        if(inputs == null) {
+        if (inputs == null)
+        {
             inputs = new Controls();
         }
+
         inputs.Enable();
     }
 
@@ -32,6 +38,7 @@ public class InputManager : MonoBehaviour
         {
             //Debug.LogError("Found more than one Input Manager in the scene.");
         }
+
         instance = this;
         inputs = new Controls();
     }
@@ -41,8 +48,7 @@ public class InputManager : MonoBehaviour
         return instance;
     }
 
-    //Работает странно с двойными векторами (считывает только значение по одному направлению)
-    // Прищлось сделать отдельный метод MovePressedControls
+    // MovePressed misses diagonals in this setup, so we read the action directly.
     public void MovePressed(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -59,7 +65,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    // Нормально обрабатывает двойные вектора    
+    // Reads composite move input correctly.
     public void MovePressedControls()
     {
         moveDirection = inputs.Game.Move.ReadValue<Vector2>();
@@ -67,7 +73,7 @@ public class InputManager : MonoBehaviour
 
     public Vector3 GetMoveDirection()
     {
-        this.MovePressedControls();
+        MovePressedControls();
         return moveDirection;
     }
 
@@ -76,12 +82,14 @@ public class InputManager : MonoBehaviour
         if (context.performed)
         {
             interactPressed = true;
-           // //Debug.Log("press" + context);
+            interactPressId++;
+            lastInteractPressedTime = Time.unscaledTime;
+            // //Debug.Log("press" + context);
         }
         else if (context.canceled)
         {
             interactPressed = false;
-           // //Debug.Log("cancel press" + context);
+            // //Debug.Log("cancel press" + context);
         }
     }
 
@@ -100,13 +108,25 @@ public class InputManager : MonoBehaviour
     // for any of the below 'Get' methods, if we're getting it then we're also using it,
     // which means we should set it to false so that it can't be used again until actually
     // pressed again.
-
     public bool GetInteractPressed()
     {
-        //Debug.Log("interact pressed" + interactPressed);
-        bool result = interactPressed;
-        interactPressed = false;
-        return result;
+        return interactPressed;
+    }
+
+    public bool TryConsumeInteractPress(ref int lastProcessedPressId)
+    {
+        if (lastProcessedPressId == interactPressId)
+        {
+            return false;
+        }
+
+        if (Time.unscaledTime - lastInteractPressedTime > InteractBufferSeconds)
+        {
+            return false;
+        }
+
+        lastProcessedPressId = interactPressId;
+        return true;
     }
 
     public bool GetSubmitPressed()
@@ -121,5 +141,4 @@ public class InputManager : MonoBehaviour
     {
         submitPressed = false;
     }
-
 }
