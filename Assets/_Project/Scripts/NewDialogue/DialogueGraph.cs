@@ -22,6 +22,11 @@ namespace Game
             return DialogueName;
         }
 
+        public void SetName(string dialogueName)
+        {
+            DialogueName = dialogueName;
+        }
+
         [System.Serializable]
         public class Node
         {

@@ -1,4 +1,4 @@
-﻿using Game.Core;
+using Game.Core;
 using Ink.Parsed;
 using System;
 using UnityEngine;
@@ -52,6 +52,7 @@ namespace Game
         //[SerializeField] private OutlineTrigger outlineTrigger;
 
         private BoxCollider boxCollider;
+        private int lastProcessedInteractPressId;
         //private bool interactPressedThisFrame;
 
         //private void Reset()
@@ -69,7 +70,12 @@ namespace Game
 
         private void Start()
         {
-            if (triggerObject == null) triggerObject = gameObject;
+            if (triggerObject == null)
+            {
+                triggerObject = AreaType == InfluenceType.Dialog
+                    ? GetComponentInParent<DialogueGraph>()?.gameObject ?? gameObject
+                    : gameObject;
+            }
 
             //interactPressedThisFrame = InputManager.GetInstance().GetInteractPressed();
 
@@ -113,9 +119,15 @@ namespace Game
             }
         }
 
+        protected bool ConsumeInteractPress()
+        {
+            var inputManager = InputManager.GetInstance();
+            return inputManager != null && inputManager.TryConsumeInteractPress(ref lastProcessedInteractPressId);
+        }
+
         public virtual async System.Threading.Tasks.Task InvokeEventAsync(Collider obj)
         {
-            bool interacted = InputManager.GetInstance().GetInteractPressed();
+            bool interacted = ConsumeInteractPress();
             TriggerEvent eventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted, Parameters);
 
 

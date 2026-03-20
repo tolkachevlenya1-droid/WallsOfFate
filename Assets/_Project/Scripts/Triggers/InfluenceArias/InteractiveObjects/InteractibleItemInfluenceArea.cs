@@ -1,4 +1,4 @@
-﻿using Game.Core;
+using Game.Core;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -64,7 +64,7 @@ namespace Game
             if (!hasBeenUsed)
             {
 
-                bool interacted = InputManager.GetInstance().GetInteractPressed();
+                bool interacted = ConsumeInteractPress();
                 TriggerEvent eventData = new TriggerEvent(
                     AreaType,
                     obj.gameObject,
