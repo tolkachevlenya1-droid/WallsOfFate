@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c210cc72ff83204c8c71c1521aad8e3, type: 3}
-  m_Name: Day1Quest
+  m_Name: Quest_1_npc
   m_EditorClassIdentifier: 
   npcName: Messager
   prefab: {fileID: 7280076937197616263, guid: e031ebe6a075d4947a5005452bd4caee, type: 3}

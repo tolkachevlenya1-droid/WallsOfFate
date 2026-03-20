@@ -1,4 +1,5 @@
-﻿using Assets._Project.Scripts.Triggers;
+﻿using Game.Data;
+using Newtonsoft.Json;
 using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,19 +22,40 @@ namespace Game
             influenceAria.OnEventTriggered -= Handle;
         }
 
-        public void Handle(TriggerEvent iventData)
+        public void Handle(TriggerEvent eventData)
         {
             DialogueGraph dialogueGraph;
             DialogueManager _dialogueManager = DialogueManager.Instance;
 
-            GameObject npc = iventData.TriggerObj.transform.gameObject;
+            GameObject npc = eventData.TriggerObj.transform.gameObject;
             dialogueGraph = GetDialogueGraph(npc);
-            _dialogueManager.StartDialogue(dialogueGraph);
+            if (dialogueGraph != null)
+            {
+                _dialogueManager.StartDialogue(dialogueGraph);
+            }
         }
 
         private DialogueGraph GetDialogueGraph(GameObject obj)
         {
-            return obj.GetComponent<DialogueGraph>(); //.Where(t => t.GetName() == obj).FirstOrDefault();
+            string dialoguePath = "Dialogues/StartDay/" + obj.name.ToLower();
+
+            TextAsset textAsset = Resources.Load<TextAsset>(dialoguePath);
+            if (textAsset == null)
+            {
+                Debug.LogError($"StartDayDialogueHandler: Failed to load dialogue graph at path: {dialoguePath}");
+                return null;
+            }
+
+            try
+            {
+                var dialogueGraph = JsonConvert.DeserializeObject<DialogueGraph>(textAsset.text);
+                return dialogueGraph;
+            }
+            catch (JsonException ex)
+            {
+                Debug.LogError($"StartDayDialogueHandler: Failed to load dialogue graph at path: {dialoguePath}");
+                return null;
+            }
         }
     }
 }

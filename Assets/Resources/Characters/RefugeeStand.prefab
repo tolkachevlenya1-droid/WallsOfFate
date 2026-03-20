@@ -2223,7 +2223,6 @@ GameObject:
   - component: {fileID: 2643634267668589266}
   - component: {fileID: 1719277975228918971}
   - component: {fileID: 1340051662864323352}
-  - component: {fileID: 3550831224699197296}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -2314,21 +2313,6 @@ MonoBehaviour:
   InteractionType: 0
   triggerObject: {fileID: 3825770112512075651}
   Parameters: 
---- !u!114 &3550831224699197296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6028777204101187310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5a0ef563608e7409ccc00b81b02432, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.DialogueGraph
-  DialogueName: 
-  sentences: []
-  Portrait: 
 --- !u!1 &6595291542925989895
 GameObject:
   m_ObjectHideFlags: 0

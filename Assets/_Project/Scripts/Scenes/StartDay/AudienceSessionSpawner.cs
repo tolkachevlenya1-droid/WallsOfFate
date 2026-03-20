@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Game;
 using Zenject;
+using Game.Data;
+using System.Linq;
 
 public class AudienceSessionSpawner : MonoBehaviour
 {
@@ -12,21 +14,21 @@ public class AudienceSessionSpawner : MonoBehaviour
     [SerializeField] private Transform _exitSpot;
     [SerializeField] private DialogueManager _dialogueManager;
 
-    /* ───── босс-НПС для каждого дня ───── */
-    [Header("Main Quest Givers  (day 0 / day 1 / day 2)")]
-    [SerializeField] private NPCDefinition[] _mainQuestGivers;
-
     private readonly Queue<NPCDefinition> _sessionQueue = new();
     private NPCController _current;
 
     /* ───────────────────────────────────────────────────────────── */
 
-    private LoadingManager _loadingManager;
+    private LoadingManager loadingManager;
+    private GameflowManager gameflowManager;
+    private QuestManager questManager;
 
     [Inject]
-    private void Construct(LoadingManager loadingManager)
+    private void Construct(LoadingManager loadingManager, GameflowManager gameflowManager, QuestManager questManager)
     {
-        _loadingManager = loadingManager;
+        this.loadingManager = loadingManager;
+        this.gameflowManager = gameflowManager;
+        this.questManager = questManager;
     }
 
     private void Start()
@@ -38,15 +40,19 @@ public class AudienceSessionSpawner : MonoBehaviour
     private void PrepareQueueAndStart()
     {
         // 1) три случайных из мешка
-        for (int i = 0; i < 3; i++)
+        // TODO: Пока только один для теста
+        for (int i = 0; i < 1; i++)
             if (AudiencePool.Instance.TryTakeRandom(out var def))
                 _sessionQueue.Enqueue(def);
 
-        // 2) босс-проситель сегодняшнего дня
-        /*int day = QuestCollection.CurrentDayNumber;          // 0,1,2 …
-        if (day < _mainQuestGivers.Length)
-            _sessionQueue.Enqueue(_mainQuestGivers[day]);
-        */
+        var mainQuest = gameflowManager.GetCurrentDayQuests().FirstOrDefault(quest => quest.Main);
+
+        if (mainQuest != null)
+        {
+            var mainQuestGiver = Resources.Load<NPCDefinition>("Characters/StartDayPrefabs/ScriptableObjects/Quest_" + mainQuest.Id + "_npc");
+            _sessionQueue.Enqueue(mainQuestGiver);
+        }
+
         if (_sessionQueue.Count == 0)
         {
             EndSession();        // никого нет → сразу выходим
@@ -68,6 +74,7 @@ public class AudienceSessionSpawner : MonoBehaviour
 
         NPCDefinition def = _sessionQueue.Dequeue();
         GameObject go = Instantiate(def.prefab, _spawnPoint.position, _spawnPoint.rotation);
+        go.name = def.npcName;
 
         _current = go.GetComponent<NPCController>();
         _current.Init(_dialogSpot, _exitSpot);
@@ -88,6 +95,6 @@ public class AudienceSessionSpawner : MonoBehaviour
     private void EndSession()
     {
         ////Debug.Log("<color=yellow>Приём окончен — переходим в MainRoom</color>");
-        this._loadingManager.LoadSceneAsync("MainRoom");
+        this.loadingManager.LoadSceneAsync("MainRoom");
     }
 }

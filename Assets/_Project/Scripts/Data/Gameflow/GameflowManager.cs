@@ -22,7 +22,8 @@ namespace Game.Data
         public GameflowManager()
         {
             LoadQuestsByDayData();
-            InitializeGameflow();
+            // Инициализируем первый день при старте игры
+            AdvanceCurrentDay();
         }
 
         private void LoadQuestsByDayData()
@@ -43,7 +44,7 @@ namespace Game.Data
                     MissingMemberHandling = MissingMemberHandling.Error
                 };
 
-                QuestsByDay = JsonConvert.DeserializeObject<Dictionary<int, List<int>>>(textAsset.text, settings);               
+                QuestsByDay = JsonConvert.DeserializeObject<Dictionary<int, List<int>>>(textAsset.text, settings);
             }
             catch (JsonException ex)
             {
@@ -51,14 +52,31 @@ namespace Game.Data
             }
         }
 
-        private void InitializeGameflow()
+        public void AdvanceCurrentDay()
         {
-            CurrentDay = new Day
+            if (CurrentDay == null)
             {
-                Id = 1,
-                CurrentPart = DayPart.Part1,
-                CurrentQuestId = null
-            };
+                CurrentDay = new Day
+                {
+                    Id = 1,
+                    CurrentQuestId = null
+                };
+            }
+            else
+            {
+                CurrentDay = new Day
+                {
+                    Id = CurrentDay.Id + 1,
+                    CurrentQuestId = null
+                };
+            }
+        }
+
+        public List<Quest> GetCurrentDayQuests()
+        {
+            var questIds = QuestsByDay[CurrentDay.Id];
+
+            return questIds.ConvertAll(id => questManager.GetQuest(id));
         }
 
         public void LoadSavedGameflowData()
@@ -78,7 +96,7 @@ namespace Game.Data
         {
             if (CurrentDay.CurrentQuestId != null) return; // Уже есть активный квест
             var questsForCurrentDay = QuestsByDay[CurrentDay.Id].FindAll(questId => questManager.GetQuestState(questId) != QuestState.NotStarted);
-            
+
             if (questsForCurrentDay.Count == 0)
             {
                 Debug.LogWarning($"No quests available for day {CurrentDay.Id}");

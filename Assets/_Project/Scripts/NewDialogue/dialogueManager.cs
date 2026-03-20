@@ -6,39 +6,37 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using static Game.EntryPoint;
+
 namespace Game
 {
-
     public class DialogueManager : MonoBehaviour
     {
         #region UI
         [SerializeField] GameObject DialogueUI;
-        [SerializeField] List<Button> optionButtons;
-
         [SerializeField] GameObject PlayerPanel;
         [SerializeField] GameObject NPCPanel;
         [SerializeField] Image NPCPortrait;
         [SerializeField] RectTransform SpawnPoint;
-        [SerializeField] float panelSpacing = 10f;
         [SerializeField] GameObject resourcesUI;
+        [SerializeField] GameObject OptionsList;
         #endregion
 
         #region MainInfo
-        DialogueGraph _currentDialogue;
+        private DialogueGraph currentDialogue;
+        private Sentence currentSentence;
+        private List<Sentence> currentOptions = new();
         #endregion
 
         #region Utility
-        bool SentenceWriten = false;
-        public int CurrentID;
         public bool IsInDialogue = false;
-        [SerializeField] public List<int> OptionIDs = new List<int>();
-        bool OptionChosed = true;
+        private readonly WaitForSeconds waitForSeconds0_01 = new(0.01f);
 
-        private List<GameObject> spawnedPanels = new List<GameObject>();
+        private List<GameObject> spawnedPanels = new();
 
         private static DialogueManager _instance;
         private PlayerManager playerManager;
+
+        private GameObject optionPrefab;
 
         public static DialogueManager Instance
         {
@@ -115,19 +113,18 @@ namespace Game
 
         void ConfigMiniGame()
         {
-            if (_currentDialogue.sentences[CurrentID].StartMinigame)
+            if (currentSentence.StartMinigame)
             {
                 startMinigame = true;
                 miniGameData = GetParamsOfMinigame();
             }
-
         }
 
         MiniGameData GetParamsOfMinigame()
         {
-            MiniGame.MiniGameType minigameType = _currentDialogue.sentences[CurrentID].MiniGameType;
-            string sceneName = _currentDialogue.sentences[CurrentID].MiniGameSceneName;
-            Dictionary<string, object> minigameParams = _currentDialogue.sentences[CurrentID].MinigameParams;
+            MiniGame.MiniGameType minigameType = currentSentence.MiniGameType;
+            string sceneName = currentSentence.MiniGameSceneName;
+            Dictionary<string, object> minigameParams = currentSentence.MinigameParams;
 
             return new MiniGameData(minigameType, sceneName, minigameParams);
         }
@@ -136,75 +133,66 @@ namespace Game
         #region MainLogic
         private void Start()
         {
+            optionPrefab = Resources.Load<GameObject>("UI/Dialogues/Option");
+
             if (DialogueUI != null)
             {
                 DialogueUI.SetActive(false);
             }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            if (IsInDialogue && OptionChosed && DialogueUI != null && DialogueUI.activeSelf)
+            if (currentOptions.Count > 0)
             {
-                if (Input.GetKeyDown(KeyCode.E))
+                for (int i = 0; i < currentOptions.Count; i++)
                 {
-                    DisplayNextSentence();
+                    if (Input.GetKeyDown(Enum.Parse<KeyCode>((49 + i).ToString())))
+                    {
+                        SelectOption(i);
+                    }
                 }
             }
         }
 
         public void StartDialogue(DialogueGraph currentDialogue)
-        {
-            if (!IsInDialogue && currentDialogue != null)
+        {          
+            if (IsInDialogue || currentDialogue == null)
             {
-                _currentDialogue = currentDialogue;
-
-                ClearSpawnedPanels();
-                if (resourcesUI != null) {
-                    resourcesUI.gameObject.SetActive(false);
-                }
-
-                IsInDialogue = true;
-                CurrentID = 0;
-
-                if (DialogueUI != null)
-                {
-                    Sprite mySprite = Resources.Load<Sprite>(_currentDialogue.Portrait);
-                    NPCPortrait.sprite = mySprite;
-
-                    DialogueUI.SetActive(true);
-                }
-
-                bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePannel);
-
-                if (pannelSpawned)
-                {
-                    TMP_Text sentenceText = sentencePannel.transform.Find("Text")?.GetComponent<TMP_Text>();
-                    TMP_Text nameText = sentencePannel.transform.Find("NameText")?.GetComponent<TMP_Text>();
-
-                    if (nameText != null && _currentDialogue.sentences.Count > 0 && CurrentID < _currentDialogue.sentences.Count)
-                    {
-                        nameText.text = _currentDialogue.sentences[CurrentID].CharName;
-                    }
-
-                    if (sentenceText != null && _currentDialogue.sentences.Count > 0 && CurrentID < _currentDialogue.sentences.Count)
-                    {
-                        StartCoroutine(TypeSentence(_currentDialogue.sentences[CurrentID].Text, sentenceText));
-                    }
-                }
+                return;
             }
+
+            this.currentDialogue = currentDialogue;
+            IsInDialogue = true;
+
+            ClearSpawnedPanels();
+
+            if (resourcesUI != null) {
+                resourcesUI.SetActive(false);
+            }
+
+            if (DialogueUI != null)
+            {
+                Sprite mySprite = Resources.Load<Sprite>("Characters/Portraits/" + this.currentDialogue.Portrait);
+                NPCPortrait.sprite = mySprite;
+
+                DialogueUI.SetActive(true);
+            }
+
+            currentSentence = currentDialogue.Sentences[0];
+            DisplayCurrentSentence();
         }
 
-        private bool TryInstantiatePannel(out GameObject sentencePannel)
+        private bool TryInstantiatePannel(out GameObject sentencePanel)
         {
-            sentencePannel = null;
+            sentencePanel = null;
 
-            if (_currentDialogue == null || CurrentID < 0 || CurrentID >= _currentDialogue.sentences.Count)
+            if (currentSentence == null)
                 return false;
 
-            GameObject panelPrefab = null;
+            GameObject panelPrefab;
 
-            if (_currentDialogue.sentences[CurrentID].IsMainCharacter)
+            if (currentSentence.IsPlayer)
             {
                 panelPrefab = PlayerPanel;
             }
@@ -215,11 +203,11 @@ namespace Game
 
             if (panelPrefab != null && SpawnPoint != null)
             {
-                sentencePannel = Instantiate(panelPrefab, SpawnPoint);
+                sentencePanel = Instantiate(panelPrefab, SpawnPoint);
 
-                sentencePannel.transform.localPosition = Vector3.zero;
+                sentencePanel.transform.localPosition = Vector3.zero;
 
-                spawnedPanels.Add(sentencePannel);
+                spawnedPanels.Add(sentencePanel);
 
                 return true;
             }
@@ -227,189 +215,101 @@ namespace Game
             return false;
         }
 
-        public void TakeOption(int OptionId)
-        {
-            if (!OptionChosed && OptionId >= 0 && OptionId < OptionIDs.Count)
-            {
-                DisplayNextSentence(OptionIDs[OptionId]);
-                OptionChosed = true;
+        public void SelectOption(int optionIndex)
+        {           
+            var optionSentence = currentOptions[optionIndex];
 
-                foreach (var b in optionButtons)
-                {
-                    if (b != null && b.transform.childCount > 0)
-                    {
-                        TMP_Text buttonText = b.transform.GetChild(0).GetComponent<TMP_Text>();
-                        if (buttonText != null)
-                        {
-                            buttonText.text = "";
-                        }
-                        b.enabled = false;
-                    }
-                }
-            }
+            currentSentence = optionSentence;
+            DisplayCurrentSentence(); 
         }
 
-        public void DisplayNextSentence()
+        public void DisplayCurrentSentence()
         {
-            if (!SentenceWriten || _currentDialogue == null) return;
-
-
-            int nextNodeId = -1;
-            if (CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count)
-            {
-                nextNodeId = _currentDialogue.sentences[CurrentID].NextNodeID;
-            }
-
-            if (nextNodeId == -1)
-            {
-                CloseDialogue();
-                return;
-            }
-
-            CurrentID = nextNodeId;
+            if (currentSentence == null) return;
 
             UpdateResources();
 
-            if (CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count &&
-                _currentDialogue.sentences[CurrentID].isOption)
-            {
-                OptionChosed = false;
-                LoadAllOptions();
-                return;
-            }
-
-            bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePannel);
+            bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePanel);
 
             if (pannelSpawned)
             {
-                TMP_Text sentenceText = sentencePannel.transform.Find("Text")?.GetComponent<TMP_Text>();
-                //TMP_Text nameText = sentencePannel.transform.Find("Image/NameText")?.GetComponent<TMP_Text>();
+                TMP_Text sentenceText = sentencePanel.transform.Find("Text")?.GetComponent<TMP_Text>();
 
                 if (sentenceText != null)
                 {
-                    sentenceText.text = "";
-                }
-
-                SentenceWriten = false;
-
-                //if (nameText != null)
-                //{
-                //    nameText.text = _currentDialogue.sentences[CurrentID].CharName;
-                //}
-
-                if (sentenceText != null)
-                {
-                    StartCoroutine(TypeSentence(_currentDialogue.sentences[CurrentID].Text, sentenceText));
+                    StartCoroutine(TypeSentence(currentSentence.Text, sentenceText));
                 }
             }
         }
 
         private void UpdateResources()
         {
-            if (_currentDialogue == null || CurrentID < 0 || CurrentID >= _currentDialogue.sentences.Count)
+            if (currentSentence == null)
                 return;
 
-            playerManager.PlayerData.AddResource(ResourceType.PeopleSatisfaction, _currentDialogue.sentences[CurrentID].PeopleSatisfaction);
-            playerManager.PlayerData.AddResource(ResourceType.Food, _currentDialogue.sentences[CurrentID].Food);
-            playerManager.PlayerData.AddResource(ResourceType.PeopleSatisfaction, _currentDialogue.sentences[CurrentID].PeopleSatisfaction);
-            playerManager.PlayerData.AddResource(ResourceType.CastleStrength, _currentDialogue.sentences[CurrentID].CastleStrength);
+            playerManager.PlayerData.AddResource(ResourceType.Gold, currentSentence.Gold);
+            playerManager.PlayerData.AddResource(ResourceType.Food, currentSentence.Food);
+            playerManager.PlayerData.AddResource(ResourceType.PeopleSatisfaction, currentSentence.PeopleSatisfaction);
+            playerManager.PlayerData.AddResource(ResourceType.CastleStrength, currentSentence.CastleStrength);
         }
 
-        public void DisplayNextSentence(int NodeID)
+        private void ProcessNextSentence()
         {
-            if (SentenceWriten && _currentDialogue != null)
+            var nextSentence = currentDialogue.Sentences.Find(s => s.Id == currentSentence.NextSentenceId);
+            if (nextSentence == null)
             {
-
-                bool pannelSpawned = TryInstantiatePannel(out GameObject sentencePannel);
-
-                if (pannelSpawned)
-                {
-                    TMP_Text sentenceText = sentencePannel.transform.Find("Text")?.GetComponent<TMP_Text>();
-                    TMP_Text nameText = sentencePannel.transform.Find("Image/NameText")?.GetComponent<TMP_Text>();
-
-                    if (sentenceText != null)
-                    {
-                        sentenceText.text = "";
-                    }
-
-                    CurrentID = NodeID;
-                    ConfigMiniGame();
-
-                    SentenceWriten = false;
-
-                    if (nameText != null && CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count)
-                    {
-                        nameText.text = _currentDialogue.sentences[CurrentID].CharName;
-                    }
-
-                    if (sentenceText != null && CurrentID >= 0 && CurrentID < _currentDialogue.sentences.Count)
-                    {
-                        StartCoroutine(TypeSentence(_currentDialogue.sentences[CurrentID].Text, sentenceText));
-                    }
-                }
+                CloseDialogue();
+                return;
             }
+
+            currentSentence = nextSentence;
+            if (currentSentence.IsOption)
+            {
+                LoadAllOptions();
+                return;
+            }
+
+            DisplayCurrentSentence();
         }
 
         private void LoadAllOptions()
         {
-            if (_currentDialogue == null) return;
+            if (currentDialogue == null) return;
 
-            int OptionalID = CurrentID;
-            OptionIDs.Clear();
-            OptionChosed = false;
-
-            // Включает кнопки
-            foreach (var b in optionButtons)
+            foreach (Transform child in OptionsList.transform)
             {
-                if (b != null && b.transform.childCount > 0)
-                {
-                    TMP_Text buttonText = b.transform.GetChild(0).GetComponent<TMP_Text>();
-                    if (buttonText != null)
-                    {
-                        buttonText.text = "";
-                    }
-                    b.enabled = true;
-                }
+                Destroy(child.gameObject);
             }
 
-            for (int i = 0; i < optionButtons.Count; i++)
+            currentOptions.Clear();
+            var optionCounter = 1;
+
+            while (currentSentence.IsOption)
             {
-                if (OptionalID >= 0 && OptionalID < _currentDialogue.sentences.Count &&
-                    _currentDialogue.sentences[OptionalID].isOption)
-                {
-                    if (i < optionButtons.Count && optionButtons[i] != null &&
-                        optionButtons[i].transform.childCount > 0)
-                    {
-                        TMP_Text buttonText = optionButtons[i].transform.GetChild(0).GetComponent<TMP_Text>();
-                        if (buttonText != null)
-                        {
-                            buttonText.text = _currentDialogue.sentences[OptionalID].Text;
-                        }
-                        OptionIDs.Add(_currentDialogue.sentences[OptionalID].id);
-                        OptionalID++;
-                    }
-                }
-                else
-                {
-                    break;
-                }
+                currentOptions.Add(currentSentence);
+                var optionObject = Instantiate(optionPrefab);
+                optionObject.transform.SetParent(OptionsList.transform, false);
+
+                Button optionButton = optionObject.GetComponent<Button>();
+                var capturedIndex = optionCounter - 1;
+                optionButton.onClick.AddListener(() => SelectOption(capturedIndex));
+
+                TMP_Text optionTextComponent = optionObject.transform.GetComponent<TMP_Text>();
+                optionTextComponent.text = optionCounter + ". " + currentSentence.Text;
+
+                optionCounter++;
+                currentSentence = currentDialogue.Sentences[currentDialogue.Sentences.IndexOf(currentSentence) + 1];
             }
         }
 
         private void CloseDialogue()
         {
-            //if (DialogueUI != null)
-            //{
-            //    DialogueUI.SetActive(false);
-            //}
+            foreach (Transform child in OptionsList.transform)
+            {
+                Destroy(child.gameObject);
+            }
 
-            //ClearSpawnedPanels();
-
-            //IsInDialogue = false;
-            //CurrentID = 0;
-            //OnFinished?.Invoke();
-            //OnMiniGameStartRequested?.Invoke(miniGameData);
-            StartCoroutine(CloseDialogueWithDelay(1f));
+            StartCoroutine(CloseDialogueWithDelay(2f));
         }
 
         private IEnumerator CloseDialogueWithDelay(float delay)
@@ -430,23 +330,23 @@ namespace Game
             ClearSpawnedPanels();
 
             IsInDialogue = false;
-            CurrentID = 0;
+            currentSentence = null;
             OnFinished?.Invoke();
             OnMiniGameStartRequested?.Invoke(miniGameData);
         }
 
-        IEnumerator TypeSentence(string _Sentence, TMP_Text textComponent)
+        IEnumerator TypeSentence(string textToType, TMP_Text textComponent)
         {
             if (textComponent == null) yield break;
 
             textComponent.text = "";
-            foreach (var c in _Sentence)
+            foreach (var c in textToType)
             {
-                yield return new WaitForSeconds(0.01f);
+                yield return waitForSeconds0_01;
                 textComponent.text += c;
             }
 
-            SentenceWriten = true;
+            ProcessNextSentence();
         }
 
         private void OnDestroy()

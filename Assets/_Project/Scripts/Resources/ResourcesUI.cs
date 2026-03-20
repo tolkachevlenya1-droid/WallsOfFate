@@ -55,6 +55,13 @@ namespace Game
 
         private void Awake() {
             playerManager.PlayerData.ResourceChanged += OnResourceChanged;
+
+            resourceTextFields = new Dictionary<ResourceType, TMP_Text> {
+                { ResourceType.Gold, goldText },
+                { ResourceType.Food, foodText },
+                { ResourceType.PeopleSatisfaction, satisfactionText },
+                { ResourceType.CastleStrength, strengthText }
+            };
         }
 
         private void OnDestroy() {
@@ -64,13 +71,6 @@ namespace Game
         #region Unity life-cycle
         private void Start()
         {
-            resourceTextFields = new Dictionary<ResourceType, TMP_Text> {
-                { ResourceType.Gold, goldText },
-                { ResourceType.Food, foodText },
-                { ResourceType.PeopleSatisfaction, satisfactionText },
-                { ResourceType.CastleStrength, strengthText }
-            };
-
             UpdateAllResources(forceUpdate: true);
         }
         #endregion

@@ -1,94 +1,80 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
 {
-
-    [System.Serializable]
-    public class DialogueGraph : MonoBehaviour
+    [Serializable]
+    public class Sentence
     {
-        [SerializeField]
-        private string DialogueName;
+        #region GraphVariables 
+        public int Id;
+        public bool IsPlayer = false;
+        public string Text;
+        public int NextSentenceId = -1;
+        public bool IsOption = false;
+        #endregion
 
-        [SerializeField]
-        public List<Node> sentences = new List<Node>();
+        #region GameVariables
+        public bool StartMinigame = false;
+        public MiniGame.MiniGameType MiniGameType = MiniGame.MiniGameType.None;
+        public string MiniGameSceneName = "";
 
-        [SerializeField]
+        [SerializeField, TextArea(3, 5)] private string _parametersJson = "{}";
+
+        private Dictionary<string, object> _cachedParams;
+        public Dictionary<string, object> MinigameParams
+        {
+            get
+            {
+                if (_cachedParams == null || _cachedParams.Count == 0)
+                {
+                    try
+                    {
+                        _cachedParams = JsonConvert.DeserializeObject<Dictionary<string, object>>(_parametersJson);
+                    }
+                    catch
+                    {
+                        _cachedParams = new Dictionary<string, object>();
+                    }
+                }
+                return _cachedParams;
+            }
+            set
+            {
+                _cachedParams = value;
+                _parametersJson = JsonConvert.SerializeObject(value, Formatting.Indented);
+            }
+        }
+
+        #region Resources
+        public int Gold = 0;
+        public int Food = 0;
+        public int PeopleSatisfaction = 0;
+        public int CastleStrength = 0;
+        #endregion
+
+        #endregion
+        public Sentence(int _id, bool _IsPlayer, string _Text)
+        {
+            Id = _id;
+            IsPlayer = _IsPlayer;
+            Text = _Text;
+        }
+
+        public Sentence() { }
+    }
+
+    [Serializable]
+    public class DialogueGraph
+    {
+        public string Name;
+
+        public string CharacterName;
+
         public string Portrait;
 
-        public string GetName()
-        {
-            return DialogueName;
-        }
-
-        public void SetName(string dialogueName)
-        {
-            DialogueName = dialogueName;
-        }
-
-        [System.Serializable]
-        public class Node
-        {
-            #region GraphVariables 
-            public int id;
-            public bool IsMainCharacter;
-            public string CharName;
-            public string Text;
-            public int NextNodeID;
-            public bool isOption;
-            #endregion
-
-            #region GameVariables
-            public bool StartMinigame;
-            public MiniGame.MiniGameType MiniGameType = MiniGame.MiniGameType.None;
-            public string MiniGameSceneName = "";
-
-            [SerializeField, TextArea(3, 5)] private string _parametersJson = "{}";
-
-            private Dictionary<string, object> _cachedParams;
-
-            public Dictionary<string, object> MinigameParams
-            {
-                get
-                {
-                    if (_cachedParams == null || _cachedParams.Count == 0)
-                    {
-                        try
-                        {
-                            _cachedParams = JsonConvert.DeserializeObject<Dictionary<string, object>>(_parametersJson);
-                        }
-                        catch
-                        {
-                            _cachedParams = new Dictionary<string, object>();
-                        }
-                    }
-                    return _cachedParams;
-                }
-                set
-                {
-                    _cachedParams = value;
-                    _parametersJson = JsonConvert.SerializeObject(value, Formatting.Indented);
-                }
-            }
-
-            #region Resources
-            public int Gold;
-            public int Food;
-            public int PeopleSatisfaction;
-            public int CastleStrength;
-            #endregion
-
-            #endregion
-            public Node(int _id, bool _IsMainCharacter, string _CharName, string _Text)
-            {
-                id = _id;
-                IsMainCharacter = _IsMainCharacter;
-                CharName = _CharName;
-                Text = _Text;
-            }
-
-            public Node() { }
-        }
+        public List<Sentence> Sentences = new();
     }
 }

@@ -72,9 +72,7 @@ namespace Game
         {
             if (triggerObject == null)
             {
-                triggerObject = AreaType == InfluenceType.Dialog
-                    ? GetComponentInParent<DialogueGraph>()?.gameObject ?? gameObject
-                    : gameObject;
+                triggerObject = gameObject;
             }
 
             //interactPressedThisFrame = InputManager.GetInstance().GetInteractPressed();
@@ -129,7 +127,6 @@ namespace Game
         {
             bool interacted = ConsumeInteractPress();
             TriggerEvent eventData = new TriggerEvent(AreaType, obj.gameObject, triggerObject, interacted, Parameters);
-
 
             if (interacted)
             {

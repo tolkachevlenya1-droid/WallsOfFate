@@ -1,3 +1,4 @@
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -55,7 +56,7 @@ namespace Game
                 return;
             }
 
-            DialogueGraph dialogueGraph = ResolveDialogueGraph(eventData.TriggerObj);
+            DialogueGraph dialogueGraph = GetDialogueGraph(eventData.TriggerObj);
             if (dialogueGraph == null)
             {
                 Debug.LogWarning(
@@ -132,16 +133,27 @@ namespace Game
                    && area.GetType() == typeof(InfluenceArea);
         }
 
-        private DialogueGraph ResolveDialogueGraph(GameObject obj)
+        private DialogueGraph GetDialogueGraph(GameObject obj)
         {
-            if (obj == null)
+            string dialoguePath = "Dialogues/NPC/" + obj.name.ToLower();
+
+            TextAsset textAsset = Resources.Load<TextAsset>(dialoguePath);
+            if (textAsset == null)
             {
+                Debug.LogError($"StartDayDialogueHandler: Failed to load dialogue graph at path: {dialoguePath}");
                 return null;
             }
 
-            return obj.GetComponent<DialogueGraph>()
-                   ?? obj.GetComponentInParent<DialogueGraph>()
-                   ?? obj.GetComponentInChildren<DialogueGraph>(true);
+            try
+            {
+                var dialogueGraph = JsonConvert.DeserializeObject<DialogueGraph>(textAsset.text);
+                return dialogueGraph;
+            }
+            catch (JsonException ex)
+            {
+                Debug.LogError($"StartDayDialogueHandler: Failed to load dialogue graph at path: {dialoguePath}");
+                return null;
+            }
         }
     }
 }

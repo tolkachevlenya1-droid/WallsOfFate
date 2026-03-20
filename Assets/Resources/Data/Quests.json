@@ -1,29 +1,39 @@
 [
 	{
 		"Id": 1,
-		"Name": "TestQuest",
-		"Description": "TestQuest description",
+		"Name": "Загадочное письмо",
+		"Description": "Узнать кто подкинул письмо",
 		"Main": true,
-		"ResourcesReward": {
-			"Gold": 10
-		},
 		"Tasks": [
 			{
 				"Id": 1,
-				"Name": "Task 1",
-				"Description": "Task 1 description",
-				"ResourcesReward": {
-					"Food": 5
-				}
+				"Name": "Расспросить людей в крепости",
+				"Description": "Нужно бы расспросить людей в крепости по поводу письма",
 			},
 			{
 				"Id": 2,
-				"Name": "Task 2",
-				"Description": "Task 2 description",
-				"Dependencies": [1],
-				"ResourcesReward": {
-					"Gold": 2
-				}
+				"Name": "Поговорить с дочерью",
+				"Description": "Дочь навреное находится в главном зале, нужно с ней обсудить случившееся",
+				"Dependencies": [1]
+			}
+		]
+	},
+	{
+		"Id": 2,
+		"Name": "Пропажа молота",
+		"Description": "Кузнец попросил найти пропавший молот",
+		"Main": false,
+		"Tasks": [
+			{
+				"Id": 1,
+				"Name": "Поискать молот неподалёку",
+				"Description": "Молот должен быть где-то рядом",
+			},
+			{
+				"Id": 2,
+				"Name": "Вернуться к кузнецу",
+				"Description": "Кузнец работает на улице и может видел кого",
+				"Dependencies": [1]
 			}
 		]
 	}

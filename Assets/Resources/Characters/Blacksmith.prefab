@@ -3985,7 +3985,6 @@ GameObject:
   - component: {fileID: 5500082600947215786}
   - component: {fileID: 2119124874553033334}
   - component: {fileID: 7937982792098785137}
-  - component: {fileID: 6108826760716343077}
   - component: {fileID: -5815068566688414377}
   m_Layer: 0
   m_Name: Blacksmith
@@ -4107,35 +4106,6 @@ MonoBehaviour:
   targetObject: {fileID: 0}
   highlightOnHover: 1
   highlightOnTrigger: 1
---- !u!114 &6108826760716343077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7948130630642926901}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e5a0ef563608e7409ccc00b81b02432, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueGraph
-  DialogueName: Blacksmith
-  sentences:
-  - id: 0
-    IsMainCharacter: 0
-    CharName: 
-    Text: 
-    NextNodeID: 0
-    isOption: 0
-    StartMinigame: 0
-    MiniGameType: 0
-    MiniGameSceneName: 
-    _parametersJson: '{}'
-    Gold: 0
-    Food: 0
-    PeopleSatisfaction: 0
-    CastleStrength: 0
-  Portrait: 
 --- !u!114 &-5815068566688414377
 MonoBehaviour:
   m_ObjectHideFlags: 0

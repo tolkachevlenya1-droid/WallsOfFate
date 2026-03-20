@@ -100,5 +100,10 @@ namespace Game.Data
                 status.State = QuestState.InProgress;
             }
         }
+
+        public Quest GetQuest(int questId)
+        {
+            return questsData.TryGetValue(questId, out Quest quest) ? quest : null;
+        }
     }
 }
