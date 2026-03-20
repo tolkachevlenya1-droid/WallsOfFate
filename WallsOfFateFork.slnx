@@ -1,7 +1,7 @@
 ﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Zenject.csproj" />
   <Project Path="Zenject-IntegrationTests-Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Zenject-ReflectionBaking-Editor.csproj" />
   <Project Path="BezierSolution.Runtime.csproj" />
   <Project Path="Zenject-UnitTests-Editor.csproj" />
