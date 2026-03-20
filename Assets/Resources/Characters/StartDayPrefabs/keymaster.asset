@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c210cc72ff83204c8c71c1521aad8e3, type: 3}
   m_Name: keymaster
   m_EditorClassIdentifier: 
-  npcName: NPC2
+  npcName: keymaster
   prefab: {fileID: 6487916388078063443, guid: cc272404eea2a6c4c9830f7efcd35e29, type: 3}

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c210cc72ff83204c8c71c1521aad8e3, type: 3}
   m_Name: Advisor
   m_EditorClassIdentifier: 
-  npcName: Advisor
+  npcName: advisor
   prefab: {fileID: 7280076937197616263, guid: c9950ae1c4065f94b84a0ec95111e75d, type: 3}
