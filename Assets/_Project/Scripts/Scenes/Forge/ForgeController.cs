@@ -1,4 +1,5 @@
 ﻿using Game.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Game
     {
         [SerializeField] private DialogueManager dialogueManager;
         [SerializeField] private InteractiveItemHandler interactiveItemHandler;
+        [SerializeField] private DialogueHandler dialogueHandler;
         [SerializeField] private string ThiefPrefabName;
         [SerializeField] private string ChiefGuardfPrefabName;
 
@@ -31,6 +33,8 @@ namespace Game
 
             interactiveItemHandler.OnItemHandled += OnQuestItemInteraction;
 
+            dialogueHandler.OnDialogHandled += OnDialogueInteraction;
+
             Quest thiefQuest = questManager.GetQuest(1);
             QuestState thiefQuestState = questManager.GetQuestState(thiefQuest.Id);
             if (thiefQuestState == QuestState.InProgress)
@@ -47,7 +51,7 @@ namespace Game
 
         public void OnDialogueFinished(DialogueGraph dialogue)
         {
-
+            DialogueManager dialogueManager = DialogueManager.Instance;
             if (dialogue.Name == "ChiefGuard")
             {
                 Quest thiefQuest = questManager.GetQuest(1);
@@ -69,7 +73,7 @@ namespace Game
                 }
 
             }
-            if(dialogue.Name == "Herbalist")
+            if(dialogue.Name == "Sofa")
             {
                 Quest herbalistQuest = questManager.GetQuest(2);
                 QuestStatus herbalistQuestStatus = questManager.GetQuestStatus(herbalistQuest.Id);
@@ -84,8 +88,12 @@ namespace Game
                     questManager.UpdateQuestTask(herbalistQuest.Id, task.Id, QuestState.Completed);
                 }
 
-            }
-            if(dialogue.Name == "Blacksmith")
+            }            
+        }
+
+        public void OnDialogueInteraction(TriggerEvent eventData)
+        {
+            if (eventData.TriggerObj.gameObject.name == "Blacksmith")
             {
                 Quest blacksmithQuest = questManager.GetQuest(5);
                 QuestStatus blacksmithQuestStatus = questManager.GetQuestStatus(blacksmithQuest.Id);
@@ -98,11 +106,17 @@ namespace Game
                 if (taskStatus.State == QuestState.NotStarted && taskStatus1.State == QuestState.NotStarted)
                 {
                     questManager.UpdateQuestTask(blacksmithQuest.Id, task.Id, QuestState.InProgress);
+                    var blacksmithDialogueJson = Resources.Load<TextAsset>("Dialogues/NPC/Dialogues/Blacksmith/First");
+                    var blacksmithDialogue = JsonConvert.DeserializeObject<DialogueGraph>(blacksmithDialogueJson.text);
+                    dialogueManager.StartDialogue(blacksmithDialogue);
                 }
                 if (taskStatus.State == QuestState.Completed && taskStatus1.State == QuestState.InProgress)
                 {
                     questManager.UpdateQuestTask(blacksmithQuest.Id, task1.Id, QuestState.Completed);
                     questManager.UpdateQuest(blacksmithQuest.Id, QuestState.Completed);
+                    var blacksmithDialogueJson = Resources.Load<TextAsset>("Dialogues/NPC/Dialogues/Blacksmith/Second");
+                    var blacksmithDialogue = JsonConvert.DeserializeObject<DialogueGraph>(blacksmithDialogueJson.text);
+                    dialogueManager.StartDialogue(blacksmithDialogue);
                 }
             }
         }
