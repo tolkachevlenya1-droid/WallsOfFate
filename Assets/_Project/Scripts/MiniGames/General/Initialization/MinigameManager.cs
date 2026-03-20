@@ -13,7 +13,8 @@ namespace Game.MiniGame
     {
         None = 0,
         PowerCheck = 1,
-        Agility = 2
+        Agility = 2,
+        Intelligence = 3
     }
 
 
@@ -33,9 +34,14 @@ namespace Game.MiniGame
         private PlayerManager playerManager;
         private LoadingManager loadingManager;
 
+        private Transform playerTransform;
+        private Vector3 previousPosition;
+        private Quaternion previousRotation;
+
         [Inject]
-        public void Construct(PlayerManager playerManager, LoadingManager loadingManager)
+        public void Construct(PlayerManager playerManager, LoadingManager loadingManager, PlayerMoveController playerController)
         {
+            this.playerTransform = playerController.transform;
             this.playerManager = playerManager;
             this.loadingManager = loadingManager;
         }
@@ -50,7 +56,8 @@ namespace Game.MiniGame
             else
             {
                 Destroy(gameObject);
-            }
+            }          
+
         }
 
         void OnEnable()
@@ -67,6 +74,12 @@ namespace Game.MiniGame
         {
             _currentGameData = gameData;
             _previousScene = SceneManager.GetActiveScene().name;
+
+            if(playerTransform != null)
+            {
+                previousPosition = playerTransform.position;
+                previousRotation = playerTransform.rotation;
+            }
 
             string sceneToLoad = gameData.miniGameSceneName;
 
@@ -146,6 +159,9 @@ namespace Game.MiniGame
             {
                 Debug.LogError($"Error processing minigame result: {e.Message}");
             }
+
+            PlayerSpawnData.SpawnPosition = previousPosition;
+            PlayerSpawnData.SpawnRotation = previousRotation;
 
             loadingManager.LoadScene(_previousScene);
             Destroy(this.gameObject);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Game;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -33,6 +34,9 @@ namespace Game.MiniGame.Agility
         [SerializeField] private float standaloneAutoStartDelay = 0.2f;
         [SerializeField] private KeyCode standaloneRestartKey = KeyCode.Space;
 
+        [Header("Enemy Prefab")]
+        [SerializeField] private Transform EnemySpawnPoint;
+
         private MiniGameData _gameData;
         private Coroutine _standaloneStartRoutine;
 
@@ -56,6 +60,13 @@ namespace Game.MiniGame.Agility
             PrepareScene();
             ApplyGameData();
             BindUi();
+
+            //string pathToEnemyPrefab = (string)_gameData.customParameters["EnemyPrefab"];
+            //if (!string.IsNullOrEmpty(pathToEnemyPrefab))
+            //{
+            //    GameObject EnemyPrefab = Resources.Load<GameObject>(pathToEnemyPrefab);
+            //    Instantiate(EnemyPrefab, EnemySpawnPoint.position, EnemyPrefab.transform.rotation);
+            //}
 
             if (controller == null)
             {

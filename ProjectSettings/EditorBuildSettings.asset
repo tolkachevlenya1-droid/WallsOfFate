@@ -44,6 +44,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/MiniGames/Agility.unity
     guid: f7e76babbdfb4af4c836d35d9e998f40
+  - enabled: 1
+    path: Assets/_Project/Scenes/MiniGames/MiniGameInt.unity
+    guid: 9e2f98c83e5973e46b31b8ce00571aa3
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 816a726db77b14b479f83b905ee881e8, type: 2}
   m_UseUCBPForAssetBundles: 0

@@ -455,10 +455,9 @@ MonoBehaviour:
     NextNodeID: 3
     isOption: 1
     StartMinigame: 1
-    MiniGameType: 0
-    MiniGameSceneName: 
-    _parametersJson: "{\n\t\"Name\": \"Guard\",\n\t\"Prefab\": \"Assets/_Project/Prefabs/MiniGames/Enemies/GuardEnemy
-      1.prefab\"\n}"
+    MiniGameType: 3
+    MiniGameSceneName: MiniGameInt
+    _parametersJson: "{\n\t\"Name\": \"Guard\",\n\t\"EnemyPrefab\": \"MiniGames/Agility/CharactersPrefabs/Figurka_guard\"\n}"
     Gold: 0
     Food: 0
     PeopleSatisfaction: 0
